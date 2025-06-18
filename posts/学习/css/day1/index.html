@@ -1,0 +1,294 @@
+<!doctype html><html lang=en dir=auto><head><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=robots content="index, follow"><title>CSS 重温 - Day 1 | 明天吃什么？</title><meta name=keywords content="CSS,学习"><meta name=description content='选择器
+标签选择器
+<h1>标题</h1>
+
+h1 {
+  color: blue;
+}
+类选择器
+<div class="header">
+  <h1>标题</h1>
+</div>
+
+.header {
+  color: blue;
+}
+ID选择器
+<div id="header">
+  <h1>标题</h1>
+</div>
+
+#header {
+  color: blue;
+}
+组合选择器
+/* 会同时选中所有 h1 和 .special */
+<h1 class="title">标题1</h1>
+<h1 class="title">标题2</h1>
+<div class="special"></div>
+
+h1, .special {
+  color: blue;
+}
+属性选择器
+li[class] {/* 选择所有有 class 属性的 li 标签 */}
+
+li[class="a"] {/* 选择 class 属性值为 "a" 的 li 标签 */}
+
+li[class~="a"] {/* 选择 class 属性值包含 "a类" 的 li 标签 */}
+
+li[class|="zh"] {/* 选择 class 属性值以 "zh" 开头并且后面跟随一个连字符&#39;-&#39;的 li 标签 */}
+
+li[class^="a"] {/* 选择 class 属性值以 "a" 开头的 li 标签 */}
+
+li[class$="a"]  {/* 选择 class 属性值以 "a" 结尾的 li 标签 */}
+
+li[class*="a"] {/* 选择 class 属性值包含 "a" 的 li 标签 */}
+关系选择器
+article p {/* 选择 article 下的所有 p 元素 */}
+article > p {/* 选择 article 下的直接子元素 p 元素, 不会选中嵌套的 p 元素 */}
+h1 + p {
+   /* 选择 h1 元素的下一个兄弟元素 p 元素, 会选中紧接着 h1 的 p 元素 */
+   <article>
+      <h1>A heading</h1>
+      <p>
+         Veggies es bonus vobis, proinde vos postulo essum magis kohlrabi welsh onion
+         daikon amaranth tatsoi tomatillo melon azuki bean garlic.
+      </p>
+
+      <p>
+         Gumbo beet greens corn soko endive gumbo gourd. Parsley shallot courgette
+         tatsoi pea sprouts fava bean collard greens dandelion okra wakame tomato.
+         Dandelion cucumber earthnut pea peanut soko zucchini.
+      </p>
+   </article>
+}
+
+
+article ~ p {
+   /* 选择 article 元素之后的所有兄弟元素 p 元素, 会选中下方所有的 p 元素 */
+   <article>
+      <h1>A heading</h1>
+      <p>I am a paragraph.</p>
+      <div>I am a div</div>
+      <p>I am another paragraph.</p>
+   </article>
+}
+伪类和伪元素
+常用伪类
+article p:first-child { /* 选择 article 下第一个 p 元素 */}
+
+article p:last-child { /* 选择 article 下最后一个 p 元素 */}
+
+article p:nth-child(2) { /* 选择 article 下第二个 p 元素 */}
+伪元素
+article p:first-child::first-line {/* 选择 article 下的第一个 p 元素的第一行 */}
+p::first-line {/* 选择 p 元素的第一行 */}
+p::first-letter { /* 选择 p 元素的第一个字符 */
+   font-size: 200%;
+   color: red;
+}
+p::before {
+   content: "前缀"; /* 在 p 元素前插入内容 */
+}
+p::after { /* 在 p 元素后插入内容 */
+   content: "后缀";
+}
+盒模型
+用display属性来控制盒子的显示类型。'><meta name=author content><link rel=canonical href=https://tnzzz.top/posts/%E5%AD%A6%E4%B9%A0/css/day1/><link crossorigin=anonymous href=/assets/css/stylesheet.93f625d739f1d6a5c6f20c146bc6a8d26b233492b34b2220c54b12fd46a04ded.css integrity="sha256-k/Yl1znx1qXG8gwUa8ao0msjNJKzSyIgxUsS/UagTe0=" rel="preload stylesheet" as=style><link rel=icon href=https://tnzzz.top/favicon.ico><link rel=icon type=image/png sizes=16x16 href=https://tnzzz.top/favicon-16x16.png><link rel=icon type=image/png sizes=32x32 href=https://tnzzz.top/favicon-32x32.png><link rel=apple-touch-icon href=https://tnzzz.top/apple-touch-icon.png><link rel=mask-icon href=https://tnzzz.top/safari-pinned-tab.svg><meta name=theme-color content="#2e2e33"><meta name=msapplication-TileColor content="#2e2e33"><link rel=alternate hreflang=en href=https://tnzzz.top/posts/%E5%AD%A6%E4%B9%A0/css/day1/><noscript><style>#theme-toggle,.top-link{display:none}</style><style>@media(prefers-color-scheme:dark){:root{--theme:rgb(29, 30, 32);--entry:rgb(46, 46, 51);--primary:rgb(218, 218, 219);--secondary:rgb(155, 156, 157);--tertiary:rgb(65, 66, 68);--content:rgb(196, 196, 197);--code-block-bg:rgb(46, 46, 51);--code-bg:rgb(55, 56, 62);--border:rgb(51, 51, 51)}.list{background:var(--theme)}.list:not(.dark)::-webkit-scrollbar-track{background:0 0}.list:not(.dark)::-webkit-scrollbar-thumb{border-color:var(--theme)}}</style></noscript><meta property="og:url" content="https://tnzzz.top/posts/%E5%AD%A6%E4%B9%A0/css/day1/"><meta property="og:site_name" content="明天吃什么？"><meta property="og:title" content="CSS 重温 - Day 1"><meta property="og:description" content='选择器 标签选择器 <h1>标题</h1> h1 { color: blue; } 类选择器 <div class="header"> <h1>标题</h1> </div> .header { color: blue; } ID选择器 <div id="header"> <h1>标题</h1> </div> #header { color: blue; } 组合选择器 /* 会同时选中所有 h1 和 .special */ <h1 class="title">标题1</h1> <h1 class="title">标题2</h1> <div class="special"></div> h1, .special { color: blue; } 属性选择器 li[class] {/* 选择所有有 class 属性的 li 标签 */} li[class="a"] {/* 选择 class 属性值为 "a" 的 li 标签 */} li[class~="a"] {/* 选择 class 属性值包含 "a类" 的 li 标签 */} li[class|="zh"] {/* 选择 class 属性值以 "zh" 开头并且后面跟随一个连字符&#39;-&#39;的 li 标签 */} li[class^="a"] {/* 选择 class 属性值以 "a" 开头的 li 标签 */} li[class$="a"] {/* 选择 class 属性值以 "a" 结尾的 li 标签 */} li[class*="a"] {/* 选择 class 属性值包含 "a" 的 li 标签 */} 关系选择器 article p {/* 选择 article 下的所有 p 元素 */} article > p {/* 选择 article 下的直接子元素 p 元素, 不会选中嵌套的 p 元素 */} h1 + p { /* 选择 h1 元素的下一个兄弟元素 p 元素, 会选中紧接着 h1 的 p 元素 */ <article> <h1>A heading</h1> <p> Veggies es bonus vobis, proinde vos postulo essum magis kohlrabi welsh onion daikon amaranth tatsoi tomatillo melon azuki bean garlic. </p> <p> Gumbo beet greens corn soko endive gumbo gourd. Parsley shallot courgette tatsoi pea sprouts fava bean collard greens dandelion okra wakame tomato. Dandelion cucumber earthnut pea peanut soko zucchini. </p> </article> } article ~ p { /* 选择 article 元素之后的所有兄弟元素 p 元素, 会选中下方所有的 p 元素 */ <article> <h1>A heading</h1> <p>I am a paragraph.</p> <div>I am a div</div> <p>I am another paragraph.</p> </article> } 伪类和伪元素 常用伪类 article p:first-child { /* 选择 article 下第一个 p 元素 */} article p:last-child { /* 选择 article 下最后一个 p 元素 */} article p:nth-child(2) { /* 选择 article 下第二个 p 元素 */} 伪元素 article p:first-child::first-line {/* 选择 article 下的第一个 p 元素的第一行 */} p::first-line {/* 选择 p 元素的第一行 */} p::first-letter { /* 选择 p 元素的第一个字符 */ font-size: 200%; color: red; } p::before { content: "前缀"; /* 在 p 元素前插入内容 */ } p::after { /* 在 p 元素后插入内容 */ content: "后缀"; } 盒模型 用display属性来控制盒子的显示类型。'><meta property="og:locale" content="zh-cn"><meta property="og:type" content="article"><meta property="article:section" content="posts"><meta property="article:published_time" content="2025-06-08T00:00:00+00:00"><meta property="article:modified_time" content="2025-06-08T00:00:00+00:00"><meta name=twitter:card content="summary"><meta name=twitter:title content="CSS 重温 - Day 1"><meta name=twitter:description content='选择器
+标签选择器
+<h1>标题</h1>
+
+h1 {
+  color: blue;
+}
+类选择器
+<div class="header">
+  <h1>标题</h1>
+</div>
+
+.header {
+  color: blue;
+}
+ID选择器
+<div id="header">
+  <h1>标题</h1>
+</div>
+
+#header {
+  color: blue;
+}
+组合选择器
+/* 会同时选中所有 h1 和 .special */
+<h1 class="title">标题1</h1>
+<h1 class="title">标题2</h1>
+<div class="special"></div>
+
+h1, .special {
+  color: blue;
+}
+属性选择器
+li[class] {/* 选择所有有 class 属性的 li 标签 */}
+
+li[class="a"] {/* 选择 class 属性值为 "a" 的 li 标签 */}
+
+li[class~="a"] {/* 选择 class 属性值包含 "a类" 的 li 标签 */}
+
+li[class|="zh"] {/* 选择 class 属性值以 "zh" 开头并且后面跟随一个连字符&#39;-&#39;的 li 标签 */}
+
+li[class^="a"] {/* 选择 class 属性值以 "a" 开头的 li 标签 */}
+
+li[class$="a"]  {/* 选择 class 属性值以 "a" 结尾的 li 标签 */}
+
+li[class*="a"] {/* 选择 class 属性值包含 "a" 的 li 标签 */}
+关系选择器
+article p {/* 选择 article 下的所有 p 元素 */}
+article > p {/* 选择 article 下的直接子元素 p 元素, 不会选中嵌套的 p 元素 */}
+h1 + p {
+   /* 选择 h1 元素的下一个兄弟元素 p 元素, 会选中紧接着 h1 的 p 元素 */
+   <article>
+      <h1>A heading</h1>
+      <p>
+         Veggies es bonus vobis, proinde vos postulo essum magis kohlrabi welsh onion
+         daikon amaranth tatsoi tomatillo melon azuki bean garlic.
+      </p>
+
+      <p>
+         Gumbo beet greens corn soko endive gumbo gourd. Parsley shallot courgette
+         tatsoi pea sprouts fava bean collard greens dandelion okra wakame tomato.
+         Dandelion cucumber earthnut pea peanut soko zucchini.
+      </p>
+   </article>
+}
+
+
+article ~ p {
+   /* 选择 article 元素之后的所有兄弟元素 p 元素, 会选中下方所有的 p 元素 */
+   <article>
+      <h1>A heading</h1>
+      <p>I am a paragraph.</p>
+      <div>I am a div</div>
+      <p>I am another paragraph.</p>
+   </article>
+}
+伪类和伪元素
+常用伪类
+article p:first-child { /* 选择 article 下第一个 p 元素 */}
+
+article p:last-child { /* 选择 article 下最后一个 p 元素 */}
+
+article p:nth-child(2) { /* 选择 article 下第二个 p 元素 */}
+伪元素
+article p:first-child::first-line {/* 选择 article 下的第一个 p 元素的第一行 */}
+p::first-line {/* 选择 p 元素的第一行 */}
+p::first-letter { /* 选择 p 元素的第一个字符 */
+   font-size: 200%;
+   color: red;
+}
+p::before {
+   content: "前缀"; /* 在 p 元素前插入内容 */
+}
+p::after { /* 在 p 元素后插入内容 */
+   content: "后缀";
+}
+盒模型
+用display属性来控制盒子的显示类型。'><script type=application/ld+json>{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Posts","item":"https://tnzzz.top/posts/"},{"@type":"ListItem","position":2,"name":"CSS 重温 - Day 1","item":"https://tnzzz.top/posts/%E5%AD%A6%E4%B9%A0/css/day1/"}]}</script><script type=application/ld+json>{"@context":"https://schema.org","@type":"BlogPosting","headline":"CSS 重温 - Day 1","name":"CSS 重温 - Day 1","description":"选择器 标签选择器 \u0026lt;h1\u0026gt;标题\u0026lt;/h1\u0026gt; h1 { color: blue; } 类选择器 \u0026lt;div class=\u0026#34;header\u0026#34;\u0026gt; \u0026lt;h1\u0026gt;标题\u0026lt;/h1\u0026gt; \u0026lt;/div\u0026gt; .header { color: blue; } ID选择器 \u0026lt;div id=\u0026#34;header\u0026#34;\u0026gt; \u0026lt;h1\u0026gt;标题\u0026lt;/h1\u0026gt; \u0026lt;/div\u0026gt; #header { color: blue; } 组合选择器 /* 会同时选中所有 h1 和 .special */ \u0026lt;h1 class=\u0026#34;title\u0026#34;\u0026gt;标题1\u0026lt;/h1\u0026gt; \u0026lt;h1 class=\u0026#34;title\u0026#34;\u0026gt;标题2\u0026lt;/h1\u0026gt; \u0026lt;div class=\u0026#34;special\u0026#34;\u0026gt;\u0026lt;/div\u0026gt; h1, .special { color: blue; } 属性选择器 li[class] {/* 选择所有有 class 属性的 li 标签 */} li[class=\u0026#34;a\u0026#34;] {/* 选择 class 属性值为 \u0026#34;a\u0026#34; 的 li 标签 */} li[class~=\u0026#34;a\u0026#34;] {/* 选择 class 属性值包含 \u0026#34;a类\u0026#34; 的 li 标签 */} li[class|=\u0026#34;zh\u0026#34;] {/* 选择 class 属性值以 \u0026#34;zh\u0026#34; 开头并且后面跟随一个连字符\u0026#39;-\u0026#39;的 li 标签 */} li[class^=\u0026#34;a\u0026#34;] {/* 选择 class 属性值以 \u0026#34;a\u0026#34; 开头的 li 标签 */} li[class$=\u0026#34;a\u0026#34;] {/* 选择 class 属性值以 \u0026#34;a\u0026#34; 结尾的 li 标签 */} li[class*=\u0026#34;a\u0026#34;] {/* 选择 class 属性值包含 \u0026#34;a\u0026#34; 的 li 标签 */} 关系选择器 article p {/* 选择 article 下的所有 p 元素 */} article \u0026gt; p {/* 选择 article 下的直接子元素 p 元素, 不会选中嵌套的 p 元素 */} h1 + p { /* 选择 h1 元素的下一个兄弟元素 p 元素, 会选中紧接着 h1 的 p 元素 */ \u0026lt;article\u0026gt; \u0026lt;h1\u0026gt;A heading\u0026lt;/h1\u0026gt; \u0026lt;p\u0026gt; Veggies es bonus vobis, proinde vos postulo essum magis kohlrabi welsh onion daikon amaranth tatsoi tomatillo melon azuki bean garlic. \u0026lt;/p\u0026gt; \u0026lt;p\u0026gt; Gumbo beet greens corn soko endive gumbo gourd. Parsley shallot courgette tatsoi pea sprouts fava bean collard greens dandelion okra wakame tomato. Dandelion cucumber earthnut pea peanut soko zucchini. \u0026lt;/p\u0026gt; \u0026lt;/article\u0026gt; } article ~ p { /* 选择 article 元素之后的所有兄弟元素 p 元素, 会选中下方所有的 p 元素 */ \u0026lt;article\u0026gt; \u0026lt;h1\u0026gt;A heading\u0026lt;/h1\u0026gt; \u0026lt;p\u0026gt;I am a paragraph.\u0026lt;/p\u0026gt; \u0026lt;div\u0026gt;I am a div\u0026lt;/div\u0026gt; \u0026lt;p\u0026gt;I am another paragraph.\u0026lt;/p\u0026gt; \u0026lt;/article\u0026gt; } 伪类和伪元素 常用伪类 article p:first-child { /* 选择 article 下第一个 p 元素 */} article p:last-child { /* 选择 article 下最后一个 p 元素 */} article p:nth-child(2) { /* 选择 article 下第二个 p 元素 */} 伪元素 article p:first-child::first-line {/* 选择 article 下的第一个 p 元素的第一行 */} p::first-line {/* 选择 p 元素的第一行 */} p::first-letter { /* 选择 p 元素的第一个字符 */ font-size: 200%; color: red; } p::before { content: \u0026#34;前缀\u0026#34;; /* 在 p 元素前插入内容 */ } p::after { /* 在 p 元素后插入内容 */ content: \u0026#34;后缀\u0026#34;; } 盒模型 用display属性来控制盒子的显示类型。\n","keywords":["CSS","学习"],"articleBody":"选择器 标签选择器 \u003ch1\u003e标题\u003c/h1\u003e h1 { color: blue; } 类选择器 \u003cdiv class=\"header\"\u003e \u003ch1\u003e标题\u003c/h1\u003e \u003c/div\u003e .header { color: blue; } ID选择器 \u003cdiv id=\"header\"\u003e \u003ch1\u003e标题\u003c/h1\u003e \u003c/div\u003e #header { color: blue; } 组合选择器 /* 会同时选中所有 h1 和 .special */ \u003ch1 class=\"title\"\u003e标题1\u003c/h1\u003e \u003ch1 class=\"title\"\u003e标题2\u003c/h1\u003e \u003cdiv class=\"special\"\u003e\u003c/div\u003e h1, .special { color: blue; } 属性选择器 li[class] {/* 选择所有有 class 属性的 li 标签 */} li[class=\"a\"] {/* 选择 class 属性值为 \"a\" 的 li 标签 */} li[class~=\"a\"] {/* 选择 class 属性值包含 \"a类\" 的 li 标签 */} li[class|=\"zh\"] {/* 选择 class 属性值以 \"zh\" 开头并且后面跟随一个连字符'-'的 li 标签 */} li[class^=\"a\"] {/* 选择 class 属性值以 \"a\" 开头的 li 标签 */} li[class$=\"a\"] {/* 选择 class 属性值以 \"a\" 结尾的 li 标签 */} li[class*=\"a\"] {/* 选择 class 属性值包含 \"a\" 的 li 标签 */} 关系选择器 article p {/* 选择 article 下的所有 p 元素 */} article \u003e p {/* 选择 article 下的直接子元素 p 元素, 不会选中嵌套的 p 元素 */} h1 + p { /* 选择 h1 元素的下一个兄弟元素 p 元素, 会选中紧接着 h1 的 p 元素 */ A heading Veggies es bonus vobis, proinde vos postulo essum magis kohlrabi welsh onion daikon amaranth tatsoi tomatillo melon azuki bean garlic. Gumbo beet greens corn soko endive gumbo gourd. Parsley shallot courgette tatsoi pea sprouts fava bean collard greens dandelion okra wakame tomato. Dandelion cucumber earthnut pea peanut soko zucchini. } article ~ p { /* 选择 article 元素之后的所有兄弟元素 p 元素, 会选中下方所有的 p 元素 */ A heading I am a paragraph.\nI am a div I am another paragraph.\n} 伪类和伪元素 常用伪类 article p:first-child { /* 选择 article 下第一个 p 元素 */} article p:last-child { /* 选择 article 下最后一个 p 元素 */} article p:nth-child(2) { /* 选择 article 下第二个 p 元素 */} 伪元素 article p:first-child::first-line {/* 选择 article 下的第一个 p 元素的第一行 */} p::first-line {/* 选择 p 元素的第一行 */} p::first-letter { /* 选择 p 元素的第一个字符 */ font-size: 200%; color: red; } p::before { content: \"前缀\"; /* 在 p 元素前插入内容 */ } p::after { /* 在 p 元素后插入内容 */ content: \"后缀\"; } 盒模型 用display属性来控制盒子的显示类型。\nblock 盒子会产生换行。 width 和 height 属性可以发挥作用。 内边距、外边距和边框会将其他元素从当前盒子周围“推开”。 如果未指定 width，方框将沿行向扩展，以填充其容器中的可用空间。在大多数情况下，盒子会变得与其- 容器一样宽，占据可用空间的 100%。 某些 HTML 元素，如 和 ，默认使用 block 作为外部显示类型。 inline 盒子不会产生换行。 width 和 height 属性将不起作用。 垂直方向的内边距、外边距以及边框会被应用但是不会把其他处于 inline 状态的盒子推开。 水平方向的内边距、外边距以及边框会被应用且会把其他处于 inline 状态的盒子推开。 标准盒模型 padding 和 border 宽度不参与 width 和 height 计算。 width 和 height 只计算内容区域的宽度和高度。 .box { box-sizing: content-box; /* 默认值 */ } 替代盒模型 padding 和 border 宽度参与 width 和 height 计算。 .box { box-sizing: border-box; } ","wordCount":"392","inLanguage":"en","datePublished":"2025-06-08T00:00:00Z","dateModified":"2025-06-08T00:00:00Z","mainEntityOfPage":{"@type":"WebPage","@id":"https://tnzzz.top/posts/%E5%AD%A6%E4%B9%A0/css/day1/"},"publisher":{"@type":"Organization","name":"明天吃什么？","logo":{"@type":"ImageObject","url":"https://tnzzz.top/favicon.ico"}}}</script></head><body id=top><script defer src=https://static.cloudflareinsights.com/beacon.min.js data-cf-beacon='{"token": "ccaaab867b5e4fe590baed8e233a2d10"}'></script><script>localStorage.getItem("pref-theme")==="dark"?document.body.classList.add("dark"):localStorage.getItem("pref-theme")==="light"?document.body.classList.remove("dark"):window.matchMedia("(prefers-color-scheme: dark)").matches&&document.body.classList.add("dark")</script><header class=header><nav class=nav><div class=logo><a href=https://tnzzz.top/ accesskey=h title="明天吃什么？ (Alt + H)">明天吃什么？</a><div class=logo-switches><button id=theme-toggle accesskey=t title="(Alt + T)" aria-label="Toggle theme">
+<svg id="moon" width="24" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+<svg id="sun" width="24" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></button></div></div><ul id=menu><li><a href=https://tnzzz.top/categories/ title=分类><span>分类</span></a></li></ul></nav></header><main class=main><article class=post-single><header class=post-header><h1 class="post-title entry-hint-parent">CSS 重温 - Day 1</h1><div class=post-meta><span title='2025-06-08 00:00:00 +0000 UTC'>June 8, 2025</span></div></header><div class=post-content><h3 id=选择器>选择器<a hidden class=anchor aria-hidden=true href=#选择器>#</a></h3><h4 id=标签选择器>标签选择器<a hidden class=anchor aria-hidden=true href=#标签选择器>#</a></h4><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-css data-lang=css><span style=display:flex><span><span style=color:#f92672>&lt;</span><span style=color:#f92672>h1</span><span style=color:#f92672>&gt;</span><span style=color:#f92672>标题</span><span style=color:#f92672>&lt;/</span><span style=color:#f92672>h1</span><span style=color:#f92672>&gt;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#f92672>h1</span> {
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>color</span>: <span style=color:#66d9ef>blue</span>;
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><h4 id=类选择器>类选择器<a hidden class=anchor aria-hidden=true href=#类选择器>#</a></h4><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-css data-lang=css><span style=display:flex><span><span style=color:#f92672>&lt;</span><span style=color:#f92672>div</span> <span style=color:#f92672>class</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;header&#34;</span><span style=color:#f92672>&gt;</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>&lt;</span><span style=color:#f92672>h1</span><span style=color:#f92672>&gt;</span><span style=color:#f92672>标题</span><span style=color:#f92672>&lt;/</span><span style=color:#f92672>h1</span><span style=color:#f92672>&gt;</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>&lt;/</span><span style=color:#f92672>div</span><span style=color:#f92672>&gt;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>.<span style=color:#a6e22e>header</span> {
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>color</span>: <span style=color:#66d9ef>blue</span>;
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><h4 id=id选择器>ID选择器<a hidden class=anchor aria-hidden=true href=#id选择器>#</a></h4><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-css data-lang=css><span style=display:flex><span><span style=color:#f92672>&lt;</span><span style=color:#f92672>div</span> <span style=color:#f92672>id</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;header&#34;</span><span style=color:#f92672>&gt;</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>&lt;</span><span style=color:#f92672>h1</span><span style=color:#f92672>&gt;</span><span style=color:#f92672>标题</span><span style=color:#f92672>&lt;/</span><span style=color:#f92672>h1</span><span style=color:#f92672>&gt;</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>&lt;/</span><span style=color:#f92672>div</span><span style=color:#f92672>&gt;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>#header {
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>color</span>: <span style=color:#66d9ef>blue</span>;
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><h4 id=组合选择器>组合选择器<a hidden class=anchor aria-hidden=true href=#组合选择器>#</a></h4><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-css data-lang=css><span style=display:flex><span><span style=color:#75715e>/* 会同时选中所有 h1 和 .special */</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>&lt;</span><span style=color:#f92672>h1</span> <span style=color:#f92672>class</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;title&#34;</span><span style=color:#f92672>&gt;</span><span style=color:#f92672>标题1</span><span style=color:#f92672>&lt;/</span><span style=color:#f92672>h1</span><span style=color:#f92672>&gt;</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>&lt;</span><span style=color:#f92672>h1</span> <span style=color:#f92672>class</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;title&#34;</span><span style=color:#f92672>&gt;</span><span style=color:#f92672>标题2</span><span style=color:#f92672>&lt;/</span><span style=color:#f92672>h1</span><span style=color:#f92672>&gt;</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>&lt;</span><span style=color:#f92672>div</span> <span style=color:#f92672>class</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;special&#34;</span><span style=color:#f92672>&gt;&lt;/</span><span style=color:#f92672>div</span><span style=color:#f92672>&gt;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#f92672>h1</span><span style=color:#f92672>,</span> .<span style=color:#a6e22e>special</span> {
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>color</span>: <span style=color:#66d9ef>blue</span>;
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><h4 id=属性选择器>属性选择器<a hidden class=anchor aria-hidden=true href=#属性选择器>#</a></h4><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-css data-lang=css><span style=display:flex><span><span style=color:#f92672>li</span><span style=color:#f92672>[</span><span style=color:#f92672>class</span><span style=color:#f92672>]</span> {<span style=color:#75715e>/* 选择所有有 class 属性的 li 标签 */</span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#f92672>li</span><span style=color:#f92672>[</span><span style=color:#f92672>class</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;a&#34;</span><span style=color:#f92672>]</span> {<span style=color:#75715e>/* 选择 class 属性值为 &#34;a&#34; 的 li 标签 */</span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#f92672>li</span><span style=color:#f92672>[</span><span style=color:#f92672>class</span><span style=color:#f92672>~=</span><span style=color:#e6db74>&#34;a&#34;</span><span style=color:#f92672>]</span> {<span style=color:#75715e>/* 选择 class 属性值包含 &#34;a类&#34; 的 li 标签 */</span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#f92672>li</span><span style=color:#f92672>[</span><span style=color:#f92672>class</span><span style=color:#f92672>|=</span><span style=color:#e6db74>&#34;zh&#34;</span><span style=color:#f92672>]</span> {<span style=color:#75715e>/* 选择 class 属性值以 &#34;zh&#34; 开头并且后面跟随一个连字符&#39;-&#39;的 li 标签 */</span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#f92672>li</span><span style=color:#f92672>[</span><span style=color:#f92672>class</span><span style=color:#f92672>^=</span><span style=color:#e6db74>&#34;a&#34;</span><span style=color:#f92672>]</span> {<span style=color:#75715e>/* 选择 class 属性值以 &#34;a&#34; 开头的 li 标签 */</span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#f92672>li</span><span style=color:#f92672>[</span><span style=color:#f92672>class</span><span style=color:#f92672>$=</span><span style=color:#e6db74>&#34;a&#34;</span><span style=color:#f92672>]</span>  {<span style=color:#75715e>/* 选择 class 属性值以 &#34;a&#34; 结尾的 li 标签 */</span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#f92672>li</span><span style=color:#f92672>[</span><span style=color:#f92672>class</span><span style=color:#f92672>*=</span><span style=color:#e6db74>&#34;a&#34;</span><span style=color:#f92672>]</span> {<span style=color:#75715e>/* 选择 class 属性值包含 &#34;a&#34; 的 li 标签 */</span>}
+</span></span></code></pre></div><h4 id=关系选择器>关系选择器<a hidden class=anchor aria-hidden=true href=#关系选择器>#</a></h4><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-css data-lang=css><span style=display:flex><span><span style=color:#f92672>article</span> <span style=color:#f92672>p</span> {<span style=color:#75715e>/* 选择 article 下的所有 p 元素 */</span>}
+</span></span><span style=display:flex><span><span style=color:#f92672>article</span> <span style=color:#f92672>&gt;</span> <span style=color:#f92672>p</span> {<span style=color:#75715e>/* 选择 article 下的直接子元素 p 元素, 不会选中嵌套的 p 元素 */</span>}
+</span></span><span style=display:flex><span><span style=color:#f92672>h1</span> <span style=color:#f92672>+</span> <span style=color:#f92672>p</span> {
+</span></span><span style=display:flex><span>   <span style=color:#75715e>/* 选择 h1 元素的下一个兄弟元素 p 元素, 会选中紧接着 h1 的 p 元素 */</span>
+</span></span><span style=display:flex><span>   <span style=color:#960050;background-color:#1e0010>&lt;article&gt;</span>
+</span></span><span style=display:flex><span>      <span style=color:#960050;background-color:#1e0010>&lt;h1&gt;A</span> <span style=color:#960050;background-color:#1e0010>heading&lt;/h1&gt;</span>
+</span></span><span style=display:flex><span>      <span style=color:#960050;background-color:#1e0010>&lt;p&gt;</span>
+</span></span><span style=display:flex><span>         <span style=color:#960050;background-color:#1e0010>Veggies</span> <span style=color:#960050;background-color:#1e0010>es</span> <span style=color:#960050;background-color:#1e0010>bonus</span> <span style=color:#960050;background-color:#1e0010>vobis,</span> <span style=color:#960050;background-color:#1e0010>proinde</span> <span style=color:#960050;background-color:#1e0010>vos</span> <span style=color:#960050;background-color:#1e0010>postulo</span> <span style=color:#960050;background-color:#1e0010>essum</span> <span style=color:#960050;background-color:#1e0010>magis</span> <span style=color:#960050;background-color:#1e0010>kohlrabi</span> <span style=color:#960050;background-color:#1e0010>welsh</span> <span style=color:#960050;background-color:#1e0010>onion</span>
+</span></span><span style=display:flex><span>         <span style=color:#960050;background-color:#1e0010>daikon</span> <span style=color:#960050;background-color:#1e0010>amaranth</span> <span style=color:#960050;background-color:#1e0010>tatsoi</span> <span style=color:#960050;background-color:#1e0010>tomatillo</span> <span style=color:#960050;background-color:#1e0010>melon</span> <span style=color:#960050;background-color:#1e0010>azuki</span> <span style=color:#960050;background-color:#1e0010>bean</span> <span style=color:#960050;background-color:#1e0010>garlic.</span>
+</span></span><span style=display:flex><span>      <span style=color:#960050;background-color:#1e0010>&lt;/p&gt;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>      <span style=color:#960050;background-color:#1e0010>&lt;p&gt;</span>
+</span></span><span style=display:flex><span>         <span style=color:#960050;background-color:#1e0010>Gumbo</span> <span style=color:#960050;background-color:#1e0010>beet</span> <span style=color:#960050;background-color:#1e0010>greens</span> <span style=color:#960050;background-color:#1e0010>corn</span> <span style=color:#960050;background-color:#1e0010>soko</span> <span style=color:#960050;background-color:#1e0010>endive</span> <span style=color:#960050;background-color:#1e0010>gumbo</span> <span style=color:#960050;background-color:#1e0010>gourd.</span> <span style=color:#960050;background-color:#1e0010>Parsley</span> <span style=color:#960050;background-color:#1e0010>shallot</span> <span style=color:#960050;background-color:#1e0010>courgette</span>
+</span></span><span style=display:flex><span>         <span style=color:#960050;background-color:#1e0010>tatsoi</span> <span style=color:#960050;background-color:#1e0010>pea</span> <span style=color:#960050;background-color:#1e0010>sprouts</span> <span style=color:#960050;background-color:#1e0010>fava</span> <span style=color:#960050;background-color:#1e0010>bean</span> <span style=color:#960050;background-color:#1e0010>collard</span> <span style=color:#960050;background-color:#1e0010>greens</span> <span style=color:#960050;background-color:#1e0010>dandelion</span> <span style=color:#960050;background-color:#1e0010>okra</span> <span style=color:#960050;background-color:#1e0010>wakame</span> <span style=color:#960050;background-color:#1e0010>tomato.</span>
+</span></span><span style=display:flex><span>         <span style=color:#960050;background-color:#1e0010>Dandelion</span> <span style=color:#960050;background-color:#1e0010>cucumber</span> <span style=color:#960050;background-color:#1e0010>earthnut</span> <span style=color:#960050;background-color:#1e0010>pea</span> <span style=color:#960050;background-color:#1e0010>peanut</span> <span style=color:#960050;background-color:#1e0010>soko</span> <span style=color:#960050;background-color:#1e0010>zucchini.</span>
+</span></span><span style=display:flex><span>      <span style=color:#960050;background-color:#1e0010>&lt;/p&gt;</span>
+</span></span><span style=display:flex><span>   <span style=color:#960050;background-color:#1e0010>&lt;/article&gt;</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#f92672>article</span> <span style=color:#f92672>~</span> <span style=color:#f92672>p</span> {
+</span></span><span style=display:flex><span>   <span style=color:#75715e>/* 选择 article 元素之后的所有兄弟元素 p 元素, 会选中下方所有的 p 元素 */</span>
+</span></span><span style=display:flex><span>   <span style=color:#960050;background-color:#1e0010>&lt;article&gt;</span>
+</span></span><span style=display:flex><span>      <span style=color:#960050;background-color:#1e0010>&lt;h1&gt;A</span> <span style=color:#960050;background-color:#1e0010>heading&lt;/h1&gt;</span>
+</span></span><span style=display:flex><span>      <span style=color:#960050;background-color:#1e0010>&lt;p&gt;I</span> <span style=color:#960050;background-color:#1e0010>am</span> <span style=color:#960050;background-color:#1e0010>a</span> <span style=color:#960050;background-color:#1e0010>paragraph.&lt;/p&gt;</span>
+</span></span><span style=display:flex><span>      <span style=color:#960050;background-color:#1e0010>&lt;div&gt;I</span> <span style=color:#960050;background-color:#1e0010>am</span> <span style=color:#960050;background-color:#1e0010>a</span> <span style=color:#960050;background-color:#1e0010>div&lt;/div&gt;</span>
+</span></span><span style=display:flex><span>      <span style=color:#960050;background-color:#1e0010>&lt;p&gt;I</span> <span style=color:#960050;background-color:#1e0010>am</span> <span style=color:#960050;background-color:#1e0010>another</span> <span style=color:#960050;background-color:#1e0010>paragraph.&lt;/p&gt;</span>
+</span></span><span style=display:flex><span>   <span style=color:#960050;background-color:#1e0010>&lt;/article&gt;</span>
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><h3 id=伪类和伪元素>伪类和伪元素<a hidden class=anchor aria-hidden=true href=#伪类和伪元素>#</a></h3><h4 id=常用伪类>常用伪类<a hidden class=anchor aria-hidden=true href=#常用伪类>#</a></h4><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-css data-lang=css><span style=display:flex><span><span style=color:#f92672>article</span> <span style=color:#f92672>p</span>:<span style=color:#a6e22e>first-child</span> { <span style=color:#75715e>/* 选择 article 下第一个 p 元素 */</span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#f92672>article</span> <span style=color:#f92672>p</span>:<span style=color:#a6e22e>last-child</span> { <span style=color:#75715e>/* 选择 article 下最后一个 p 元素 */</span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#f92672>article</span> <span style=color:#f92672>p</span>:<span style=color:#a6e22e>nth-child</span><span style=color:#f92672>(</span><span style=color:#f92672>2</span><span style=color:#f92672>)</span> { <span style=color:#75715e>/* 选择 article 下第二个 p 元素 */</span>}
+</span></span></code></pre></div><h4 id=伪元素>伪元素<a hidden class=anchor aria-hidden=true href=#伪元素>#</a></h4><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-css data-lang=css><span style=display:flex><span><span style=color:#f92672>article</span> <span style=color:#f92672>p</span>:<span style=color:#a6e22e>first-child</span>::<span style=color:#a6e22e>first-line</span> {<span style=color:#75715e>/* 选择 article 下的第一个 p 元素的第一行 */</span>}
+</span></span><span style=display:flex><span><span style=color:#f92672>p</span>::<span style=color:#a6e22e>first-line</span> {<span style=color:#75715e>/* 选择 p 元素的第一行 */</span>}
+</span></span><span style=display:flex><span><span style=color:#f92672>p</span>::<span style=color:#a6e22e>first-letter</span> { <span style=color:#75715e>/* 选择 p 元素的第一个字符 */</span>
+</span></span><span style=display:flex><span>   <span style=color:#66d9ef>font-size</span>: <span style=color:#ae81ff>200</span><span style=color:#66d9ef>%</span>;
+</span></span><span style=display:flex><span>   <span style=color:#66d9ef>color</span>: <span style=color:#66d9ef>red</span>;
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span><span style=color:#f92672>p</span>::<span style=color:#a6e22e>before</span> {
+</span></span><span style=display:flex><span>   <span style=color:#66d9ef>content</span>: <span style=color:#e6db74>&#34;前缀&#34;</span>; <span style=color:#75715e>/* 在 p 元素前插入内容 */</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span><span style=color:#f92672>p</span>::<span style=color:#a6e22e>after</span> { <span style=color:#75715e>/* 在 p 元素后插入内容 */</span>
+</span></span><span style=display:flex><span>   <span style=color:#66d9ef>content</span>: <span style=color:#e6db74>&#34;后缀&#34;</span>;
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><h3 id=盒模型>盒模型<a hidden class=anchor aria-hidden=true href=#盒模型>#</a></h3><p>用display属性来控制盒子的显示类型。</p><h4 id=block>block<a hidden class=anchor aria-hidden=true href=#block>#</a></h4><ul><li>盒子会产生换行。</li><li>width 和 height 属性可以发挥作用。</li><li>内边距、外边距和边框会将其他元素从当前盒子周围“推开”。</li><li>如果未指定 width，方框将沿行向扩展，以填充其容器中的可用空间。在大多数情况下，盒子会变得与其- 容器一样宽，占据可用空间的 100%。</li><li>某些 HTML 元素，如 &lt;h1> 和 &lt;p>，默认使用 block 作为外部显示类型。</li></ul><h4 id=inline>inline<a hidden class=anchor aria-hidden=true href=#inline>#</a></h4><ul><li>盒子不会产生换行。</li><li>width 和 height 属性将不起作用。</li><li>垂直方向的内边距、外边距以及边框会被应用但是不会把其他处于 inline 状态的盒子推开。</li><li>水平方向的内边距、外边距以及边框会被应用且会把其他处于 inline 状态的盒子推开。</li></ul><h4 id=标准盒模型>标准盒模型<a hidden class=anchor aria-hidden=true href=#标准盒模型>#</a></h4><ul><li>padding 和 border 宽度不参与 width 和 height 计算。</li><li>width 和 height 只计算内容区域的宽度和高度。</li></ul><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-css data-lang=css><span style=display:flex><span>.<span style=color:#a6e22e>box</span> {
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>box-sizing</span>: <span style=color:#66d9ef>content-box</span>; <span style=color:#75715e>/* 默认值 */</span>
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><h4 id=替代盒模型>替代盒模型<a hidden class=anchor aria-hidden=true href=#替代盒模型>#</a></h4><ul><li>padding 和 border 宽度参与 width 和 height 计算。</li></ul><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-css data-lang=css><span style=display:flex><span>.<span style=color:#a6e22e>box</span> {
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>box-sizing</span>: <span style=color:#66d9ef>border-box</span>;
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div></div><footer class=post-footer><ul class=post-tags></ul></footer></article></main><footer class=footer><span>&copy; 2025 <a href=https://tnzzz.top/>明天吃什么？</a></span> ·
+<span>Powered by
+<a href=https://gohugo.io/ rel="noopener noreferrer" target=_blank>Hugo</a> &
+<a href=https://github.com/adityatelange/hugo-PaperMod/ rel=noopener target=_blank>PaperMod</a> &
+<a href=https://beian.miit.gov.cn/#/Integrated/index>粤ICP备2022076439号</a></span></footer><a href=#top aria-label="go to top" title="Go to Top (Alt + G)" class=top-link id=top-link accesskey=g><svg viewBox="0 0 12 6" fill="currentColor"><path d="M12 6H0l6-6z"/></svg>
+</a><script>let menu=document.getElementById("menu");menu&&(menu.scrollLeft=localStorage.getItem("menu-scroll-position"),menu.onscroll=function(){localStorage.setItem("menu-scroll-position",menu.scrollLeft)}),document.querySelectorAll('a[href^="#"]').forEach(e=>{e.addEventListener("click",function(e){e.preventDefault();var t=this.getAttribute("href").substr(1);window.matchMedia("(prefers-reduced-motion: reduce)").matches?document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView():document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView({behavior:"smooth"}),t==="top"?history.replaceState(null,null," "):history.pushState(null,null,`#${t}`)})})</script><script>var mybutton=document.getElementById("top-link");window.onscroll=function(){document.body.scrollTop>800||document.documentElement.scrollTop>800?(mybutton.style.visibility="visible",mybutton.style.opacity="1"):(mybutton.style.visibility="hidden",mybutton.style.opacity="0")}</script><script>document.getElementById("theme-toggle").addEventListener("click",()=>{document.body.className.includes("dark")?(document.body.classList.remove("dark"),localStorage.setItem("pref-theme","light")):(document.body.classList.add("dark"),localStorage.setItem("pref-theme","dark"))})</script><script>document.querySelectorAll("pre > code").forEach(e=>{const n=e.parentNode.parentNode,t=document.createElement("button");t.classList.add("copy-code"),t.innerHTML="copy";function s(){t.innerHTML="copied!",setTimeout(()=>{t.innerHTML="copy"},2e3)}t.addEventListener("click",t=>{if("clipboard"in navigator){navigator.clipboard.writeText(e.textContent),s();return}const n=document.createRange();n.selectNodeContents(e);const o=window.getSelection();o.removeAllRanges(),o.addRange(n);try{document.execCommand("copy"),s()}catch{}o.removeRange(n)}),n.classList.contains("highlight")?n.appendChild(t):n.parentNode.firstChild==n||(e.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName=="TABLE"?e.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(t):e.parentNode.appendChild(t))})</script></body></html>

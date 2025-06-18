@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>解决方法 on 明天吃什么？</title><link>https://tnzzz.top/categories/%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95/</link><description>Recent content in 解决方法 on 明天吃什么？</description><generator>Hugo -- 0.147.8</generator><language>zh-cn</language><lastBuildDate>Mon, 16 Jun 2025 13:01:40 +0800</lastBuildDate><atom:link href="https://tnzzz.top/categories/%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95/index.xml" rel="self" type="application/rss+xml"/><item><title>JS事件莫名其妙不触发解决方法</title><link>https://tnzzz.top/posts/%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95/js%E4%BA%8B%E4%BB%B6%E8%8E%AB%E5%90%8D%E5%85%B6%E5%A6%99%E4%B8%8D%E8%A7%A6%E5%8F%91/</link><pubDate>Mon, 16 Jun 2025 13:01:40 +0800</pubDate><guid>https://tnzzz.top/posts/%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95/js%E4%BA%8B%E4%BB%B6%E8%8E%AB%E5%90%8D%E5%85%B6%E5%A6%99%E4%B8%8D%E8%A7%A6%E5%8F%91/</guid><description>&lt;h3 id="问题描述">问题描述&lt;/h3>
+&lt;p>监听 JavaScript 事件时，对应处理函数只有一个console.log()，但事件并没有触发。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-javascript" data-lang="javascript">&lt;span style="display:flex;">&lt;span>document.&lt;span style="color:#a6e22e">getElementById&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;myButton&amp;#34;&lt;/span>).&lt;span style="color:#a6e22e">addEventListener&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;click&amp;#34;&lt;/span>, (&lt;span style="color:#a6e22e">e&lt;/span>) =&amp;gt; {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">console&lt;/span>.&lt;span style="color:#a6e22e">log&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;Button clicked&amp;#34;&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>});
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="问题原因">问题原因&lt;/h3>
+&lt;p>Vite 中配置了去除 console.log 的功能，导致在生产环境中无法输出日志。&lt;/p>
+&lt;h3 id="解决方法">解决方法&lt;/h3>
+&lt;p>删除对应的 Vite 配置即可&lt;/p></description></item><item><title>reqwest请求被cloudflare拦截</title><link>https://tnzzz.top/posts/%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95/reqwest%E8%AF%B7%E6%B1%82%E8%A2%ABcloudflare%E6%8B%A6%E6%88%AA/</link><pubDate>Sat, 26 Apr 2025 13:15:40 +0800</pubDate><guid>https://tnzzz.top/posts/%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95/reqwest%E8%AF%B7%E6%B1%82%E8%A2%ABcloudflare%E6%8B%A6%E6%88%AA/</guid><description>&lt;h3 id="问题描述">问题描述&lt;/h3>
+&lt;p>在使用 reqwest 请求时，即使是最简的请求也会出发 cloudflare 的拦截，导致请求失败。例如以下代码：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-rust" data-lang="rust">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">let&lt;/span> res &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#66d9ef">match&lt;/span> self
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> .client
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> .get(&lt;span style="color:#e6db74">&amp;#34;https://api.bgm.tv/v0/subjects/12&amp;#34;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> .send()
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> .&lt;span style="color:#66d9ef">await&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Ok(res) &lt;span style="color:#f92672">=&amp;gt;&lt;/span> res,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Err(e) &lt;span style="color:#f92672">=&amp;gt;&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> Err(e.to_string());
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>};
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="临时解决方法">临时解决方法&lt;/h3>
+&lt;p>添加 native-tls-alpn feature&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-toml" data-lang="toml">&lt;span style="display:flex;">&lt;span>[&lt;span style="color:#a6e22e">dependencies&lt;/span>]
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">reqwest&lt;/span> = { &lt;span style="color:#a6e22e">version&lt;/span> = &lt;span style="color:#e6db74">&amp;#34;0.11&amp;#34;&lt;/span>, &lt;span style="color:#a6e22e">features&lt;/span> = [&lt;span style="color:#e6db74">&amp;#34;native-tls-alpn&amp;#34;&lt;/span>] }
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="参考链接">参考链接&lt;/h3>
+&lt;p>&lt;a href="https://github.com/seanmonstar/reqwest/discussions/2227">Request made with reqwest blocked by Cloudflare&amp;rsquo;s protection but succeeds with curl&lt;/a>&lt;/p></description></item><item><title>CPU 线程数只有实际的一半解决方法</title><link>https://tnzzz.top/posts/%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95/cpu-%E7%BA%BF%E7%A8%8B%E6%95%B0%E5%8F%AA%E6%9C%89%E5%AE%9E%E9%99%85%E7%9A%84%E4%B8%80%E5%8D%8A%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95/</link><pubDate>Wed, 09 Apr 2025 13:01:40 +0800</pubDate><guid>https://tnzzz.top/posts/%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95/cpu-%E7%BA%BF%E7%A8%8B%E6%95%B0%E5%8F%AA%E6%9C%89%E5%AE%9E%E9%99%85%E7%9A%84%E4%B8%80%E5%8D%8A%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95/</guid><description>&lt;h3 id="问题描述">问题描述&lt;/h3>
+&lt;p>Windows 任务管理器中显示 CPU 线程数只有实际的一半
+如下图，实际 CPU 线程数为 16，但任务管理器中显示的线程数为 8。
+&lt;img alt="Windows 任务管理器" loading="lazy" src="https://tnzzz.top/posts/%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95/cpu-%E7%BA%BF%E7%A8%8B%E6%95%B0%E5%8F%AA%E6%9C%89%E5%AE%9E%E9%99%85%E7%9A%84%E4%B8%80%E5%8D%8A%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95/img/image.png">&lt;/p>
+&lt;h3 id="问题原因">问题原因&lt;/h3>
+&lt;p>在 CPU 管理工具，例如 Ryzen Master 中，开启了同步多线程 (SMT) 功能，导致 Windows 任务管理器中显示的线程数只有实际的一半。
+&lt;img alt="Ryzen Master" loading="lazy" src="https://tnzzz.top/posts/%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95/cpu-%E7%BA%BF%E7%A8%8B%E6%95%B0%E5%8F%AA%E6%9C%89%E5%AE%9E%E9%99%85%E7%9A%84%E4%B8%80%E5%8D%8A%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95/img/image-1.png">&lt;/p>
+&lt;h3 id="解决方法">解决方法&lt;/h3>
+&lt;p>关闭 CPU 管理工具中的同步多线程 (SMT) 功能，重启计算机后，Windows 任务管理器中显示的线程数应该恢复正常。&lt;/p>
+&lt;p>&lt;strong>你需要关闭 SMT 吗？&lt;/strong>
+这应该是一个经常被讨论的问题了，我个人的建议是，对于一般消费者，除非你追求极致的单核表现，不然没必要关闭 SMT，多数时候打开 SMT 并不会带来负面的影响。&lt;/p>
+&lt;p>现代的操作系统在调度上都考虑到了 SMT 的特性，比如你有 8 个核心 16 线程，那么在多任务要求不是很大的情况下，操作系统会尽量避免让一个核心同时执行两个线程。那么那些单核倒退、资源冲突的情况就基本不会发生了。而当多任务要求很高的时候，操作系统让一个核心跑多个线程，这时候虽然可能会发生冲突导致效率反向降低，但是更多的时候是增加效率，所以从期望上来说，是没必要的。&lt;/p>
+&lt;p>如果追求极致性能且自己确切不需要那么多多线程性能，自然可以关掉。反正也用不到那么多线程，享受不到 SMT 的好处，还不如索性关了，杜绝一切可能的开销，也更容易超频了。所以其实核心越多的，越适合关闭 SMT，至于还在用 4 核心之类的就别关了。&lt;/p>
+&lt;h3 id="参考链接">参考链接&lt;/h3>
+&lt;p>&lt;a href="https://zh.wikipedia.org/wiki/%E5%90%8C%E6%97%B6%E5%A4%9A%E7%BA%BF%E7%A8%8B">Wikipedia 同步多线程&lt;/a>&lt;/p>
+&lt;p>&lt;a href="https://www.zhihu.com/tardis/zm/art/352676442?source_id=1003">知乎 说一说超线程/同步多线程（HT/SMT）技术那些事儿&lt;/a>&lt;/p></description></item><item><title>Windows更换CPU后PIN无法修改或无法删除问题解决方法</title><link>https://tnzzz.top/posts/%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95/windows%E6%9B%B4%E6%8D%A2cpu%E5%90%8Epin%E6%97%A0%E6%B3%95%E4%BF%AE%E6%94%B9%E6%88%96%E6%97%A0%E6%B3%95%E5%88%A0%E9%99%A4%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95/</link><pubDate>Tue, 08 Apr 2025 23:19:40 +0800</pubDate><guid>https://tnzzz.top/posts/%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95/windows%E6%9B%B4%E6%8D%A2cpu%E5%90%8Epin%E6%97%A0%E6%B3%95%E4%BF%AE%E6%94%B9%E6%88%96%E6%97%A0%E6%B3%95%E5%88%A0%E9%99%A4%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95/</guid><description>&lt;h3 id="问题描述">问题描述&lt;/h3>
+&lt;p>更换 CPU 后，Windows 系统提示无法使用 PIN 登录，但 PIN 可以正常修改，但修改后锁屏界面仍然无法使用 PIN 登录
+并且在设置中删除 PIN 选项变为灰色。&lt;/p>
+&lt;h3 id="参考链接">参考链接&lt;/h3>
+&lt;p>&lt;a href="https://learn.microsoft.com/en-us/answers/questions/1466604/how-do-i-remove-pin-(windows-hello)-option-if-it-i">How do I remove PIN (Windows Hello) option if it is greyed out?&lt;/a>
+&lt;img alt="NoAlt" loading="lazy" src="https://tnzzz.top/posts/%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95/windows%E6%9B%B4%E6%8D%A2cpu%E5%90%8Epin%E6%97%A0%E6%B3%95%E4%BF%AE%E6%94%B9%E6%88%96%E6%97%A0%E6%B3%95%E5%88%A0%E9%99%A4%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95/img/image.png">&lt;/p>
+&lt;h3 id="解决方法">解决方法&lt;/h3>
+&lt;ol>
+&lt;li>
+&lt;p>启动 cmd，输入以下命令：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>certutil.exe -DeleteHelloContainer
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;li>
+&lt;p>注销重新登录，PIN 选项现在应该被正常删除了。&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;h3 id="总结">总结&lt;/h3>
+&lt;p>中文互联网确实被狗屎 CSDN、知乎等网站污染了，搜索同样的关键字，结果一整页都是重复的方法，下次遇到问题还是得先用英文搜索。CSDN、百度这种垃圾公司什么时候死？&lt;/p></description></item></channel></rss>

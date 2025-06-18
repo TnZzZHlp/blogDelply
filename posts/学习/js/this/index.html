@@ -1,0 +1,251 @@
+<!doctype html><html lang=en dir=auto><head><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=robots content="index, follow"><title>JavaScript 中的 this 指向 | 明天吃什么？</title><meta name=keywords content="JavaScript,this"><meta name=description content='this 的值是运行时计算出来的
+let user = { name: "John" };
+let admin = { name: "Admin" };
+
+function sayHi() {
+  alert( this.name );
+}
+
+// 在两个对象中使用相同的函数
+user.f = sayHi;
+admin.f = sayHi;
+
+// 这两个调用有不同的 this 值
+// 函数内部的 "this" 是“点符号前面”的那个对象
+user.f(); // John（this == user）
+admin.f(); // Admin（this == admin）
+
+admin[&#39;f&#39;](); // Admin（使用点符号或方括号语法来访问这个方法，都没有关系。）
+没有对象的情况下
+
+在严格模式下，函数中的 this 是 undefined。
+在非严格模式下，this 是全局对象（浏览器中是 window 对象）。
+
+function showThis() {
+  console.log(this);
+}
+
+showThis(); // 在非严格模式下，this指向全局对象
+箭头函数没有自己的this
+let user = {
+  firstName: "Ilya",
+  sayHi() {
+    let arrow = () => console.log(this.firstName);
+    arrow();
+  }
+};
+user.sayHi(); // Ilya
+调用函数时指定this
+function say(phrase) {
+  alert(this.name + &#39;: &#39; + phrase);
+}
+let user = { name: "John" };
+let admin = { name: "Admin" };
+say.call(user, "Hello"); // John: Hello
+say.call(admin, "Hello"); // Admin: Hello
+say.apply(user, ["Hello"]); // John: Hello
+say.apply(admin, ["Hello"]); // Admin: Hello
+say.bind(user, "Hello")(); // John: Hello
+say.bind(admin, "Hello")(); // Admin: Hello
+例子
+在对象字面量中使用 &ldquo;this&rdquo;
+function makeUser() {
+  return {
+    name: "John",
+    ref: this
+  };
+}
+
+let user = makeUser();
+
+alert( user.ref.name ); // 结果是什么？
+
+因为在调用 makeUser 函数时，不是通过对象调用的，所以 this 是 undefined。因此，user.ref 是 undefined，访问 user.ref.name 会导致错误。'><meta name=author content><link rel=canonical href=https://tnzzz.top/posts/%E5%AD%A6%E4%B9%A0/js/this/><link crossorigin=anonymous href=/assets/css/stylesheet.93f625d739f1d6a5c6f20c146bc6a8d26b233492b34b2220c54b12fd46a04ded.css integrity="sha256-k/Yl1znx1qXG8gwUa8ao0msjNJKzSyIgxUsS/UagTe0=" rel="preload stylesheet" as=style><link rel=icon href=https://tnzzz.top/favicon.ico><link rel=icon type=image/png sizes=16x16 href=https://tnzzz.top/favicon-16x16.png><link rel=icon type=image/png sizes=32x32 href=https://tnzzz.top/favicon-32x32.png><link rel=apple-touch-icon href=https://tnzzz.top/apple-touch-icon.png><link rel=mask-icon href=https://tnzzz.top/safari-pinned-tab.svg><meta name=theme-color content="#2e2e33"><meta name=msapplication-TileColor content="#2e2e33"><link rel=alternate hreflang=en href=https://tnzzz.top/posts/%E5%AD%A6%E4%B9%A0/js/this/><noscript><style>#theme-toggle,.top-link{display:none}</style><style>@media(prefers-color-scheme:dark){:root{--theme:rgb(29, 30, 32);--entry:rgb(46, 46, 51);--primary:rgb(218, 218, 219);--secondary:rgb(155, 156, 157);--tertiary:rgb(65, 66, 68);--content:rgb(196, 196, 197);--code-block-bg:rgb(46, 46, 51);--code-bg:rgb(55, 56, 62);--border:rgb(51, 51, 51)}.list{background:var(--theme)}.list:not(.dark)::-webkit-scrollbar-track{background:0 0}.list:not(.dark)::-webkit-scrollbar-thumb{border-color:var(--theme)}}</style></noscript><meta property="og:url" content="https://tnzzz.top/posts/%E5%AD%A6%E4%B9%A0/js/this/"><meta property="og:site_name" content="明天吃什么？"><meta property="og:title" content="JavaScript 中的 this 指向"><meta property="og:description" content='this 的值是运行时计算出来的 let user = { name: "John" }; let admin = { name: "Admin" }; function sayHi() { alert( this.name ); } // 在两个对象中使用相同的函数 user.f = sayHi; admin.f = sayHi; // 这两个调用有不同的 this 值 // 函数内部的 "this" 是“点符号前面”的那个对象 user.f(); // John（this == user） admin.f(); // Admin（this == admin） admin[&#39;f&#39;](); // Admin（使用点符号或方括号语法来访问这个方法，都没有关系。） 没有对象的情况下 在严格模式下，函数中的 this 是 undefined。 在非严格模式下，this 是全局对象（浏览器中是 window 对象）。 function showThis() { console.log(this); } showThis(); // 在非严格模式下，this指向全局对象 箭头函数没有自己的this let user = { firstName: "Ilya", sayHi() { let arrow = () => console.log(this.firstName); arrow(); } }; user.sayHi(); // Ilya 调用函数时指定this function say(phrase) { alert(this.name + &#39;: &#39; + phrase); } let user = { name: "John" }; let admin = { name: "Admin" }; say.call(user, "Hello"); // John: Hello say.call(admin, "Hello"); // Admin: Hello say.apply(user, ["Hello"]); // John: Hello say.apply(admin, ["Hello"]); // Admin: Hello say.bind(user, "Hello")(); // John: Hello say.bind(admin, "Hello")(); // Admin: Hello 例子 在对象字面量中使用 “this” function makeUser() { return { name: "John", ref: this }; } let user = makeUser(); alert( user.ref.name ); // 结果是什么？ 因为在调用 makeUser 函数时，不是通过对象调用的，所以 this 是 undefined。因此，user.ref 是 undefined，访问 user.ref.name 会导致错误。'><meta property="og:locale" content="zh-cn"><meta property="og:type" content="article"><meta property="article:section" content="posts"><meta property="article:published_time" content="2025-06-17T00:00:00+00:00"><meta property="article:modified_time" content="2025-06-17T00:00:00+00:00"><meta name=twitter:card content="summary"><meta name=twitter:title content="JavaScript 中的 this 指向"><meta name=twitter:description content='this 的值是运行时计算出来的
+let user = { name: "John" };
+let admin = { name: "Admin" };
+
+function sayHi() {
+  alert( this.name );
+}
+
+// 在两个对象中使用相同的函数
+user.f = sayHi;
+admin.f = sayHi;
+
+// 这两个调用有不同的 this 值
+// 函数内部的 "this" 是“点符号前面”的那个对象
+user.f(); // John（this == user）
+admin.f(); // Admin（this == admin）
+
+admin[&#39;f&#39;](); // Admin（使用点符号或方括号语法来访问这个方法，都没有关系。）
+没有对象的情况下
+
+在严格模式下，函数中的 this 是 undefined。
+在非严格模式下，this 是全局对象（浏览器中是 window 对象）。
+
+function showThis() {
+  console.log(this);
+}
+
+showThis(); // 在非严格模式下，this指向全局对象
+箭头函数没有自己的this
+let user = {
+  firstName: "Ilya",
+  sayHi() {
+    let arrow = () => console.log(this.firstName);
+    arrow();
+  }
+};
+user.sayHi(); // Ilya
+调用函数时指定this
+function say(phrase) {
+  alert(this.name + &#39;: &#39; + phrase);
+}
+let user = { name: "John" };
+let admin = { name: "Admin" };
+say.call(user, "Hello"); // John: Hello
+say.call(admin, "Hello"); // Admin: Hello
+say.apply(user, ["Hello"]); // John: Hello
+say.apply(admin, ["Hello"]); // Admin: Hello
+say.bind(user, "Hello")(); // John: Hello
+say.bind(admin, "Hello")(); // Admin: Hello
+例子
+在对象字面量中使用 &ldquo;this&rdquo;
+function makeUser() {
+  return {
+    name: "John",
+    ref: this
+  };
+}
+
+let user = makeUser();
+
+alert( user.ref.name ); // 结果是什么？
+
+因为在调用 makeUser 函数时，不是通过对象调用的，所以 this 是 undefined。因此，user.ref 是 undefined，访问 user.ref.name 会导致错误。'><script type=application/ld+json>{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Posts","item":"https://tnzzz.top/posts/"},{"@type":"ListItem","position":2,"name":"JavaScript 中的 this 指向","item":"https://tnzzz.top/posts/%E5%AD%A6%E4%B9%A0/js/this/"}]}</script><script type=application/ld+json>{"@context":"https://schema.org","@type":"BlogPosting","headline":"JavaScript 中的 this 指向","name":"JavaScript 中的 this 指向","description":"this 的值是运行时计算出来的 let user = { name: \u0026#34;John\u0026#34; }; let admin = { name: \u0026#34;Admin\u0026#34; }; function sayHi() { alert( this.name ); } // 在两个对象中使用相同的函数 user.f = sayHi; admin.f = sayHi; // 这两个调用有不同的 this 值 // 函数内部的 \u0026#34;this\u0026#34; 是“点符号前面”的那个对象 user.f(); // John（this == user） admin.f(); // Admin（this == admin） admin[\u0026#39;f\u0026#39;](); // Admin（使用点符号或方括号语法来访问这个方法，都没有关系。） 没有对象的情况下 在严格模式下，函数中的 this 是 undefined。 在非严格模式下，this 是全局对象（浏览器中是 window 对象）。 function showThis() { console.log(this); } showThis(); // 在非严格模式下，this指向全局对象 箭头函数没有自己的this let user = { firstName: \u0026#34;Ilya\u0026#34;, sayHi() { let arrow = () =\u0026gt; console.log(this.firstName); arrow(); } }; user.sayHi(); // Ilya 调用函数时指定this function say(phrase) { alert(this.name + \u0026#39;: \u0026#39; + phrase); } let user = { name: \u0026#34;John\u0026#34; }; let admin = { name: \u0026#34;Admin\u0026#34; }; say.call(user, \u0026#34;Hello\u0026#34;); // John: Hello say.call(admin, \u0026#34;Hello\u0026#34;); // Admin: Hello say.apply(user, [\u0026#34;Hello\u0026#34;]); // John: Hello say.apply(admin, [\u0026#34;Hello\u0026#34;]); // Admin: Hello say.bind(user, \u0026#34;Hello\u0026#34;)(); // John: Hello say.bind(admin, \u0026#34;Hello\u0026#34;)(); // Admin: Hello 例子 在对象字面量中使用 \u0026ldquo;this\u0026rdquo; function makeUser() { return { name: \u0026#34;John\u0026#34;, ref: this }; } let user = makeUser(); alert( user.ref.name ); // 结果是什么？ 因为在调用 makeUser 函数时，不是通过对象调用的，所以 this 是 undefined。因此，user.ref 是 undefined，访问 user.ref.name 会导致错误。\n","keywords":["JavaScript","this"],"articleBody":"this 的值是运行时计算出来的 let user = { name: \"John\" }; let admin = { name: \"Admin\" }; function sayHi() { alert( this.name ); } // 在两个对象中使用相同的函数 user.f = sayHi; admin.f = sayHi; // 这两个调用有不同的 this 值 // 函数内部的 \"this\" 是“点符号前面”的那个对象 user.f(); // John（this == user） admin.f(); // Admin（this == admin） admin['f'](); // Admin（使用点符号或方括号语法来访问这个方法，都没有关系。） 没有对象的情况下 在严格模式下，函数中的 this 是 undefined。 在非严格模式下，this 是全局对象（浏览器中是 window 对象）。 function showThis() { console.log(this); } showThis(); // 在非严格模式下，this指向全局对象 箭头函数没有自己的this let user = { firstName: \"Ilya\", sayHi() { let arrow = () =\u003e console.log(this.firstName); arrow(); } }; user.sayHi(); // Ilya 调用函数时指定this function say(phrase) { alert(this.name + ': ' + phrase); } let user = { name: \"John\" }; let admin = { name: \"Admin\" }; say.call(user, \"Hello\"); // John: Hello say.call(admin, \"Hello\"); // Admin: Hello say.apply(user, [\"Hello\"]); // John: Hello say.apply(admin, [\"Hello\"]); // Admin: Hello say.bind(user, \"Hello\")(); // John: Hello say.bind(admin, \"Hello\")(); // Admin: Hello 例子 在对象字面量中使用 “this” function makeUser() { return { name: \"John\", ref: this }; } let user = makeUser(); alert( user.ref.name ); // 结果是什么？ 因为在调用 makeUser 函数时，不是通过对象调用的，所以 this 是 undefined。因此，user.ref 是 undefined，访问 user.ref.name 会导致错误。\n反例:\nfunction makeUser() { return { name: \"John\", ref() { return this; } }; } let user = makeUser(); alert( user.ref().name ); // John 这里正常的原因是 ref 是一个方法，通过 user.ref() 调用时，this才被确定下来。\n创建一个计算器 创建一个有三个方法的 calculator 对象：\nread() 提示输入两个值，并将其保存为对象属性，属性名分别为 a 和 b。 sum() 返回保存的值的和。 mul() 将保存的值相乘并返回计算结果。 let calculator = { // ……你的代码…… }; calculator.read(); alert( calculator.sum() ); alert( calculator.mul() ); let calculator = { read(a,b){ this.a = +prompt(); this.b = +prompt(); }, sum(){ return this.a + this.b }, mul(){ return this.a * this.b } }; calculator.read(); alert( calculator.sum() ); alert( calculator.mul() ); 链式（调用） 有一个可以上下移动的 ladder 对象：\nlet ladder = { step: 0, up() { this.step++; }, down() { this.step--; }, showStep: function() { // 显示当前的 step alert( this.step ); } }; 现在，如果我们要按顺序执行几次调用，可以这样做：\nladder.up(); ladder.up(); ladder.down(); ladder.showStep(); // 1 ladder.down(); ladder.showStep(); // 0 let ladder = { step: 0, up() { this.step++; return this; }, down() { this.step--; return this; }, showStep: function() { // 显示当前的 step alert( this.step ); return this } }; ","wordCount":"337","inLanguage":"en","datePublished":"2025-06-17T00:00:00Z","dateModified":"2025-06-17T00:00:00Z","mainEntityOfPage":{"@type":"WebPage","@id":"https://tnzzz.top/posts/%E5%AD%A6%E4%B9%A0/js/this/"},"publisher":{"@type":"Organization","name":"明天吃什么？","logo":{"@type":"ImageObject","url":"https://tnzzz.top/favicon.ico"}}}</script></head><body id=top><script defer src=https://static.cloudflareinsights.com/beacon.min.js data-cf-beacon='{"token": "ccaaab867b5e4fe590baed8e233a2d10"}'></script><script>localStorage.getItem("pref-theme")==="dark"?document.body.classList.add("dark"):localStorage.getItem("pref-theme")==="light"?document.body.classList.remove("dark"):window.matchMedia("(prefers-color-scheme: dark)").matches&&document.body.classList.add("dark")</script><header class=header><nav class=nav><div class=logo><a href=https://tnzzz.top/ accesskey=h title="明天吃什么？ (Alt + H)">明天吃什么？</a><div class=logo-switches><button id=theme-toggle accesskey=t title="(Alt + T)" aria-label="Toggle theme">
+<svg id="moon" width="24" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+<svg id="sun" width="24" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></button></div></div><ul id=menu><li><a href=https://tnzzz.top/categories/ title=分类><span>分类</span></a></li></ul></nav></header><main class=main><article class=post-single><header class=post-header><h1 class="post-title entry-hint-parent">JavaScript 中的 this 指向</h1><div class=post-meta><span title='2025-06-17 00:00:00 +0000 UTC'>June 17, 2025</span></div></header><div class=post-content><h3 id=this-的值是运行时计算出来的>this 的值是运行时计算出来的<a hidden class=anchor aria-hidden=true href=#this-的值是运行时计算出来的>#</a></h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-javascript data-lang=javascript><span style=display:flex><span><span style=color:#66d9ef>let</span> <span style=color:#a6e22e>user</span> <span style=color:#f92672>=</span> { <span style=color:#a6e22e>name</span><span style=color:#f92672>:</span> <span style=color:#e6db74>&#34;John&#34;</span> };
+</span></span><span style=display:flex><span><span style=color:#66d9ef>let</span> <span style=color:#a6e22e>admin</span> <span style=color:#f92672>=</span> { <span style=color:#a6e22e>name</span><span style=color:#f92672>:</span> <span style=color:#e6db74>&#34;Admin&#34;</span> };
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>function</span> <span style=color:#a6e22e>sayHi</span>() {
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>alert</span>( <span style=color:#66d9ef>this</span>.<span style=color:#a6e22e>name</span> );
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// 在两个对象中使用相同的函数
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#a6e22e>user</span>.<span style=color:#a6e22e>f</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>sayHi</span>;
+</span></span><span style=display:flex><span><span style=color:#a6e22e>admin</span>.<span style=color:#a6e22e>f</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>sayHi</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// 这两个调用有不同的 this 值
+</span></span></span><span style=display:flex><span><span style=color:#75715e>// 函数内部的 &#34;this&#34; 是“点符号前面”的那个对象
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#a6e22e>user</span>.<span style=color:#a6e22e>f</span>(); <span style=color:#75715e>// John（this == user）
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#a6e22e>admin</span>.<span style=color:#a6e22e>f</span>(); <span style=color:#75715e>// Admin（this == admin）
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>admin</span>[<span style=color:#e6db74>&#39;f&#39;</span>](); <span style=color:#75715e>// Admin（使用点符号或方括号语法来访问这个方法，都没有关系。）
+</span></span></span></code></pre></div><h3 id=没有对象的情况下>没有对象的情况下<a hidden class=anchor aria-hidden=true href=#没有对象的情况下>#</a></h3><ul><li>在严格模式下，函数中的 this 是 undefined。</li><li>在非严格模式下，this 是全局对象（浏览器中是 window 对象）。</li></ul><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-javascript data-lang=javascript><span style=display:flex><span><span style=color:#66d9ef>function</span> <span style=color:#a6e22e>showThis</span>() {
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>console</span>.<span style=color:#a6e22e>log</span>(<span style=color:#66d9ef>this</span>);
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>showThis</span>(); <span style=color:#75715e>// 在非严格模式下，this指向全局对象
+</span></span></span></code></pre></div><h3 id=箭头函数没有自己的this>箭头函数没有自己的this<a hidden class=anchor aria-hidden=true href=#箭头函数没有自己的this>#</a></h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-javascript data-lang=javascript><span style=display:flex><span><span style=color:#66d9ef>let</span> <span style=color:#a6e22e>user</span> <span style=color:#f92672>=</span> {
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>firstName</span><span style=color:#f92672>:</span> <span style=color:#e6db74>&#34;Ilya&#34;</span>,
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>sayHi</span>() {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>let</span> <span style=color:#a6e22e>arrow</span> <span style=color:#f92672>=</span> () =&gt; <span style=color:#a6e22e>console</span>.<span style=color:#a6e22e>log</span>(<span style=color:#66d9ef>this</span>.<span style=color:#a6e22e>firstName</span>);
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>arrow</span>();
+</span></span><span style=display:flex><span>  }
+</span></span><span style=display:flex><span>};
+</span></span><span style=display:flex><span><span style=color:#a6e22e>user</span>.<span style=color:#a6e22e>sayHi</span>(); <span style=color:#75715e>// Ilya
+</span></span></span></code></pre></div><h3 id=调用函数时指定this>调用函数时指定this<a hidden class=anchor aria-hidden=true href=#调用函数时指定this>#</a></h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-javascript data-lang=javascript><span style=display:flex><span><span style=color:#66d9ef>function</span> <span style=color:#a6e22e>say</span>(<span style=color:#a6e22e>phrase</span>) {
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>alert</span>(<span style=color:#66d9ef>this</span>.<span style=color:#a6e22e>name</span> <span style=color:#f92672>+</span> <span style=color:#e6db74>&#39;: &#39;</span> <span style=color:#f92672>+</span> <span style=color:#a6e22e>phrase</span>);
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span><span style=color:#66d9ef>let</span> <span style=color:#a6e22e>user</span> <span style=color:#f92672>=</span> { <span style=color:#a6e22e>name</span><span style=color:#f92672>:</span> <span style=color:#e6db74>&#34;John&#34;</span> };
+</span></span><span style=display:flex><span><span style=color:#66d9ef>let</span> <span style=color:#a6e22e>admin</span> <span style=color:#f92672>=</span> { <span style=color:#a6e22e>name</span><span style=color:#f92672>:</span> <span style=color:#e6db74>&#34;Admin&#34;</span> };
+</span></span><span style=display:flex><span><span style=color:#a6e22e>say</span>.<span style=color:#a6e22e>call</span>(<span style=color:#a6e22e>user</span>, <span style=color:#e6db74>&#34;Hello&#34;</span>); <span style=color:#75715e>// John: Hello
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#a6e22e>say</span>.<span style=color:#a6e22e>call</span>(<span style=color:#a6e22e>admin</span>, <span style=color:#e6db74>&#34;Hello&#34;</span>); <span style=color:#75715e>// Admin: Hello
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#a6e22e>say</span>.<span style=color:#a6e22e>apply</span>(<span style=color:#a6e22e>user</span>, [<span style=color:#e6db74>&#34;Hello&#34;</span>]); <span style=color:#75715e>// John: Hello
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#a6e22e>say</span>.<span style=color:#a6e22e>apply</span>(<span style=color:#a6e22e>admin</span>, [<span style=color:#e6db74>&#34;Hello&#34;</span>]); <span style=color:#75715e>// Admin: Hello
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#a6e22e>say</span>.<span style=color:#a6e22e>bind</span>(<span style=color:#a6e22e>user</span>, <span style=color:#e6db74>&#34;Hello&#34;</span>)(); <span style=color:#75715e>// John: Hello
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#a6e22e>say</span>.<span style=color:#a6e22e>bind</span>(<span style=color:#a6e22e>admin</span>, <span style=color:#e6db74>&#34;Hello&#34;</span>)(); <span style=color:#75715e>// Admin: Hello
+</span></span></span></code></pre></div><h3 id=例子>例子<a hidden class=anchor aria-hidden=true href=#例子>#</a></h3><h4 id=在对象字面量中使用-this>在对象字面量中使用 &ldquo;this&rdquo;<a hidden class=anchor aria-hidden=true href=#在对象字面量中使用-this>#</a></h4><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-javascript data-lang=javascript><span style=display:flex><span><span style=color:#66d9ef>function</span> <span style=color:#a6e22e>makeUser</span>() {
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>return</span> {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>name</span><span style=color:#f92672>:</span> <span style=color:#e6db74>&#34;John&#34;</span>,
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>ref</span><span style=color:#f92672>:</span> <span style=color:#66d9ef>this</span>
+</span></span><span style=display:flex><span>  };
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>let</span> <span style=color:#a6e22e>user</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>makeUser</span>();
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>alert</span>( <span style=color:#a6e22e>user</span>.<span style=color:#a6e22e>ref</span>.<span style=color:#a6e22e>name</span> ); <span style=color:#75715e>// 结果是什么？
+</span></span></span></code></pre></div><p>因为在调用 <code>makeUser</code> 函数时，不是通过对象调用的，所以 <code>this</code> 是 <code>undefined</code>。因此，<code>user.ref</code> 是 <code>undefined</code>，访问 <code>user.ref.name</code> 会导致错误。</p><p>反例:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-javascript data-lang=javascript><span style=display:flex><span><span style=color:#66d9ef>function</span> <span style=color:#a6e22e>makeUser</span>() {
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>return</span> {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>name</span><span style=color:#f92672>:</span> <span style=color:#e6db74>&#34;John&#34;</span>,
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>ref</span>() {
+</span></span><span style=display:flex><span>      <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>this</span>;
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>  };
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>let</span> <span style=color:#a6e22e>user</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>makeUser</span>();
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>alert</span>( <span style=color:#a6e22e>user</span>.<span style=color:#a6e22e>ref</span>().<span style=color:#a6e22e>name</span> ); <span style=color:#75715e>// John
+</span></span></span></code></pre></div><p>这里正常的原因是 <code>ref</code> 是一个方法，通过 <code>user.ref()</code> 调用时，this才被确定下来。</p><h4 id=创建一个计算器>创建一个计算器<a hidden class=anchor aria-hidden=true href=#创建一个计算器>#</a></h4><p>创建一个有三个方法的 <code>calculator</code> 对象：</p><ul><li><code>read()</code> 提示输入两个值，并将其保存为对象属性，属性名分别为 a 和 b。</li><li><code>sum()</code> 返回保存的值的和。</li><li><code>mul()</code> 将保存的值相乘并返回计算结果。</li></ul><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-javascript data-lang=javascript><span style=display:flex><span><span style=color:#66d9ef>let</span> <span style=color:#a6e22e>calculator</span> <span style=color:#f92672>=</span> {
+</span></span><span style=display:flex><span>  <span style=color:#75715e>// ……你的代码……
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>};
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>calculator</span>.<span style=color:#a6e22e>read</span>();
+</span></span><span style=display:flex><span><span style=color:#a6e22e>alert</span>( <span style=color:#a6e22e>calculator</span>.<span style=color:#a6e22e>sum</span>() );
+</span></span><span style=display:flex><span><span style=color:#a6e22e>alert</span>( <span style=color:#a6e22e>calculator</span>.<span style=color:#a6e22e>mul</span>() );
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-javascript data-lang=javascript><span style=display:flex><span><span style=color:#66d9ef>let</span> <span style=color:#a6e22e>calculator</span> <span style=color:#f92672>=</span> {
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>read</span>(<span style=color:#a6e22e>a</span>,<span style=color:#a6e22e>b</span>){
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>this</span>.<span style=color:#a6e22e>a</span> <span style=color:#f92672>=</span> <span style=color:#f92672>+</span><span style=color:#a6e22e>prompt</span>();
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>this</span>.<span style=color:#a6e22e>b</span> <span style=color:#f92672>=</span> <span style=color:#f92672>+</span><span style=color:#a6e22e>prompt</span>();
+</span></span><span style=display:flex><span>  },
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>sum</span>(){
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>this</span>.<span style=color:#a6e22e>a</span> <span style=color:#f92672>+</span> <span style=color:#66d9ef>this</span>.<span style=color:#a6e22e>b</span>
+</span></span><span style=display:flex><span>  },
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>mul</span>(){
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>this</span>.<span style=color:#a6e22e>a</span> <span style=color:#f92672>*</span> <span style=color:#66d9ef>this</span>.<span style=color:#a6e22e>b</span>
+</span></span><span style=display:flex><span>  }
+</span></span><span style=display:flex><span>};
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>calculator</span>.<span style=color:#a6e22e>read</span>();
+</span></span><span style=display:flex><span><span style=color:#a6e22e>alert</span>( <span style=color:#a6e22e>calculator</span>.<span style=color:#a6e22e>sum</span>() );
+</span></span><span style=display:flex><span><span style=color:#a6e22e>alert</span>( <span style=color:#a6e22e>calculator</span>.<span style=color:#a6e22e>mul</span>() );
+</span></span></code></pre></div><h4 id=链式调用>链式（调用）<a hidden class=anchor aria-hidden=true href=#链式调用>#</a></h4><p>有一个可以上下移动的 <code>ladder</code> 对象：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-javascript data-lang=javascript><span style=display:flex><span><span style=color:#66d9ef>let</span> <span style=color:#a6e22e>ladder</span> <span style=color:#f92672>=</span> {
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>step</span><span style=color:#f92672>:</span> <span style=color:#ae81ff>0</span>,
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>up</span>() {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>this</span>.<span style=color:#a6e22e>step</span><span style=color:#f92672>++</span>;
+</span></span><span style=display:flex><span>  },
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>down</span>() {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>this</span>.<span style=color:#a6e22e>step</span><span style=color:#f92672>--</span>;
+</span></span><span style=display:flex><span>  },
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>showStep</span><span style=color:#f92672>:</span> <span style=color:#66d9ef>function</span>() { <span style=color:#75715e>// 显示当前的 step
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#a6e22e>alert</span>( <span style=color:#66d9ef>this</span>.<span style=color:#a6e22e>step</span> );
+</span></span><span style=display:flex><span>  }
+</span></span><span style=display:flex><span>};
+</span></span></code></pre></div><p>现在，如果我们要按顺序执行几次调用，可以这样做：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-javascript data-lang=javascript><span style=display:flex><span><span style=color:#a6e22e>ladder</span>.<span style=color:#a6e22e>up</span>();
+</span></span><span style=display:flex><span><span style=color:#a6e22e>ladder</span>.<span style=color:#a6e22e>up</span>();
+</span></span><span style=display:flex><span><span style=color:#a6e22e>ladder</span>.<span style=color:#a6e22e>down</span>();
+</span></span><span style=display:flex><span><span style=color:#a6e22e>ladder</span>.<span style=color:#a6e22e>showStep</span>(); <span style=color:#75715e>// 1
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#a6e22e>ladder</span>.<span style=color:#a6e22e>down</span>();
+</span></span><span style=display:flex><span><span style=color:#a6e22e>ladder</span>.<span style=color:#a6e22e>showStep</span>(); <span style=color:#75715e>// 0
+</span></span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-javascript data-lang=javascript><span style=display:flex><span><span style=color:#66d9ef>let</span> <span style=color:#a6e22e>ladder</span> <span style=color:#f92672>=</span> {
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>step</span><span style=color:#f92672>:</span> <span style=color:#ae81ff>0</span>,
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>up</span>() {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>this</span>.<span style=color:#a6e22e>step</span><span style=color:#f92672>++</span>;
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>this</span>;
+</span></span><span style=display:flex><span>  },
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>down</span>() {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>this</span>.<span style=color:#a6e22e>step</span><span style=color:#f92672>--</span>;
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>this</span>;
+</span></span><span style=display:flex><span>  },
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>showStep</span><span style=color:#f92672>:</span> <span style=color:#66d9ef>function</span>() { <span style=color:#75715e>// 显示当前的 step
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#a6e22e>alert</span>( <span style=color:#66d9ef>this</span>.<span style=color:#a6e22e>step</span> );
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>this</span>
+</span></span><span style=display:flex><span>  }
+</span></span><span style=display:flex><span>};
+</span></span></code></pre></div></div><footer class=post-footer><ul class=post-tags></ul></footer></article></main><footer class=footer><span>&copy; 2025 <a href=https://tnzzz.top/>明天吃什么？</a></span> ·
+<span>Powered by
+<a href=https://gohugo.io/ rel="noopener noreferrer" target=_blank>Hugo</a> &
+<a href=https://github.com/adityatelange/hugo-PaperMod/ rel=noopener target=_blank>PaperMod</a> &
+<a href=https://beian.miit.gov.cn/#/Integrated/index>粤ICP备2022076439号</a></span></footer><a href=#top aria-label="go to top" title="Go to Top (Alt + G)" class=top-link id=top-link accesskey=g><svg viewBox="0 0 12 6" fill="currentColor"><path d="M12 6H0l6-6z"/></svg>
+</a><script>let menu=document.getElementById("menu");menu&&(menu.scrollLeft=localStorage.getItem("menu-scroll-position"),menu.onscroll=function(){localStorage.setItem("menu-scroll-position",menu.scrollLeft)}),document.querySelectorAll('a[href^="#"]').forEach(e=>{e.addEventListener("click",function(e){e.preventDefault();var t=this.getAttribute("href").substr(1);window.matchMedia("(prefers-reduced-motion: reduce)").matches?document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView():document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView({behavior:"smooth"}),t==="top"?history.replaceState(null,null," "):history.pushState(null,null,`#${t}`)})})</script><script>var mybutton=document.getElementById("top-link");window.onscroll=function(){document.body.scrollTop>800||document.documentElement.scrollTop>800?(mybutton.style.visibility="visible",mybutton.style.opacity="1"):(mybutton.style.visibility="hidden",mybutton.style.opacity="0")}</script><script>document.getElementById("theme-toggle").addEventListener("click",()=>{document.body.className.includes("dark")?(document.body.classList.remove("dark"),localStorage.setItem("pref-theme","light")):(document.body.classList.add("dark"),localStorage.setItem("pref-theme","dark"))})</script><script>document.querySelectorAll("pre > code").forEach(e=>{const n=e.parentNode.parentNode,t=document.createElement("button");t.classList.add("copy-code"),t.innerHTML="copy";function s(){t.innerHTML="copied!",setTimeout(()=>{t.innerHTML="copy"},2e3)}t.addEventListener("click",t=>{if("clipboard"in navigator){navigator.clipboard.writeText(e.textContent),s();return}const n=document.createRange();n.selectNodeContents(e);const o=window.getSelection();o.removeAllRanges(),o.addRange(n);try{document.execCommand("copy"),s()}catch{}o.removeRange(n)}),n.classList.contains("highlight")?n.appendChild(t):n.parentNode.firstChild==n||(e.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName=="TABLE"?e.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(t):e.parentNode.appendChild(t))})</script></body></html>

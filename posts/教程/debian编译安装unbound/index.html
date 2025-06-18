@@ -1,0 +1,1316 @@
+<!doctype html><html lang=en dir=auto><head><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=robots content="index, follow"><title>Debian 编译安装 unbound | 明天吃什么？</title><meta name=keywords content="Debian,unbound,编译安装"><meta name=description content='unbound 简介
+Unbound是一款验证型、递归式、带缓存的DNS解析器，旨在实现快速与轻量化，并融合了基于开放标准的现代特性。
+为增强在线隐私保护，Unbound支持DNS-over-TLS和DNS-over-HTTPS，使客户端能够加密通信。此外，它还支持多种现代标准，这些标准不仅减少了与权威服务器交换的数据量，提升了隐私性，还增强了DNS的健壮性。其中最为关键的技术包括查询名称最小化、积极利用DNSSEC验证缓存，以及对权威区域的支持，后者可用于加载根区域副本。
+Unbound兼容所有Linux和BSD发行版，以及macOS，大多数平台均有现成安装包。它已被纳入所有主要BSD操作系统的基础系统，以及大多数Linux发行版的标准软件库中，安装与配置简便易行，仅需几行配置即可为单机或网络设置解析器。
+作为遵循BSD许可证的自由开源软件，Unbound的产品开发路线图首要关注用户的安全与隐私。同时，所有功能均需依托成熟的开放标准。我们持续为所有用户优化Unbound的功能，这意味着我们不会为付费客户定制构建或提供专属功能。我们的优先级由用户反馈，特别是拥有支持合同的用户，以及更广泛的互联网社区所引导。在可能的情况下，赞助功能将获得更高优先级，并会逐案评估。
+Source
+安装必要的依赖
+sudo apt update
+sudo apt install -y build-essential libssl-dev bison flex libhiredis-dev libevent-dev libsystemd-dev pkg-config make dns-root-data
+下载并编译安装 unbound
+git clone https://github.com/NLnetLabs/unbound
+cd unbound
+./configure --prefix=/usr \
+ --sysconfdir=/etc \
+    --localstatedir=/var \
+    --runstatedir=/run \
+    --with-username=unbound \
+    --with-ssl \
+    --with-libevent \
+    --enable-systemd \
+    --enable-subnet \
+    --enable-tfo-client \
+    --enable-tfo-server \
+    --enable-cachedb \
+    --with-libhiredis \
+    --disable-rpath \
+    --with-pidfile=/run/unbound/unbound.pid \
+    --with-rootkey-file=/var/lib/unbound/root.key \
+    --with-libnghttp2 \
+    --with-libsodium \
+    --with-pthreads \
+    --with-chroot-dir=
+make && make install
+说明
+`configure&#39; 配置 unbound 1.23.1 以适应多种类型的系统。
+
+用法: ./configure [选项]... [变量=值]...
+
+要分配环境变量 (例如 CC, CFLAGS...), 请将它们指定为
+变量=值。有关一些有用变量的描述，请参见下文。
+
+选项的默认值在中括号内指定。
+
+配置:
+    -h, --help              显示此帮助信息并退出
+    --help=short            显示此软件包特有的选项
+    --help=recursive        显示所有包含的软件包的简短帮助信息
+    -V, --version           显示版本信息并退出
+    -q, --quiet, --silent   不打印 `checking ...&#39; 消息
+    --cache-file=FILE       将测试结果缓存在 FILE 中 [禁用]
+    -C, --config-cache      `--cache-file=config.cache&#39; 的别名
+    -n, --no-create         不创建输出文件
+    --srcdir=DIR            在 DIR 中查找源代码 [配置目录或 `..&#39;]
+
+安装目录:
+    --prefix=PREFIX         将与体系结构无关的文件安装在 PREFIX 中
+                                                    [/usr/local]
+    --exec-prefix=EPREFIX   将与体系结构相关的文件安装在 EPREFIX 中
+                                                    [PREFIX]
+
+默认情况下, `make install&#39; 会将所有文件安装在 `/usr/local/bin&#39;, `/usr/local/lib&#39; 等目录中。您可以使用 `--prefix` 指定一个不同于 `/usr/local&#39; 的安装前缀, 例如 `--prefix=$HOME&#39;。
+
+为了更好地控制，请使用以下选项。
+
+微调安装目录:
+    --bindir=DIR            用户可执行文件 [EPREFIX/bin]
+    --sbindir=DIR           系统管理员可执行文件 [EPREFIX/sbin]
+    --libexecdir=DIR        程序可执行文件 [EPREFIX/libexec]
+    --sysconfdir=DIR        只读的单机数据 [PREFIX/etc]
+    --sharedstatedir=DIR    可修改的与体系结构无关的数据 [PREFIX/com]
+    --localstatedir=DIR     可修改的单机数据 [PREFIX/var]
+    --runstatedir=DIR       可修改的每进程数据 [LOCALSTATEDIR/run]
+    --libdir=DIR            目标代码库 [EPREFIX/lib]
+    --includedir=DIR        C 头文件 [PREFIX/include]
+    --oldincludedir=DIR     非 gcc 的 C 头文件 [/usr/include]
+    --datarootdir=DIR       只读的与体系结构无关的数据根目录 [PREFIX/share]
+    --datadir=DIR           只读的与体系结构无关的数据 [DATAROOTDIR]
+    --infodir=DIR           info 文档 [DATAROOTDIR/info]
+    --localedir=DIR         区域设置相关的数据 [DATAROOTDIR/locale]
+    --mandir=DIR            man 文档 [DATAROOTDIR/man]
+    --docdir=DIR            文档根目录 [DATAROOTDIR/doc/unbound]
+    --htmldir=DIR           html 文档 [DOCDIR]
+    --dvidir=DIR            dvi 文档 [DOCDIR]
+    --pdfdir=DIR            pdf 文档 [DOCDIR]
+    --psdir=DIR             ps 文档 [DOCDIR]
+
+系统类型:
+    --build=BUILD     为在 BUILD 上构建进行配置 [猜测值]
+    --host=HOST       交叉编译以构建在 HOST 上运行的程序 [BUILD]
+
+可选特性:
+    --disable-option-checking  忽略无法识别的 --enable/--with 选项
+    --disable-FEATURE       不包含 FEATURE (等同于 --enable-FEATURE=no)
+    --enable-FEATURE[=ARG]  包含 FEATURE [ARG=yes]
+    --enable-checking       启用警告、断言、makefile 依赖关系
+    --enable-debug          等同于 enable-checking
+    --disable-flto          禁用链接时优化 (gcc 特定选项)
+    --enable-pie            启用位置无关可执行文件 (例如，为了充分
+                                                    利用 ASLR，会有少量性能损失)
+    --enable-relro-now      在加载时启用完全重定位绑定 (RELRO
+                                                    NOW, 以保护 GOT 和 .dtor 区域)
+    --enable-shared[=PKGS]  构建共享库 [默认=yes]
+    --enable-static[=PKGS]  构建静态库 [默认=yes]
+    --enable-fast-install[=PKGS]
+                                                    为快速安装进行优化 [默认=yes]
+    --disable-libtool-lock  避免锁定 (可能会破坏并行构建)
+    --disable-rpath         禁用硬编码的 rpath (默认=启用)
+    --disable-largefile     忽略对大文件的支持
+    --enable-systemd        编译时支持 systemd (需要 libsystemd,
+                                                    pkg-config)
+    --enable-alloc-checks   启用内存分配统计信息，用于调试
+    --enable-alloc-lite     启用轻量级分配断言，用于调试
+    --enable-alloc-nonregional 启用非区域分配，速度较慢但会将区域分配暴露给其他内存净化器，用于调试
+    --disable-swig-version-check 禁用 swig 版本检查，以使用较旧的 swig 构建 python 模块即使这样做不可靠
+    --disable-sha1          禁用 SHA1 RRSIG 支持，不会禁用 nsec3 支持
+    --disable-sha2          禁用 SHA256 和 SHA512 RRSIG 支持
+    --enable-subnet         启用客户端子网
+    --disable-gost          禁用 GOST 支持
+    --disable-ecdsa         禁用 ECDSA 支持
+    --disable-dsa           禁用 DSA 支持
+    --disable-ed25519       禁用 ED25519 支持
+    --disable-ed448         禁用 ED448 支持
+    --enable-event-api      启用 (实验性的) 可插拔事件基础
+                                                    libunbound API，安装到 unbound-event.h
+    --enable-tfo-client     为客户端模式启用 TCP Fast Open
+    --enable-tfo-server     为服务器模式启用 TCP Fast Open
+    --enable-static-exe     启用以针对未安装的 (事件) 库静态编译
+                                                    可执行文件，用于调试
+    --enable-fully-static   启用以完全静态编译
+    --enable-lock-checks    启用以检查锁定和解锁调用，用于调试
+    --enable-allsymbols     从 libunbound 导出所有符号并将二进制文件链接到它，安装尺寸更小但 libunbound 导出表会被内部符号污染
+    --enable-dnstap         启用 dnstap 支持 (需要 protobuf-c)
+    --enable-dnscrypt       启用 dnscrypt 支持 (需要 libsodium)
+    --enable-cachedb        启用 cachedb 模块，可以使用外部缓存存储
+    --enable-ipsecmod       启用 ipsecmod 模块，以促进机会性 IPsec
+    --enable-ipset          启用 ipset 模块
+    --disable-explicit-port-randomisation 禁用显式源端口随机化，并依赖 内核提供随机源端口
+    --enable-linux-ip-local-port-range 定义此项以启用 /proc/sys/net/ipv4/ip_local_port_range 作为默认传出端口范围。这仅适用于 Linux 上的 libunbound 并且不影响 unbound 解析守护进程本身。这可能会严重限制可用的传出端口数量，从而降低随机性。仅当目标系统限制 (例如某些启用 SELinux 的发行版) 使用非临时端口时才定义此项。
+
+可选软件包:
+    --with-PACKAGE[=ARG]    使用 PACKAGE [ARG=yes]
+    --without-PACKAGE       不使用 PACKAGE (等同于 --with-PACKAGE=no)
+    --with-conf-file=path   Unbound 配置文件的路径名
+    --with-run-dir=path     设置 chdir 到的默认目录 (默认为 cfg 文件所在的目录)
+    --with-chroot-dir=path  设置 chroot 到的默认目录 (默认为与 run-dir 相同)
+    --with-share-dir=path   设置共享数据的默认目录 (默认为 share/unbound)
+    --with-pidfile=filename 设置 unbound pid 文件的默认路径名 (默认 run-dir/unbound.pid)
+    --with-rootkey-file=filename 设置根密钥文件的默认路径名 (默认 run-dir/root.key)。此文件会被读取和写入。
+    --with-rootcert-file=filename 设置根更新证书文件的默认路径名(默认 run-dir/icannbundle.pem)。如果您对内置证书满意，则此文件不必存在。
+    --with-username=user    设置 unbound 更改到的默认用户 (默认用户是 unbound)
+    --with-pic[=PKGS]       尝试仅使用 PIC/非 PIC 对象 [默认=两者都使用]
+    --with-aix-soname=aix|svr4|both 在 AIX 上提供的共享库版本控制(又名 "SONAME")变体, [默认=aix]。
+    --with-gnu-ld           假设 C 编译器使用 GNU ld [默认=no]
+    --with-sysroot[=DIR]    在 DIR 中搜索依赖库 (如果未指定，则为编译器的 sysroot)。
+    --with-pthreads         使用 pthreads 库，或使用 --without-pthreads禁用线程支持。
+    --with-solaris-threads  使用 solaris 原生线程库。
+    --with-syslog-facility=LOCAL0 - LOCAL7 设置 SYSLOG_FACILITY, 默认 DAEMON
+    --with-dynlibmodule     构建动态库模块，或使用 --without-dynlibmodule 禁用它。(默认=no)
+    --with-pyunbound        构建 PyUnbound，或使用 --without-pyunbound 跳过它。 (默认=no)
+    --with-pythonmodule     构建 Python 模块，或使用 --without-pythonmodule 禁用脚本引擎。(默认=no)
+    --with-nss=path         使用 libnss 代替 openssl，安装在 path。
+    --with-nettle=path      使用 libnettle 作为加密库，安装在 path。
+    --with-ssl=pathname     启用 SSL (将检查 /usr/local/ssl /usr/lib/ssl /usr/ssl /usr/pkg /usr/local /opt/local /usr/sfw /usr 或指定类似 /usr/include/openssl11)
+    --with-libbsd           使用可移植的 libbsd 函数
+    --with-deprecate-rsa-1024 弃用 RSA 1024 位长度，使其成为不受支持的密钥，用于 OpenSSL FIPS 拒绝 1024 位验证的情况
+    --with-libevent=pathname 使用 libevent (将检查 /usr/local /opt/local /usr/lib /usr/pkg /usr/sfw /usr 或您可以指定一个显式路径)。速度较慢，但允许使用大的传出端口范围。
+    --with-libexpat=path    为 libexpat 指定显式路径。
+    --with-libhiredis=path  为 libhiredis 指定显式路径。
+    --with-libnghttp2=path  为 libnghttp2 指定显式路径。
+    --with-libngtcp2=path   为 libngtcp2 指定显式路径，用于 QUIC。
+    --with-dnstap-socket-path=pathname 设置默认 dnstap 套接字路径
+    --with-protobuf-c=path  protobuf-c 的安装路径，用于 dnstap
+    --with-libsodium=path   libsodium 的安装路径，用于 dnscrypt
+    --with-libmnl=path      为 libmnl 指定显式路径。
+    --with-libunbound-only  不构建守护进程和工具程序
+
+一些有影响的环境变量:
+    CC          C 编译器命令
+    CFLAGS      C 编译器标志
+    LDFLAGS     链接器标志, 例如 -L<lib dir> 如果您的库在非标准目录 <lib dir> 中
+    LIBS        传递给链接器的库, 例如 -l<library>
+    CPPFLAGS    (Objective) C/C++ 预处理器标志, 例如 -I<include dir> 如果您的头文件在非标准目录 <include dir> 中
+    YACC        要使用的 `Yet Another Compiler Compiler&#39; 实现。默认为找到的第一个程序: `bison -y&#39;, `byacc&#39;, `yacc&#39;。
+    YFLAGS      默认传递给 $YACC 的参数列表。此脚本将 YFLAGS 默认为空字符串，以避免某些 make 应用程序给出的默认值 `-d&#39;。
+    LT_SYS_LIBRARY_PATH 用户定义的运行时库搜索路径。
+    PKG_CONFIG  pkg-config 工具的路径
+    PKG_CONFIG_PATH 添加到 pkg-config 搜索路径的目录
+    PKG_CONFIG_LIBDIR 覆盖 pkg-config 内置搜索路径的路径
+    CPP         C 预处理器
+    SYSTEMD_CFLAGS SYSTEMD 的 C 编译器标志, 覆盖 pkg-config
+    SYSTEMD_LIBS SYSTEMD 的链接器标志, 覆盖 pkg-config
+    SYSTEMD_DAEMON_CFLAGS SYSTEMD_DAEMON 的 C 编译器标志, 覆盖 pkg-config
+    SYSTEMD_DAEMON_LIBS SYSTEMD_DAEMON 的链接器标志, 覆盖 pkg-config
+    PYTHON_VERSION 要使用的已安装 Python 版本，例如 &#39;2.3&#39;。此字符串将附加到 Python 解释器的规范名称。
+    SOURCE_DATE_EPOCH 如果设置了此变量，则使用该变量的值而不是当前时间作为构建时间戳。格式为 unix时间戳。这可以实现可重现的构建输出。
+    PROTOBUFC_CFLAGS PROTOBUFC 的 C 编译器标志, 覆盖 pkg-config
+    PROTOBUFC_LIBS PROTOBUFC 的链接器标志, 覆盖 pkg-config
+
+使用这些变量来覆盖 `configure&#39; 所做的选择，或帮助
+它找到具有非标准名称/位置的库和程序。
+
+将错误报告给 <unbound-bugs@nlnetlabs.nl 或 https://github.com/NLnetLabs/unbound/issues>。
+创建 unbound 用户和组并配置
+groupadd --system unbound
+useradd --no-create-home --system --shell /usr/sbin/nologin unbound
+mkdir -p /var/lib/unbound
+cp /usr/share/dns/root.key /var/lib/unbound/root.key
+chown -R unbound:unbound /var/lib/unbound
+创建 unbound 的 systemd 服务文件
+cat <<EOF > /etc/systemd/system/unbound.service
+[Unit]
+Description=Unbound DNS Resolver (Experimental Build)
+Documentation=man:unbound(8) man:unbound.conf(5) https://www.nlnetlabs.nl/projects/unbound/documentation.html
+Wants=network-online.target
+After=network-online.target
+# 如果您的 auto-trust-anchor-file 或 cachedb 路径位于 /var/lib/unbound，
+# 确保 /var 在此服务启动前已挂载。
+RequiresMountsFor=/var/lib/unbound /run
+
+[Service]
+# === 基本配置 ===
+Type=notify
+# Unbound 在 &#39;--enable-systemd&#39; 编译时支持 notify 类型，它会在服务完全准备好后通知 systemd。
+
+# 指定运行 Unbound 的用户和组。
+# 您在 ./configure 时使用了 --with-username=unbound。
+# 您需要确保 &#39;unbound&#39; 用户和组在系统上存在。
+# 例如:
+# sudo groupadd --system unbound
+# sudo useradd --system -g unbound -d /var/lib/unbound -s /bin/false -c "Unbound DNS Resolver" unbound
+User=unbound
+Group=unbound
+
+# 预启动检查配置文件
+ExecStartPre=/usr/sbin/unbound-checkconf /etc/unbound/unbound.conf
+
+# 启动命令
+# -d: 不进行后台守护进程化 (systemd 处理)
+# -p: 创建 PID 文件 (与 --with-pidfile 编译选项匹配)
+# -c: 指定配置文件路径
+ExecStart=/usr/sbin/unbound -d -p -c /etc/unbound/unbound.conf
+
+# 重载配置 (需要 unbound.conf 中启用 remote-control)
+ExecReload=/usr/sbin/unbound-control reload
+
+# 重启策略
+Restart=on-failure
+RestartSec=5s
+
+# PID 文件路径 (与 --with-pidfile 编译选项匹配)
+# RuntimeDirectory 会自动创建 /run/unbound 并设置权限给指定用户
+PIDFile=/run/unbound/unbound.pid
+
+# === 资源和权限管理 ===
+# 运行时目录，systemd 会创建 /run/unbound 并设置所有权为 User 和 Group 指定的用户/组
+RuntimeDirectory=unbound
+RuntimeDirectoryMode=0750
+
+# 能力绑定
+# CAP_NET_BIND_SERVICE 允许 &#39;unbound&#39; 用户绑定到特权端口 (如53)
+AmbientCapabilities=CAP_NET_BIND_SERVICE
+CapabilityBoundingSet=CAP_NET_BIND_SERVICE CAP_SETGID CAP_SETUID
+# 如果在 unbound.conf 中启用了 chroot，并且 Unbound 在降权为 &#39;unbound&#39; 用户后才执行 chroot,
+# 则可能还需要 CAP_SYS_CHROOT。但通常 chroot 在降权前由root完成，或者Unbound启动时即为&#39;unbound&#39;用户，则无法chroot到任意目录。
+# 您的 --with-username=unbound 意味着Unbound会自行处理权限。
+
+# --- 安全强化选项 ---
+#NoNewPrivileges=yes
+#ProtectSystem=no
+# 如果 ProtectSystem=strict 导致 Unbound 无法写入其管理的 root.key 或 cachedb (通常在 /var/lib/unbound/)：
+# 您需要添加 ReadWritePaths 指令。例如：
+# ReadWritePaths=/var/lib/unbound
+# 如果您在 unbound.conf 中使用了 chroot: "/etc/unbound" 并且需要在其中写入 (如 root.key):
+# ReadWritePaths=/etc/unbound
+#ProtectHome=no
+#PrivateTmp=no
+#PrivateDevices=yes
+# MemoryDenyWriteExecute=yes # 如果系统和Unbound版本支持，可增强安全性
+
+[Install]
+WantedBy=multi-user.target
+EOF
+创建 unbound 的配置文件
+cat <<EOF > /etc/unbound/unbound.conf
+# Unbound configuration file
+#
+# See unbound.conf(5) man page for more information.
+#
+# 注意: 路径 (例如 logfile, root-hints, auto-trust-anchor-file)
+# 可能需要根据您的操作系统和Unbound安装方式进行调整。
+# 确保Unbound进程对指定的日志文件和自动信任锚点文件具有写入权限（或对其目录）。
+
+server:
+    # --- 基本服务器设置 ---
+    verbosity: 0                     # 日志详细级别 (0=仅错误, 1=操作信息, 2=详细操作, ... 5=非常详细)
+    #logfile: "/var/log/unbound/unbound.log" # 日志文件路径。如果注释掉或为空，则可能记录到syslog。
+                                              # 例如: FreeBSD: /var/unbound/unbound.log, OpenBSD: Unbound chroots and logs via syslog
+                                              # Linux (from package): often /var/log/unbound.log or uses systemd journal
+    use-syslog: no                  # 如果指定了 logfile，设为 no 则仅记录到文件。设为 yes 则也发送到 syslog。
+
+    module-config: "validator cachedb iterator"
+
+    interface: 0.0.0.0               # 监听所有 IPv4 地址
+    interface: ::0                   # 监听所有 IPv6 地址 (如果您的系统支持IPv6)
+    port: 54                         # 监听的端口 (DNS标准端口)
+
+    do-ip4: yes                      # 允许 IPv4
+    do-ip6: yes                      # 允许 IPv6 (如果网络支持)
+    do-udp: yes                      # 允许 UDP
+    do-tcp: yes                      # 允许 TCP
+
+    # --- 访问控制 ---
+    # 定义哪些客户端IP地址或子网可以查询此服务器。
+    # 强烈建议配置此项以防止滥用。
+    access-control: 127.0.0.0/8 allow    # 允许本地回环地址 (IPv4)
+    access-control: ::1/128 allow        # 允许本地回环地址 (IPv6)
+    # 示例：允许常见的私有网络范围。根据您的网络调整或添加。
+    access-control: 192.168.0.0/16 allow
+    access-control: 10.0.0.0/8 allow
+    access-control: 172.16.0.0/12 allow
+    # access-control: ::ffff:127.0.0.1/128 allow # IPv4-mapped IPv6 localhost
+
+    # --- 性能和缓存设置 ---
+    msg-cache-size: 10m              # DNS消息缓存大小 (查询和应答)
+    rrset-cache-size: 20m            # RRset缓存大小 (DNS资源记录)
+
+    # 缓存相关的 slab 数量，通常可以设为接近 num-threads 的值或者2的幂次方。
+    msg-cache-slabs: 4
+    rrset-cache-slabs: 4
+
+    num-threads: 2                   # 创建的线程数。理想情况下，设置为CPU核心数。
+                                     # 对于较小的部署，1或2通常足够。
+
+    # 增加传出查询可用的端口范围，有助于防止某些类型的攻击。
+    outgoing-range: 1024
+    # 每个线程可以并发处理的查询数上限。
+    num-queries-per-thread: 2048
+
+    # --- 过期缓存与预取功能 (Requested "过期缓存功能") ---
+    prefetch: yes                    # 在缓存条目过期前主动获取更新，保持常用条目新鲜。
+    prefetch-key: yes                # 在验证DS记录时，提前获取DNSKEY记录，加速后续DNSSEC验证。
+
+    serve-expired: yes               # 在尝试获取新记录的同时，从缓存中提供已过期的记录。
+                                     # 这可以提高当上游权威服务器缓慢或无响应时的可用性。
+    serve-expired-ttl: 3600          # (1小时) 提供已过期记录时，该记录的TTL值。
+    serve-expired-reply-ttl: 30      # (30秒) 当提供过期数据时，客户端应该缓存这条过期数据的TTL。
+    serve-expired-client-timeout: 1000 # (1秒) 在提供过期数据之前，等待新答案的最长时间（毫秒）。
+
+    # --- 安全设置 ---
+    harden-glue: yes                 # 强化对胶水记录的验证。
+    harden-dnssec-stripped: yes      # 防止DNSSEC剥离攻击。
+    harden-algo-downgrade: yes       # 防止算法降级攻击。
+    use-caps-for-id: yes             # 在查询ID中使用随机大小写混合（0x20技巧）来增加欺骗难度。
+
+    edns-buffer-size: 1232           # EDNS0 UDP包的建议大小，以减少IP分片。
+
+    hide-identity: yes               # 拒绝回应 id.server 和 hostname.bind 的查询。
+    hide-version: yes                # 拒绝回应 version.server 和 version.bind 的查询。
+
+    # 定义私有地址范围，Unbound会从DNS响应中剥离这些地址，以防止DNS重绑定攻击。
+    private-address: 10.0.0.0/8
+    private-address: 172.16.0.0/12
+    private-address: 192.168.0.0/16
+    private-address: 169.254.0.0/16
+    private-address: fd00::/8
+    private-address: fe80::/10
+    # private-domain: "example.com" # 如果您有不想被外部解析的内部域名，可以在这里声明。
+
+    # 不查询回环地址上的公共域名，防止潜在的循环或安全问题。
+    do-not-query-localhost: yes
+
+    # --- DNSSEC 验证 ---
+    # 自动管理和更新根信任锚点。Unbound需要对该文件的目录有写权限，或者您可以手动管理此文件。
+    # 路径可能为: /var/lib/unbound/root.key (Debian/Ubuntu), /usr/local/etc/unbound/root.key (FreeBSD ports),
+    # /etc/unbound/root.key (generic from source), /opt/homebrew/etc/unbound/root.key (macOS Homebrew)
+    auto-trust-anchor-file: "/var/lib/unbound/root.key"
+
+    val-log-level: 1                 # DNSSEC验证失败时的日志级别 (1=基本信息, 2=详细信息)。
+
+    # --- 根提示文件 (Root Hints) ---
+    # 如果Unbound作为递归解析器直接从根服务器开始解析 (而不是转发模式)，则需要此文件。
+    # 确保此文件存在并且保持最新。
+    # 路径可能为: /usr/share/dns/root.hints (common on Linux), /etc/unbound/root.hints,
+    # /usr/local/etc/unbound/root.hints
+    root-hints: "/usr/share/dns/root.hints"
+
+    # --- 转发模式 (可选) ---
+    # 如果您希望Unbound将所有查询转发到其他上游DNS服务器，而不是自己从根进行递归解析，
+    # 请取消注释并配置以下部分。如果启用了转发，则上面的 root-hints 通常不再需要。
+    # forward-zone:
+    #   name: "."  # 转发所有查询
+    #   # 常用的公共DNS服务器示例:
+    #   forward-addr: 8.8.8.8@53      # Google
+    #   forward-addr: 8.8.4.4@53      # Google
+    #   forward-addr: 1.1.1.1@53      # Cloudflare
+    #   forward-addr: 1.0.0.1@53      # Cloudflare
+    #   # 如果您的上游服务器支持DNS-over-TLS (DoT):
+    #   # forward-tls-upstream: yes
+    #   # forward-addr: 1.1.1.1@853#cloudflare-dns.com # DoT示例，主机名用于证书验证
+
+# --- 远程控制 (可选) ---
+# 允许使用 unbound-control 工具管理Unbound服务。
+# 如果启用，请确保使用 unbound-control-setup 生成密钥和证书文件。
+# remote-control:
+#   control-enable: yes
+#   control-interface: 127.0.0.1    # 监听远程控制连接的IP地址
+#   control-port: 8953              # 监听远程控制连接的端口
+#   # 以下文件路径也需要根据您的安装进行调整
+#   server-key-file: "/etc/unbound/unbound_server.key"
+#   server-cert-file: "/etc/unbound/unbound_server.pem"
+#   control-key-file: "/etc/unbound/unbound_control.key"
+#   control-cert-file: "/etc/unbound/unbound_control.pem"
+
+# cachedb:
+    # backend: "redis"  # 指定后端为 redis (这通常也适用于Valkey)
+
+    # --- Redis/Valkey 服务器连接参数 ---
+    # redis-server-host: 192.168.2.11
+    # redis-server-port: 6379
+
+    #redis-server-path: "/run/valkey/valkey-server.sock"
+    # redis-server-password: "your_valkey_password" # 如果Valkey设置了密码
+    # redis-database: 0                # 可选，Valkey/Redis数据库编号 (默认为0)
+
+    # --- 可选的 Redis/Valkey 相关超时设置 (如果后端驱动支持) ---
+    # redis-timeout: 100               # 连接和操作超时 (毫秒)
+
+    # --- 缓存数据密钥前缀 (可选) ---
+    # redis-key-prefix: "unbound_cache:" # 避免与其他应用在同一Valkey实例中的键冲突
+
+    # --- 其他 cachedb 通用设置 (可能适用) ---
+    # cachedb-no-store: no        # 是否存储否定缓存条目 (默认为no，即存储)
+EOF
+启动 unbound 服务
+sudo systemctl daemon-reload
+sudo systemctl enable unbound
+sudo systemctl start unbound
+检查 unbound 服务状态
+sudo systemctl status unbound
+'><meta name=author content><link rel=canonical href=https://tnzzz.top/posts/%E6%95%99%E7%A8%8B/debian%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85unbound/><link crossorigin=anonymous href=/assets/css/stylesheet.93f625d739f1d6a5c6f20c146bc6a8d26b233492b34b2220c54b12fd46a04ded.css integrity="sha256-k/Yl1znx1qXG8gwUa8ao0msjNJKzSyIgxUsS/UagTe0=" rel="preload stylesheet" as=style><link rel=icon href=https://tnzzz.top/favicon.ico><link rel=icon type=image/png sizes=16x16 href=https://tnzzz.top/favicon-16x16.png><link rel=icon type=image/png sizes=32x32 href=https://tnzzz.top/favicon-32x32.png><link rel=apple-touch-icon href=https://tnzzz.top/apple-touch-icon.png><link rel=mask-icon href=https://tnzzz.top/safari-pinned-tab.svg><meta name=theme-color content="#2e2e33"><meta name=msapplication-TileColor content="#2e2e33"><link rel=alternate hreflang=en href=https://tnzzz.top/posts/%E6%95%99%E7%A8%8B/debian%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85unbound/><noscript><style>#theme-toggle,.top-link{display:none}</style><style>@media(prefers-color-scheme:dark){:root{--theme:rgb(29, 30, 32);--entry:rgb(46, 46, 51);--primary:rgb(218, 218, 219);--secondary:rgb(155, 156, 157);--tertiary:rgb(65, 66, 68);--content:rgb(196, 196, 197);--code-block-bg:rgb(46, 46, 51);--code-bg:rgb(55, 56, 62);--border:rgb(51, 51, 51)}.list{background:var(--theme)}.list:not(.dark)::-webkit-scrollbar-track{background:0 0}.list:not(.dark)::-webkit-scrollbar-thumb{border-color:var(--theme)}}</style></noscript><meta property="og:url" content="https://tnzzz.top/posts/%E6%95%99%E7%A8%8B/debian%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85unbound/"><meta property="og:site_name" content="明天吃什么？"><meta property="og:title" content="Debian 编译安装 unbound"><meta property="og:description" content='unbound 简介 Unbound是一款验证型、递归式、带缓存的DNS解析器，旨在实现快速与轻量化，并融合了基于开放标准的现代特性。
+为增强在线隐私保护，Unbound支持DNS-over-TLS和DNS-over-HTTPS，使客户端能够加密通信。此外，它还支持多种现代标准，这些标准不仅减少了与权威服务器交换的数据量，提升了隐私性，还增强了DNS的健壮性。其中最为关键的技术包括查询名称最小化、积极利用DNSSEC验证缓存，以及对权威区域的支持，后者可用于加载根区域副本。
+Unbound兼容所有Linux和BSD发行版，以及macOS，大多数平台均有现成安装包。它已被纳入所有主要BSD操作系统的基础系统，以及大多数Linux发行版的标准软件库中，安装与配置简便易行，仅需几行配置即可为单机或网络设置解析器。
+作为遵循BSD许可证的自由开源软件，Unbound的产品开发路线图首要关注用户的安全与隐私。同时，所有功能均需依托成熟的开放标准。我们持续为所有用户优化Unbound的功能，这意味着我们不会为付费客户定制构建或提供专属功能。我们的优先级由用户反馈，特别是拥有支持合同的用户，以及更广泛的互联网社区所引导。在可能的情况下，赞助功能将获得更高优先级，并会逐案评估。 Source
+安装必要的依赖 sudo apt update sudo apt install -y build-essential libssl-dev bison flex libhiredis-dev libevent-dev libsystemd-dev pkg-config make dns-root-data 下载并编译安装 unbound git clone https://github.com/NLnetLabs/unbound cd unbound ./configure --prefix=/usr \ --sysconfdir=/etc \ --localstatedir=/var \ --runstatedir=/run \ --with-username=unbound \ --with-ssl \ --with-libevent \ --enable-systemd \ --enable-subnet \ --enable-tfo-client \ --enable-tfo-server \ --enable-cachedb \ --with-libhiredis \ --disable-rpath \ --with-pidfile=/run/unbound/unbound.pid \ --with-rootkey-file=/var/lib/unbound/root.key \ --with-libnghttp2 \ --with-libsodium \ --with-pthreads \ --with-chroot-dir= make && make install 说明 `configure&#39; 配置 unbound 1.23.1 以适应多种类型的系统。 用法: ./configure [选项]... [变量=值]... 要分配环境变量 (例如 CC, CFLAGS...), 请将它们指定为 变量=值。有关一些有用变量的描述，请参见下文。 选项的默认值在中括号内指定。 配置: -h, --help 显示此帮助信息并退出 --help=short 显示此软件包特有的选项 --help=recursive 显示所有包含的软件包的简短帮助信息 -V, --version 显示版本信息并退出 -q, --quiet, --silent 不打印 `checking ...&#39; 消息 --cache-file=FILE 将测试结果缓存在 FILE 中 [禁用] -C, --config-cache `--cache-file=config.cache&#39; 的别名 -n, --no-create 不创建输出文件 --srcdir=DIR 在 DIR 中查找源代码 [配置目录或 `..&#39;] 安装目录: --prefix=PREFIX 将与体系结构无关的文件安装在 PREFIX 中 [/usr/local] --exec-prefix=EPREFIX 将与体系结构相关的文件安装在 EPREFIX 中 [PREFIX] 默认情况下, `make install&#39; 会将所有文件安装在 `/usr/local/bin&#39;, `/usr/local/lib&#39; 等目录中。您可以使用 `--prefix` 指定一个不同于 `/usr/local&#39; 的安装前缀, 例如 `--prefix=$HOME&#39;。 为了更好地控制，请使用以下选项。 微调安装目录: --bindir=DIR 用户可执行文件 [EPREFIX/bin] --sbindir=DIR 系统管理员可执行文件 [EPREFIX/sbin] --libexecdir=DIR 程序可执行文件 [EPREFIX/libexec] --sysconfdir=DIR 只读的单机数据 [PREFIX/etc] --sharedstatedir=DIR 可修改的与体系结构无关的数据 [PREFIX/com] --localstatedir=DIR 可修改的单机数据 [PREFIX/var] --runstatedir=DIR 可修改的每进程数据 [LOCALSTATEDIR/run] --libdir=DIR 目标代码库 [EPREFIX/lib] --includedir=DIR C 头文件 [PREFIX/include] --oldincludedir=DIR 非 gcc 的 C 头文件 [/usr/include] --datarootdir=DIR 只读的与体系结构无关的数据根目录 [PREFIX/share] --datadir=DIR 只读的与体系结构无关的数据 [DATAROOTDIR] --infodir=DIR info 文档 [DATAROOTDIR/info] --localedir=DIR 区域设置相关的数据 [DATAROOTDIR/locale] --mandir=DIR man 文档 [DATAROOTDIR/man] --docdir=DIR 文档根目录 [DATAROOTDIR/doc/unbound] --htmldir=DIR html 文档 [DOCDIR] --dvidir=DIR dvi 文档 [DOCDIR] --pdfdir=DIR pdf 文档 [DOCDIR] --psdir=DIR ps 文档 [DOCDIR] 系统类型: --build=BUILD 为在 BUILD 上构建进行配置 [猜测值] --host=HOST 交叉编译以构建在 HOST 上运行的程序 [BUILD] 可选特性: --disable-option-checking 忽略无法识别的 --enable/--with 选项 --disable-FEATURE 不包含 FEATURE (等同于 --enable-FEATURE=no) --enable-FEATURE[=ARG] 包含 FEATURE [ARG=yes] --enable-checking 启用警告、断言、makefile 依赖关系 --enable-debug 等同于 enable-checking --disable-flto 禁用链接时优化 (gcc 特定选项) --enable-pie 启用位置无关可执行文件 (例如，为了充分 利用 ASLR，会有少量性能损失) --enable-relro-now 在加载时启用完全重定位绑定 (RELRO NOW, 以保护 GOT 和 .dtor 区域) --enable-shared[=PKGS] 构建共享库 [默认=yes] --enable-static[=PKGS] 构建静态库 [默认=yes] --enable-fast-install[=PKGS] 为快速安装进行优化 [默认=yes] --disable-libtool-lock 避免锁定 (可能会破坏并行构建) --disable-rpath 禁用硬编码的 rpath (默认=启用) --disable-largefile 忽略对大文件的支持 --enable-systemd 编译时支持 systemd (需要 libsystemd, pkg-config) --enable-alloc-checks 启用内存分配统计信息，用于调试 --enable-alloc-lite 启用轻量级分配断言，用于调试 --enable-alloc-nonregional 启用非区域分配，速度较慢但会将区域分配暴露给其他内存净化器，用于调试 --disable-swig-version-check 禁用 swig 版本检查，以使用较旧的 swig 构建 python 模块即使这样做不可靠 --disable-sha1 禁用 SHA1 RRSIG 支持，不会禁用 nsec3 支持 --disable-sha2 禁用 SHA256 和 SHA512 RRSIG 支持 --enable-subnet 启用客户端子网 --disable-gost 禁用 GOST 支持 --disable-ecdsa 禁用 ECDSA 支持 --disable-dsa 禁用 DSA 支持 --disable-ed25519 禁用 ED25519 支持 --disable-ed448 禁用 ED448 支持 --enable-event-api 启用 (实验性的) 可插拔事件基础 libunbound API，安装到 unbound-event.h --enable-tfo-client 为客户端模式启用 TCP Fast Open --enable-tfo-server 为服务器模式启用 TCP Fast Open --enable-static-exe 启用以针对未安装的 (事件) 库静态编译 可执行文件，用于调试 --enable-fully-static 启用以完全静态编译 --enable-lock-checks 启用以检查锁定和解锁调用，用于调试 --enable-allsymbols 从 libunbound 导出所有符号并将二进制文件链接到它，安装尺寸更小但 libunbound 导出表会被内部符号污染 --enable-dnstap 启用 dnstap 支持 (需要 protobuf-c) --enable-dnscrypt 启用 dnscrypt 支持 (需要 libsodium) --enable-cachedb 启用 cachedb 模块，可以使用外部缓存存储 --enable-ipsecmod 启用 ipsecmod 模块，以促进机会性 IPsec --enable-ipset 启用 ipset 模块 --disable-explicit-port-randomisation 禁用显式源端口随机化，并依赖 内核提供随机源端口 --enable-linux-ip-local-port-range 定义此项以启用 /proc/sys/net/ipv4/ip_local_port_range 作为默认传出端口范围。这仅适用于 Linux 上的 libunbound 并且不影响 unbound 解析守护进程本身。这可能会严重限制可用的传出端口数量，从而降低随机性。仅当目标系统限制 (例如某些启用 SELinux 的发行版) 使用非临时端口时才定义此项。 可选软件包: --with-PACKAGE[=ARG] 使用 PACKAGE [ARG=yes] --without-PACKAGE 不使用 PACKAGE (等同于 --with-PACKAGE=no) --with-conf-file=path Unbound 配置文件的路径名 --with-run-dir=path 设置 chdir 到的默认目录 (默认为 cfg 文件所在的目录) --with-chroot-dir=path 设置 chroot 到的默认目录 (默认为与 run-dir 相同) --with-share-dir=path 设置共享数据的默认目录 (默认为 share/unbound) --with-pidfile=filename 设置 unbound pid 文件的默认路径名 (默认 run-dir/unbound.pid) --with-rootkey-file=filename 设置根密钥文件的默认路径名 (默认 run-dir/root.key)。此文件会被读取和写入。 --with-rootcert-file=filename 设置根更新证书文件的默认路径名(默认 run-dir/icannbundle.pem)。如果您对内置证书满意，则此文件不必存在。 --with-username=user 设置 unbound 更改到的默认用户 (默认用户是 unbound) --with-pic[=PKGS] 尝试仅使用 PIC/非 PIC 对象 [默认=两者都使用] --with-aix-soname=aix|svr4|both 在 AIX 上提供的共享库版本控制(又名 "SONAME")变体, [默认=aix]。 --with-gnu-ld 假设 C 编译器使用 GNU ld [默认=no] --with-sysroot[=DIR] 在 DIR 中搜索依赖库 (如果未指定，则为编译器的 sysroot)。 --with-pthreads 使用 pthreads 库，或使用 --without-pthreads禁用线程支持。 --with-solaris-threads 使用 solaris 原生线程库。 --with-syslog-facility=LOCAL0 - LOCAL7 设置 SYSLOG_FACILITY, 默认 DAEMON --with-dynlibmodule 构建动态库模块，或使用 --without-dynlibmodule 禁用它。(默认=no) --with-pyunbound 构建 PyUnbound，或使用 --without-pyunbound 跳过它。 (默认=no) --with-pythonmodule 构建 Python 模块，或使用 --without-pythonmodule 禁用脚本引擎。(默认=no) --with-nss=path 使用 libnss 代替 openssl，安装在 path。 --with-nettle=path 使用 libnettle 作为加密库，安装在 path。 --with-ssl=pathname 启用 SSL (将检查 /usr/local/ssl /usr/lib/ssl /usr/ssl /usr/pkg /usr/local /opt/local /usr/sfw /usr 或指定类似 /usr/include/openssl11) --with-libbsd 使用可移植的 libbsd 函数 --with-deprecate-rsa-1024 弃用 RSA 1024 位长度，使其成为不受支持的密钥，用于 OpenSSL FIPS 拒绝 1024 位验证的情况 --with-libevent=pathname 使用 libevent (将检查 /usr/local /opt/local /usr/lib /usr/pkg /usr/sfw /usr 或您可以指定一个显式路径)。速度较慢，但允许使用大的传出端口范围。 --with-libexpat=path 为 libexpat 指定显式路径。 --with-libhiredis=path 为 libhiredis 指定显式路径。 --with-libnghttp2=path 为 libnghttp2 指定显式路径。 --with-libngtcp2=path 为 libngtcp2 指定显式路径，用于 QUIC。 --with-dnstap-socket-path=pathname 设置默认 dnstap 套接字路径 --with-protobuf-c=path protobuf-c 的安装路径，用于 dnstap --with-libsodium=path libsodium 的安装路径，用于 dnscrypt --with-libmnl=path 为 libmnl 指定显式路径。 --with-libunbound-only 不构建守护进程和工具程序 一些有影响的环境变量: CC C 编译器命令 CFLAGS C 编译器标志 LDFLAGS 链接器标志, 例如 -L<lib dir> 如果您的库在非标准目录 <lib dir> 中 LIBS 传递给链接器的库, 例如 -l<library> CPPFLAGS (Objective) C/C++ 预处理器标志, 例如 -I<include dir> 如果您的头文件在非标准目录 <include dir> 中 YACC 要使用的 `Yet Another Compiler Compiler&#39; 实现。默认为找到的第一个程序: `bison -y&#39;, `byacc&#39;, `yacc&#39;。 YFLAGS 默认传递给 $YACC 的参数列表。此脚本将 YFLAGS 默认为空字符串，以避免某些 make 应用程序给出的默认值 `-d&#39;。 LT_SYS_LIBRARY_PATH 用户定义的运行时库搜索路径。 PKG_CONFIG pkg-config 工具的路径 PKG_CONFIG_PATH 添加到 pkg-config 搜索路径的目录 PKG_CONFIG_LIBDIR 覆盖 pkg-config 内置搜索路径的路径 CPP C 预处理器 SYSTEMD_CFLAGS SYSTEMD 的 C 编译器标志, 覆盖 pkg-config SYSTEMD_LIBS SYSTEMD 的链接器标志, 覆盖 pkg-config SYSTEMD_DAEMON_CFLAGS SYSTEMD_DAEMON 的 C 编译器标志, 覆盖 pkg-config SYSTEMD_DAEMON_LIBS SYSTEMD_DAEMON 的链接器标志, 覆盖 pkg-config PYTHON_VERSION 要使用的已安装 Python 版本，例如 &#39;2.3&#39;。此字符串将附加到 Python 解释器的规范名称。 SOURCE_DATE_EPOCH 如果设置了此变量，则使用该变量的值而不是当前时间作为构建时间戳。格式为 unix时间戳。这可以实现可重现的构建输出。 PROTOBUFC_CFLAGS PROTOBUFC 的 C 编译器标志, 覆盖 pkg-config PROTOBUFC_LIBS PROTOBUFC 的链接器标志, 覆盖 pkg-config 使用这些变量来覆盖 `configure&#39; 所做的选择，或帮助 它找到具有非标准名称/位置的库和程序。 将错误报告给 <unbound-bugs@nlnetlabs.nl 或 https://github.com/NLnetLabs/unbound/issues>。 创建 unbound 用户和组并配置 groupadd --system unbound useradd --no-create-home --system --shell /usr/sbin/nologin unbound mkdir -p /var/lib/unbound cp /usr/share/dns/root.key /var/lib/unbound/root.key chown -R unbound:unbound /var/lib/unbound 创建 unbound 的 systemd 服务文件 cat <<EOF > /etc/systemd/system/unbound.service [Unit] Description=Unbound DNS Resolver (Experimental Build) Documentation=man:unbound(8) man:unbound.conf(5) https://www.nlnetlabs.nl/projects/unbound/documentation.html Wants=network-online.target After=network-online.target # 如果您的 auto-trust-anchor-file 或 cachedb 路径位于 /var/lib/unbound， # 确保 /var 在此服务启动前已挂载。 RequiresMountsFor=/var/lib/unbound /run [Service] # === 基本配置 === Type=notify # Unbound 在 &#39;--enable-systemd&#39; 编译时支持 notify 类型，它会在服务完全准备好后通知 systemd。 # 指定运行 Unbound 的用户和组。 # 您在 ./configure 时使用了 --with-username=unbound。 # 您需要确保 &#39;unbound&#39; 用户和组在系统上存在。 # 例如: # sudo groupadd --system unbound # sudo useradd --system -g unbound -d /var/lib/unbound -s /bin/false -c "Unbound DNS Resolver" unbound User=unbound Group=unbound # 预启动检查配置文件 ExecStartPre=/usr/sbin/unbound-checkconf /etc/unbound/unbound.conf # 启动命令 # -d: 不进行后台守护进程化 (systemd 处理) # -p: 创建 PID 文件 (与 --with-pidfile 编译选项匹配) # -c: 指定配置文件路径 ExecStart=/usr/sbin/unbound -d -p -c /etc/unbound/unbound.conf # 重载配置 (需要 unbound.conf 中启用 remote-control) ExecReload=/usr/sbin/unbound-control reload # 重启策略 Restart=on-failure RestartSec=5s # PID 文件路径 (与 --with-pidfile 编译选项匹配) # RuntimeDirectory 会自动创建 /run/unbound 并设置权限给指定用户 PIDFile=/run/unbound/unbound.pid # === 资源和权限管理 === # 运行时目录，systemd 会创建 /run/unbound 并设置所有权为 User 和 Group 指定的用户/组 RuntimeDirectory=unbound RuntimeDirectoryMode=0750 # 能力绑定 # CAP_NET_BIND_SERVICE 允许 &#39;unbound&#39; 用户绑定到特权端口 (如53) AmbientCapabilities=CAP_NET_BIND_SERVICE CapabilityBoundingSet=CAP_NET_BIND_SERVICE CAP_SETGID CAP_SETUID # 如果在 unbound.conf 中启用了 chroot，并且 Unbound 在降权为 &#39;unbound&#39; 用户后才执行 chroot, # 则可能还需要 CAP_SYS_CHROOT。但通常 chroot 在降权前由root完成，或者Unbound启动时即为&#39;unbound&#39;用户，则无法chroot到任意目录。 # 您的 --with-username=unbound 意味着Unbound会自行处理权限。 # --- 安全强化选项 --- #NoNewPrivileges=yes #ProtectSystem=no # 如果 ProtectSystem=strict 导致 Unbound 无法写入其管理的 root.key 或 cachedb (通常在 /var/lib/unbound/)： # 您需要添加 ReadWritePaths 指令。例如： # ReadWritePaths=/var/lib/unbound # 如果您在 unbound.conf 中使用了 chroot: "/etc/unbound" 并且需要在其中写入 (如 root.key): # ReadWritePaths=/etc/unbound #ProtectHome=no #PrivateTmp=no #PrivateDevices=yes # MemoryDenyWriteExecute=yes # 如果系统和Unbound版本支持，可增强安全性 [Install] WantedBy=multi-user.target EOF 创建 unbound 的配置文件 cat <<EOF > /etc/unbound/unbound.conf # Unbound configuration file # # See unbound.conf(5) man page for more information. # # 注意: 路径 (例如 logfile, root-hints, auto-trust-anchor-file) # 可能需要根据您的操作系统和Unbound安装方式进行调整。 # 确保Unbound进程对指定的日志文件和自动信任锚点文件具有写入权限（或对其目录）。 server: # --- 基本服务器设置 --- verbosity: 0 # 日志详细级别 (0=仅错误, 1=操作信息, 2=详细操作, ... 5=非常详细) #logfile: "/var/log/unbound/unbound.log" # 日志文件路径。如果注释掉或为空，则可能记录到syslog。 # 例如: FreeBSD: /var/unbound/unbound.log, OpenBSD: Unbound chroots and logs via syslog # Linux (from package): often /var/log/unbound.log or uses systemd journal use-syslog: no # 如果指定了 logfile，设为 no 则仅记录到文件。设为 yes 则也发送到 syslog。 module-config: "validator cachedb iterator" interface: 0.0.0.0 # 监听所有 IPv4 地址 interface: ::0 # 监听所有 IPv6 地址 (如果您的系统支持IPv6) port: 54 # 监听的端口 (DNS标准端口) do-ip4: yes # 允许 IPv4 do-ip6: yes # 允许 IPv6 (如果网络支持) do-udp: yes # 允许 UDP do-tcp: yes # 允许 TCP # --- 访问控制 --- # 定义哪些客户端IP地址或子网可以查询此服务器。 # 强烈建议配置此项以防止滥用。 access-control: 127.0.0.0/8 allow # 允许本地回环地址 (IPv4) access-control: ::1/128 allow # 允许本地回环地址 (IPv6) # 示例：允许常见的私有网络范围。根据您的网络调整或添加。 access-control: 192.168.0.0/16 allow access-control: 10.0.0.0/8 allow access-control: 172.16.0.0/12 allow # access-control: ::ffff:127.0.0.1/128 allow # IPv4-mapped IPv6 localhost # --- 性能和缓存设置 --- msg-cache-size: 10m # DNS消息缓存大小 (查询和应答) rrset-cache-size: 20m # RRset缓存大小 (DNS资源记录) # 缓存相关的 slab 数量，通常可以设为接近 num-threads 的值或者2的幂次方。 msg-cache-slabs: 4 rrset-cache-slabs: 4 num-threads: 2 # 创建的线程数。理想情况下，设置为CPU核心数。 # 对于较小的部署，1或2通常足够。 # 增加传出查询可用的端口范围，有助于防止某些类型的攻击。 outgoing-range: 1024 # 每个线程可以并发处理的查询数上限。 num-queries-per-thread: 2048 # --- 过期缓存与预取功能 (Requested "过期缓存功能") --- prefetch: yes # 在缓存条目过期前主动获取更新，保持常用条目新鲜。 prefetch-key: yes # 在验证DS记录时，提前获取DNSKEY记录，加速后续DNSSEC验证。 serve-expired: yes # 在尝试获取新记录的同时，从缓存中提供已过期的记录。 # 这可以提高当上游权威服务器缓慢或无响应时的可用性。 serve-expired-ttl: 3600 # (1小时) 提供已过期记录时，该记录的TTL值。 serve-expired-reply-ttl: 30 # (30秒) 当提供过期数据时，客户端应该缓存这条过期数据的TTL。 serve-expired-client-timeout: 1000 # (1秒) 在提供过期数据之前，等待新答案的最长时间（毫秒）。 # --- 安全设置 --- harden-glue: yes # 强化对胶水记录的验证。 harden-dnssec-stripped: yes # 防止DNSSEC剥离攻击。 harden-algo-downgrade: yes # 防止算法降级攻击。 use-caps-for-id: yes # 在查询ID中使用随机大小写混合（0x20技巧）来增加欺骗难度。 edns-buffer-size: 1232 # EDNS0 UDP包的建议大小，以减少IP分片。 hide-identity: yes # 拒绝回应 id.server 和 hostname.bind 的查询。 hide-version: yes # 拒绝回应 version.server 和 version.bind 的查询。 # 定义私有地址范围，Unbound会从DNS响应中剥离这些地址，以防止DNS重绑定攻击。 private-address: 10.0.0.0/8 private-address: 172.16.0.0/12 private-address: 192.168.0.0/16 private-address: 169.254.0.0/16 private-address: fd00::/8 private-address: fe80::/10 # private-domain: "example.com" # 如果您有不想被外部解析的内部域名，可以在这里声明。 # 不查询回环地址上的公共域名，防止潜在的循环或安全问题。 do-not-query-localhost: yes # --- DNSSEC 验证 --- # 自动管理和更新根信任锚点。Unbound需要对该文件的目录有写权限，或者您可以手动管理此文件。 # 路径可能为: /var/lib/unbound/root.key (Debian/Ubuntu), /usr/local/etc/unbound/root.key (FreeBSD ports), # /etc/unbound/root.key (generic from source), /opt/homebrew/etc/unbound/root.key (macOS Homebrew) auto-trust-anchor-file: "/var/lib/unbound/root.key" val-log-level: 1 # DNSSEC验证失败时的日志级别 (1=基本信息, 2=详细信息)。 # --- 根提示文件 (Root Hints) --- # 如果Unbound作为递归解析器直接从根服务器开始解析 (而不是转发模式)，则需要此文件。 # 确保此文件存在并且保持最新。 # 路径可能为: /usr/share/dns/root.hints (common on Linux), /etc/unbound/root.hints, # /usr/local/etc/unbound/root.hints root-hints: "/usr/share/dns/root.hints" # --- 转发模式 (可选) --- # 如果您希望Unbound将所有查询转发到其他上游DNS服务器，而不是自己从根进行递归解析， # 请取消注释并配置以下部分。如果启用了转发，则上面的 root-hints 通常不再需要。 # forward-zone: # name: "." # 转发所有查询 # # 常用的公共DNS服务器示例: # forward-addr: 8.8.8.8@53 # Google # forward-addr: 8.8.4.4@53 # Google # forward-addr: 1.1.1.1@53 # Cloudflare # forward-addr: 1.0.0.1@53 # Cloudflare # # 如果您的上游服务器支持DNS-over-TLS (DoT): # # forward-tls-upstream: yes # # forward-addr: 1.1.1.1@853#cloudflare-dns.com # DoT示例，主机名用于证书验证 # --- 远程控制 (可选) --- # 允许使用 unbound-control 工具管理Unbound服务。 # 如果启用，请确保使用 unbound-control-setup 生成密钥和证书文件。 # remote-control: # control-enable: yes # control-interface: 127.0.0.1 # 监听远程控制连接的IP地址 # control-port: 8953 # 监听远程控制连接的端口 # # 以下文件路径也需要根据您的安装进行调整 # server-key-file: "/etc/unbound/unbound_server.key" # server-cert-file: "/etc/unbound/unbound_server.pem" # control-key-file: "/etc/unbound/unbound_control.key" # control-cert-file: "/etc/unbound/unbound_control.pem" # cachedb: # backend: "redis" # 指定后端为 redis (这通常也适用于Valkey) # --- Redis/Valkey 服务器连接参数 --- # redis-server-host: 192.168.2.11 # redis-server-port: 6379 #redis-server-path: "/run/valkey/valkey-server.sock" # redis-server-password: "your_valkey_password" # 如果Valkey设置了密码 # redis-database: 0 # 可选，Valkey/Redis数据库编号 (默认为0) # --- 可选的 Redis/Valkey 相关超时设置 (如果后端驱动支持) --- # redis-timeout: 100 # 连接和操作超时 (毫秒) # --- 缓存数据密钥前缀 (可选) --- # redis-key-prefix: "unbound_cache:" # 避免与其他应用在同一Valkey实例中的键冲突 # --- 其他 cachedb 通用设置 (可能适用) --- # cachedb-no-store: no # 是否存储否定缓存条目 (默认为no，即存储) EOF 启动 unbound 服务 sudo systemctl daemon-reload sudo systemctl enable unbound sudo systemctl start unbound 检查 unbound 服务状态 sudo systemctl status unbound '><meta property="og:locale" content="zh-cn"><meta property="og:type" content="article"><meta property="article:section" content="posts"><meta property="article:published_time" content="2025-05-20T22:17:40+08:00"><meta property="article:modified_time" content="2025-05-20T22:17:40+08:00"><meta name=twitter:card content="summary"><meta name=twitter:title content="Debian 编译安装 unbound"><meta name=twitter:description content='unbound 简介
+Unbound是一款验证型、递归式、带缓存的DNS解析器，旨在实现快速与轻量化，并融合了基于开放标准的现代特性。
+为增强在线隐私保护，Unbound支持DNS-over-TLS和DNS-over-HTTPS，使客户端能够加密通信。此外，它还支持多种现代标准，这些标准不仅减少了与权威服务器交换的数据量，提升了隐私性，还增强了DNS的健壮性。其中最为关键的技术包括查询名称最小化、积极利用DNSSEC验证缓存，以及对权威区域的支持，后者可用于加载根区域副本。
+Unbound兼容所有Linux和BSD发行版，以及macOS，大多数平台均有现成安装包。它已被纳入所有主要BSD操作系统的基础系统，以及大多数Linux发行版的标准软件库中，安装与配置简便易行，仅需几行配置即可为单机或网络设置解析器。
+作为遵循BSD许可证的自由开源软件，Unbound的产品开发路线图首要关注用户的安全与隐私。同时，所有功能均需依托成熟的开放标准。我们持续为所有用户优化Unbound的功能，这意味着我们不会为付费客户定制构建或提供专属功能。我们的优先级由用户反馈，特别是拥有支持合同的用户，以及更广泛的互联网社区所引导。在可能的情况下，赞助功能将获得更高优先级，并会逐案评估。
+Source
+安装必要的依赖
+sudo apt update
+sudo apt install -y build-essential libssl-dev bison flex libhiredis-dev libevent-dev libsystemd-dev pkg-config make dns-root-data
+下载并编译安装 unbound
+git clone https://github.com/NLnetLabs/unbound
+cd unbound
+./configure --prefix=/usr \
+ --sysconfdir=/etc \
+    --localstatedir=/var \
+    --runstatedir=/run \
+    --with-username=unbound \
+    --with-ssl \
+    --with-libevent \
+    --enable-systemd \
+    --enable-subnet \
+    --enable-tfo-client \
+    --enable-tfo-server \
+    --enable-cachedb \
+    --with-libhiredis \
+    --disable-rpath \
+    --with-pidfile=/run/unbound/unbound.pid \
+    --with-rootkey-file=/var/lib/unbound/root.key \
+    --with-libnghttp2 \
+    --with-libsodium \
+    --with-pthreads \
+    --with-chroot-dir=
+make && make install
+说明
+`configure&#39; 配置 unbound 1.23.1 以适应多种类型的系统。
+
+用法: ./configure [选项]... [变量=值]...
+
+要分配环境变量 (例如 CC, CFLAGS...), 请将它们指定为
+变量=值。有关一些有用变量的描述，请参见下文。
+
+选项的默认值在中括号内指定。
+
+配置:
+    -h, --help              显示此帮助信息并退出
+    --help=short            显示此软件包特有的选项
+    --help=recursive        显示所有包含的软件包的简短帮助信息
+    -V, --version           显示版本信息并退出
+    -q, --quiet, --silent   不打印 `checking ...&#39; 消息
+    --cache-file=FILE       将测试结果缓存在 FILE 中 [禁用]
+    -C, --config-cache      `--cache-file=config.cache&#39; 的别名
+    -n, --no-create         不创建输出文件
+    --srcdir=DIR            在 DIR 中查找源代码 [配置目录或 `..&#39;]
+
+安装目录:
+    --prefix=PREFIX         将与体系结构无关的文件安装在 PREFIX 中
+                                                    [/usr/local]
+    --exec-prefix=EPREFIX   将与体系结构相关的文件安装在 EPREFIX 中
+                                                    [PREFIX]
+
+默认情况下, `make install&#39; 会将所有文件安装在 `/usr/local/bin&#39;, `/usr/local/lib&#39; 等目录中。您可以使用 `--prefix` 指定一个不同于 `/usr/local&#39; 的安装前缀, 例如 `--prefix=$HOME&#39;。
+
+为了更好地控制，请使用以下选项。
+
+微调安装目录:
+    --bindir=DIR            用户可执行文件 [EPREFIX/bin]
+    --sbindir=DIR           系统管理员可执行文件 [EPREFIX/sbin]
+    --libexecdir=DIR        程序可执行文件 [EPREFIX/libexec]
+    --sysconfdir=DIR        只读的单机数据 [PREFIX/etc]
+    --sharedstatedir=DIR    可修改的与体系结构无关的数据 [PREFIX/com]
+    --localstatedir=DIR     可修改的单机数据 [PREFIX/var]
+    --runstatedir=DIR       可修改的每进程数据 [LOCALSTATEDIR/run]
+    --libdir=DIR            目标代码库 [EPREFIX/lib]
+    --includedir=DIR        C 头文件 [PREFIX/include]
+    --oldincludedir=DIR     非 gcc 的 C 头文件 [/usr/include]
+    --datarootdir=DIR       只读的与体系结构无关的数据根目录 [PREFIX/share]
+    --datadir=DIR           只读的与体系结构无关的数据 [DATAROOTDIR]
+    --infodir=DIR           info 文档 [DATAROOTDIR/info]
+    --localedir=DIR         区域设置相关的数据 [DATAROOTDIR/locale]
+    --mandir=DIR            man 文档 [DATAROOTDIR/man]
+    --docdir=DIR            文档根目录 [DATAROOTDIR/doc/unbound]
+    --htmldir=DIR           html 文档 [DOCDIR]
+    --dvidir=DIR            dvi 文档 [DOCDIR]
+    --pdfdir=DIR            pdf 文档 [DOCDIR]
+    --psdir=DIR             ps 文档 [DOCDIR]
+
+系统类型:
+    --build=BUILD     为在 BUILD 上构建进行配置 [猜测值]
+    --host=HOST       交叉编译以构建在 HOST 上运行的程序 [BUILD]
+
+可选特性:
+    --disable-option-checking  忽略无法识别的 --enable/--with 选项
+    --disable-FEATURE       不包含 FEATURE (等同于 --enable-FEATURE=no)
+    --enable-FEATURE[=ARG]  包含 FEATURE [ARG=yes]
+    --enable-checking       启用警告、断言、makefile 依赖关系
+    --enable-debug          等同于 enable-checking
+    --disable-flto          禁用链接时优化 (gcc 特定选项)
+    --enable-pie            启用位置无关可执行文件 (例如，为了充分
+                                                    利用 ASLR，会有少量性能损失)
+    --enable-relro-now      在加载时启用完全重定位绑定 (RELRO
+                                                    NOW, 以保护 GOT 和 .dtor 区域)
+    --enable-shared[=PKGS]  构建共享库 [默认=yes]
+    --enable-static[=PKGS]  构建静态库 [默认=yes]
+    --enable-fast-install[=PKGS]
+                                                    为快速安装进行优化 [默认=yes]
+    --disable-libtool-lock  避免锁定 (可能会破坏并行构建)
+    --disable-rpath         禁用硬编码的 rpath (默认=启用)
+    --disable-largefile     忽略对大文件的支持
+    --enable-systemd        编译时支持 systemd (需要 libsystemd,
+                                                    pkg-config)
+    --enable-alloc-checks   启用内存分配统计信息，用于调试
+    --enable-alloc-lite     启用轻量级分配断言，用于调试
+    --enable-alloc-nonregional 启用非区域分配，速度较慢但会将区域分配暴露给其他内存净化器，用于调试
+    --disable-swig-version-check 禁用 swig 版本检查，以使用较旧的 swig 构建 python 模块即使这样做不可靠
+    --disable-sha1          禁用 SHA1 RRSIG 支持，不会禁用 nsec3 支持
+    --disable-sha2          禁用 SHA256 和 SHA512 RRSIG 支持
+    --enable-subnet         启用客户端子网
+    --disable-gost          禁用 GOST 支持
+    --disable-ecdsa         禁用 ECDSA 支持
+    --disable-dsa           禁用 DSA 支持
+    --disable-ed25519       禁用 ED25519 支持
+    --disable-ed448         禁用 ED448 支持
+    --enable-event-api      启用 (实验性的) 可插拔事件基础
+                                                    libunbound API，安装到 unbound-event.h
+    --enable-tfo-client     为客户端模式启用 TCP Fast Open
+    --enable-tfo-server     为服务器模式启用 TCP Fast Open
+    --enable-static-exe     启用以针对未安装的 (事件) 库静态编译
+                                                    可执行文件，用于调试
+    --enable-fully-static   启用以完全静态编译
+    --enable-lock-checks    启用以检查锁定和解锁调用，用于调试
+    --enable-allsymbols     从 libunbound 导出所有符号并将二进制文件链接到它，安装尺寸更小但 libunbound 导出表会被内部符号污染
+    --enable-dnstap         启用 dnstap 支持 (需要 protobuf-c)
+    --enable-dnscrypt       启用 dnscrypt 支持 (需要 libsodium)
+    --enable-cachedb        启用 cachedb 模块，可以使用外部缓存存储
+    --enable-ipsecmod       启用 ipsecmod 模块，以促进机会性 IPsec
+    --enable-ipset          启用 ipset 模块
+    --disable-explicit-port-randomisation 禁用显式源端口随机化，并依赖 内核提供随机源端口
+    --enable-linux-ip-local-port-range 定义此项以启用 /proc/sys/net/ipv4/ip_local_port_range 作为默认传出端口范围。这仅适用于 Linux 上的 libunbound 并且不影响 unbound 解析守护进程本身。这可能会严重限制可用的传出端口数量，从而降低随机性。仅当目标系统限制 (例如某些启用 SELinux 的发行版) 使用非临时端口时才定义此项。
+
+可选软件包:
+    --with-PACKAGE[=ARG]    使用 PACKAGE [ARG=yes]
+    --without-PACKAGE       不使用 PACKAGE (等同于 --with-PACKAGE=no)
+    --with-conf-file=path   Unbound 配置文件的路径名
+    --with-run-dir=path     设置 chdir 到的默认目录 (默认为 cfg 文件所在的目录)
+    --with-chroot-dir=path  设置 chroot 到的默认目录 (默认为与 run-dir 相同)
+    --with-share-dir=path   设置共享数据的默认目录 (默认为 share/unbound)
+    --with-pidfile=filename 设置 unbound pid 文件的默认路径名 (默认 run-dir/unbound.pid)
+    --with-rootkey-file=filename 设置根密钥文件的默认路径名 (默认 run-dir/root.key)。此文件会被读取和写入。
+    --with-rootcert-file=filename 设置根更新证书文件的默认路径名(默认 run-dir/icannbundle.pem)。如果您对内置证书满意，则此文件不必存在。
+    --with-username=user    设置 unbound 更改到的默认用户 (默认用户是 unbound)
+    --with-pic[=PKGS]       尝试仅使用 PIC/非 PIC 对象 [默认=两者都使用]
+    --with-aix-soname=aix|svr4|both 在 AIX 上提供的共享库版本控制(又名 "SONAME")变体, [默认=aix]。
+    --with-gnu-ld           假设 C 编译器使用 GNU ld [默认=no]
+    --with-sysroot[=DIR]    在 DIR 中搜索依赖库 (如果未指定，则为编译器的 sysroot)。
+    --with-pthreads         使用 pthreads 库，或使用 --without-pthreads禁用线程支持。
+    --with-solaris-threads  使用 solaris 原生线程库。
+    --with-syslog-facility=LOCAL0 - LOCAL7 设置 SYSLOG_FACILITY, 默认 DAEMON
+    --with-dynlibmodule     构建动态库模块，或使用 --without-dynlibmodule 禁用它。(默认=no)
+    --with-pyunbound        构建 PyUnbound，或使用 --without-pyunbound 跳过它。 (默认=no)
+    --with-pythonmodule     构建 Python 模块，或使用 --without-pythonmodule 禁用脚本引擎。(默认=no)
+    --with-nss=path         使用 libnss 代替 openssl，安装在 path。
+    --with-nettle=path      使用 libnettle 作为加密库，安装在 path。
+    --with-ssl=pathname     启用 SSL (将检查 /usr/local/ssl /usr/lib/ssl /usr/ssl /usr/pkg /usr/local /opt/local /usr/sfw /usr 或指定类似 /usr/include/openssl11)
+    --with-libbsd           使用可移植的 libbsd 函数
+    --with-deprecate-rsa-1024 弃用 RSA 1024 位长度，使其成为不受支持的密钥，用于 OpenSSL FIPS 拒绝 1024 位验证的情况
+    --with-libevent=pathname 使用 libevent (将检查 /usr/local /opt/local /usr/lib /usr/pkg /usr/sfw /usr 或您可以指定一个显式路径)。速度较慢，但允许使用大的传出端口范围。
+    --with-libexpat=path    为 libexpat 指定显式路径。
+    --with-libhiredis=path  为 libhiredis 指定显式路径。
+    --with-libnghttp2=path  为 libnghttp2 指定显式路径。
+    --with-libngtcp2=path   为 libngtcp2 指定显式路径，用于 QUIC。
+    --with-dnstap-socket-path=pathname 设置默认 dnstap 套接字路径
+    --with-protobuf-c=path  protobuf-c 的安装路径，用于 dnstap
+    --with-libsodium=path   libsodium 的安装路径，用于 dnscrypt
+    --with-libmnl=path      为 libmnl 指定显式路径。
+    --with-libunbound-only  不构建守护进程和工具程序
+
+一些有影响的环境变量:
+    CC          C 编译器命令
+    CFLAGS      C 编译器标志
+    LDFLAGS     链接器标志, 例如 -L<lib dir> 如果您的库在非标准目录 <lib dir> 中
+    LIBS        传递给链接器的库, 例如 -l<library>
+    CPPFLAGS    (Objective) C/C++ 预处理器标志, 例如 -I<include dir> 如果您的头文件在非标准目录 <include dir> 中
+    YACC        要使用的 `Yet Another Compiler Compiler&#39; 实现。默认为找到的第一个程序: `bison -y&#39;, `byacc&#39;, `yacc&#39;。
+    YFLAGS      默认传递给 $YACC 的参数列表。此脚本将 YFLAGS 默认为空字符串，以避免某些 make 应用程序给出的默认值 `-d&#39;。
+    LT_SYS_LIBRARY_PATH 用户定义的运行时库搜索路径。
+    PKG_CONFIG  pkg-config 工具的路径
+    PKG_CONFIG_PATH 添加到 pkg-config 搜索路径的目录
+    PKG_CONFIG_LIBDIR 覆盖 pkg-config 内置搜索路径的路径
+    CPP         C 预处理器
+    SYSTEMD_CFLAGS SYSTEMD 的 C 编译器标志, 覆盖 pkg-config
+    SYSTEMD_LIBS SYSTEMD 的链接器标志, 覆盖 pkg-config
+    SYSTEMD_DAEMON_CFLAGS SYSTEMD_DAEMON 的 C 编译器标志, 覆盖 pkg-config
+    SYSTEMD_DAEMON_LIBS SYSTEMD_DAEMON 的链接器标志, 覆盖 pkg-config
+    PYTHON_VERSION 要使用的已安装 Python 版本，例如 &#39;2.3&#39;。此字符串将附加到 Python 解释器的规范名称。
+    SOURCE_DATE_EPOCH 如果设置了此变量，则使用该变量的值而不是当前时间作为构建时间戳。格式为 unix时间戳。这可以实现可重现的构建输出。
+    PROTOBUFC_CFLAGS PROTOBUFC 的 C 编译器标志, 覆盖 pkg-config
+    PROTOBUFC_LIBS PROTOBUFC 的链接器标志, 覆盖 pkg-config
+
+使用这些变量来覆盖 `configure&#39; 所做的选择，或帮助
+它找到具有非标准名称/位置的库和程序。
+
+将错误报告给 <unbound-bugs@nlnetlabs.nl 或 https://github.com/NLnetLabs/unbound/issues>。
+创建 unbound 用户和组并配置
+groupadd --system unbound
+useradd --no-create-home --system --shell /usr/sbin/nologin unbound
+mkdir -p /var/lib/unbound
+cp /usr/share/dns/root.key /var/lib/unbound/root.key
+chown -R unbound:unbound /var/lib/unbound
+创建 unbound 的 systemd 服务文件
+cat <<EOF > /etc/systemd/system/unbound.service
+[Unit]
+Description=Unbound DNS Resolver (Experimental Build)
+Documentation=man:unbound(8) man:unbound.conf(5) https://www.nlnetlabs.nl/projects/unbound/documentation.html
+Wants=network-online.target
+After=network-online.target
+# 如果您的 auto-trust-anchor-file 或 cachedb 路径位于 /var/lib/unbound，
+# 确保 /var 在此服务启动前已挂载。
+RequiresMountsFor=/var/lib/unbound /run
+
+[Service]
+# === 基本配置 ===
+Type=notify
+# Unbound 在 &#39;--enable-systemd&#39; 编译时支持 notify 类型，它会在服务完全准备好后通知 systemd。
+
+# 指定运行 Unbound 的用户和组。
+# 您在 ./configure 时使用了 --with-username=unbound。
+# 您需要确保 &#39;unbound&#39; 用户和组在系统上存在。
+# 例如:
+# sudo groupadd --system unbound
+# sudo useradd --system -g unbound -d /var/lib/unbound -s /bin/false -c "Unbound DNS Resolver" unbound
+User=unbound
+Group=unbound
+
+# 预启动检查配置文件
+ExecStartPre=/usr/sbin/unbound-checkconf /etc/unbound/unbound.conf
+
+# 启动命令
+# -d: 不进行后台守护进程化 (systemd 处理)
+# -p: 创建 PID 文件 (与 --with-pidfile 编译选项匹配)
+# -c: 指定配置文件路径
+ExecStart=/usr/sbin/unbound -d -p -c /etc/unbound/unbound.conf
+
+# 重载配置 (需要 unbound.conf 中启用 remote-control)
+ExecReload=/usr/sbin/unbound-control reload
+
+# 重启策略
+Restart=on-failure
+RestartSec=5s
+
+# PID 文件路径 (与 --with-pidfile 编译选项匹配)
+# RuntimeDirectory 会自动创建 /run/unbound 并设置权限给指定用户
+PIDFile=/run/unbound/unbound.pid
+
+# === 资源和权限管理 ===
+# 运行时目录，systemd 会创建 /run/unbound 并设置所有权为 User 和 Group 指定的用户/组
+RuntimeDirectory=unbound
+RuntimeDirectoryMode=0750
+
+# 能力绑定
+# CAP_NET_BIND_SERVICE 允许 &#39;unbound&#39; 用户绑定到特权端口 (如53)
+AmbientCapabilities=CAP_NET_BIND_SERVICE
+CapabilityBoundingSet=CAP_NET_BIND_SERVICE CAP_SETGID CAP_SETUID
+# 如果在 unbound.conf 中启用了 chroot，并且 Unbound 在降权为 &#39;unbound&#39; 用户后才执行 chroot,
+# 则可能还需要 CAP_SYS_CHROOT。但通常 chroot 在降权前由root完成，或者Unbound启动时即为&#39;unbound&#39;用户，则无法chroot到任意目录。
+# 您的 --with-username=unbound 意味着Unbound会自行处理权限。
+
+# --- 安全强化选项 ---
+#NoNewPrivileges=yes
+#ProtectSystem=no
+# 如果 ProtectSystem=strict 导致 Unbound 无法写入其管理的 root.key 或 cachedb (通常在 /var/lib/unbound/)：
+# 您需要添加 ReadWritePaths 指令。例如：
+# ReadWritePaths=/var/lib/unbound
+# 如果您在 unbound.conf 中使用了 chroot: "/etc/unbound" 并且需要在其中写入 (如 root.key):
+# ReadWritePaths=/etc/unbound
+#ProtectHome=no
+#PrivateTmp=no
+#PrivateDevices=yes
+# MemoryDenyWriteExecute=yes # 如果系统和Unbound版本支持，可增强安全性
+
+[Install]
+WantedBy=multi-user.target
+EOF
+创建 unbound 的配置文件
+cat <<EOF > /etc/unbound/unbound.conf
+# Unbound configuration file
+#
+# See unbound.conf(5) man page for more information.
+#
+# 注意: 路径 (例如 logfile, root-hints, auto-trust-anchor-file)
+# 可能需要根据您的操作系统和Unbound安装方式进行调整。
+# 确保Unbound进程对指定的日志文件和自动信任锚点文件具有写入权限（或对其目录）。
+
+server:
+    # --- 基本服务器设置 ---
+    verbosity: 0                     # 日志详细级别 (0=仅错误, 1=操作信息, 2=详细操作, ... 5=非常详细)
+    #logfile: "/var/log/unbound/unbound.log" # 日志文件路径。如果注释掉或为空，则可能记录到syslog。
+                                              # 例如: FreeBSD: /var/unbound/unbound.log, OpenBSD: Unbound chroots and logs via syslog
+                                              # Linux (from package): often /var/log/unbound.log or uses systemd journal
+    use-syslog: no                  # 如果指定了 logfile，设为 no 则仅记录到文件。设为 yes 则也发送到 syslog。
+
+    module-config: "validator cachedb iterator"
+
+    interface: 0.0.0.0               # 监听所有 IPv4 地址
+    interface: ::0                   # 监听所有 IPv6 地址 (如果您的系统支持IPv6)
+    port: 54                         # 监听的端口 (DNS标准端口)
+
+    do-ip4: yes                      # 允许 IPv4
+    do-ip6: yes                      # 允许 IPv6 (如果网络支持)
+    do-udp: yes                      # 允许 UDP
+    do-tcp: yes                      # 允许 TCP
+
+    # --- 访问控制 ---
+    # 定义哪些客户端IP地址或子网可以查询此服务器。
+    # 强烈建议配置此项以防止滥用。
+    access-control: 127.0.0.0/8 allow    # 允许本地回环地址 (IPv4)
+    access-control: ::1/128 allow        # 允许本地回环地址 (IPv6)
+    # 示例：允许常见的私有网络范围。根据您的网络调整或添加。
+    access-control: 192.168.0.0/16 allow
+    access-control: 10.0.0.0/8 allow
+    access-control: 172.16.0.0/12 allow
+    # access-control: ::ffff:127.0.0.1/128 allow # IPv4-mapped IPv6 localhost
+
+    # --- 性能和缓存设置 ---
+    msg-cache-size: 10m              # DNS消息缓存大小 (查询和应答)
+    rrset-cache-size: 20m            # RRset缓存大小 (DNS资源记录)
+
+    # 缓存相关的 slab 数量，通常可以设为接近 num-threads 的值或者2的幂次方。
+    msg-cache-slabs: 4
+    rrset-cache-slabs: 4
+
+    num-threads: 2                   # 创建的线程数。理想情况下，设置为CPU核心数。
+                                     # 对于较小的部署，1或2通常足够。
+
+    # 增加传出查询可用的端口范围，有助于防止某些类型的攻击。
+    outgoing-range: 1024
+    # 每个线程可以并发处理的查询数上限。
+    num-queries-per-thread: 2048
+
+    # --- 过期缓存与预取功能 (Requested "过期缓存功能") ---
+    prefetch: yes                    # 在缓存条目过期前主动获取更新，保持常用条目新鲜。
+    prefetch-key: yes                # 在验证DS记录时，提前获取DNSKEY记录，加速后续DNSSEC验证。
+
+    serve-expired: yes               # 在尝试获取新记录的同时，从缓存中提供已过期的记录。
+                                     # 这可以提高当上游权威服务器缓慢或无响应时的可用性。
+    serve-expired-ttl: 3600          # (1小时) 提供已过期记录时，该记录的TTL值。
+    serve-expired-reply-ttl: 30      # (30秒) 当提供过期数据时，客户端应该缓存这条过期数据的TTL。
+    serve-expired-client-timeout: 1000 # (1秒) 在提供过期数据之前，等待新答案的最长时间（毫秒）。
+
+    # --- 安全设置 ---
+    harden-glue: yes                 # 强化对胶水记录的验证。
+    harden-dnssec-stripped: yes      # 防止DNSSEC剥离攻击。
+    harden-algo-downgrade: yes       # 防止算法降级攻击。
+    use-caps-for-id: yes             # 在查询ID中使用随机大小写混合（0x20技巧）来增加欺骗难度。
+
+    edns-buffer-size: 1232           # EDNS0 UDP包的建议大小，以减少IP分片。
+
+    hide-identity: yes               # 拒绝回应 id.server 和 hostname.bind 的查询。
+    hide-version: yes                # 拒绝回应 version.server 和 version.bind 的查询。
+
+    # 定义私有地址范围，Unbound会从DNS响应中剥离这些地址，以防止DNS重绑定攻击。
+    private-address: 10.0.0.0/8
+    private-address: 172.16.0.0/12
+    private-address: 192.168.0.0/16
+    private-address: 169.254.0.0/16
+    private-address: fd00::/8
+    private-address: fe80::/10
+    # private-domain: "example.com" # 如果您有不想被外部解析的内部域名，可以在这里声明。
+
+    # 不查询回环地址上的公共域名，防止潜在的循环或安全问题。
+    do-not-query-localhost: yes
+
+    # --- DNSSEC 验证 ---
+    # 自动管理和更新根信任锚点。Unbound需要对该文件的目录有写权限，或者您可以手动管理此文件。
+    # 路径可能为: /var/lib/unbound/root.key (Debian/Ubuntu), /usr/local/etc/unbound/root.key (FreeBSD ports),
+    # /etc/unbound/root.key (generic from source), /opt/homebrew/etc/unbound/root.key (macOS Homebrew)
+    auto-trust-anchor-file: "/var/lib/unbound/root.key"
+
+    val-log-level: 1                 # DNSSEC验证失败时的日志级别 (1=基本信息, 2=详细信息)。
+
+    # --- 根提示文件 (Root Hints) ---
+    # 如果Unbound作为递归解析器直接从根服务器开始解析 (而不是转发模式)，则需要此文件。
+    # 确保此文件存在并且保持最新。
+    # 路径可能为: /usr/share/dns/root.hints (common on Linux), /etc/unbound/root.hints,
+    # /usr/local/etc/unbound/root.hints
+    root-hints: "/usr/share/dns/root.hints"
+
+    # --- 转发模式 (可选) ---
+    # 如果您希望Unbound将所有查询转发到其他上游DNS服务器，而不是自己从根进行递归解析，
+    # 请取消注释并配置以下部分。如果启用了转发，则上面的 root-hints 通常不再需要。
+    # forward-zone:
+    #   name: "."  # 转发所有查询
+    #   # 常用的公共DNS服务器示例:
+    #   forward-addr: 8.8.8.8@53      # Google
+    #   forward-addr: 8.8.4.4@53      # Google
+    #   forward-addr: 1.1.1.1@53      # Cloudflare
+    #   forward-addr: 1.0.0.1@53      # Cloudflare
+    #   # 如果您的上游服务器支持DNS-over-TLS (DoT):
+    #   # forward-tls-upstream: yes
+    #   # forward-addr: 1.1.1.1@853#cloudflare-dns.com # DoT示例，主机名用于证书验证
+
+# --- 远程控制 (可选) ---
+# 允许使用 unbound-control 工具管理Unbound服务。
+# 如果启用，请确保使用 unbound-control-setup 生成密钥和证书文件。
+# remote-control:
+#   control-enable: yes
+#   control-interface: 127.0.0.1    # 监听远程控制连接的IP地址
+#   control-port: 8953              # 监听远程控制连接的端口
+#   # 以下文件路径也需要根据您的安装进行调整
+#   server-key-file: "/etc/unbound/unbound_server.key"
+#   server-cert-file: "/etc/unbound/unbound_server.pem"
+#   control-key-file: "/etc/unbound/unbound_control.key"
+#   control-cert-file: "/etc/unbound/unbound_control.pem"
+
+# cachedb:
+    # backend: "redis"  # 指定后端为 redis (这通常也适用于Valkey)
+
+    # --- Redis/Valkey 服务器连接参数 ---
+    # redis-server-host: 192.168.2.11
+    # redis-server-port: 6379
+
+    #redis-server-path: "/run/valkey/valkey-server.sock"
+    # redis-server-password: "your_valkey_password" # 如果Valkey设置了密码
+    # redis-database: 0                # 可选，Valkey/Redis数据库编号 (默认为0)
+
+    # --- 可选的 Redis/Valkey 相关超时设置 (如果后端驱动支持) ---
+    # redis-timeout: 100               # 连接和操作超时 (毫秒)
+
+    # --- 缓存数据密钥前缀 (可选) ---
+    # redis-key-prefix: "unbound_cache:" # 避免与其他应用在同一Valkey实例中的键冲突
+
+    # --- 其他 cachedb 通用设置 (可能适用) ---
+    # cachedb-no-store: no        # 是否存储否定缓存条目 (默认为no，即存储)
+EOF
+启动 unbound 服务
+sudo systemctl daemon-reload
+sudo systemctl enable unbound
+sudo systemctl start unbound
+检查 unbound 服务状态
+sudo systemctl status unbound
+'><script type=application/ld+json>{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Posts","item":"https://tnzzz.top/posts/"},{"@type":"ListItem","position":2,"name":"Debian 编译安装 unbound","item":"https://tnzzz.top/posts/%E6%95%99%E7%A8%8B/debian%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85unbound/"}]}</script><script type=application/ld+json>{"@context":"https://schema.org","@type":"BlogPosting","headline":"Debian 编译安装 unbound","name":"Debian 编译安装 unbound","description":"unbound 简介 Unbound是一款验证型、递归式、带缓存的DNS解析器，旨在实现快速与轻量化，并融合了基于开放标准的现代特性。\n为增强在线隐私保护，Unbound支持DNS-over-TLS和DNS-over-HTTPS，使客户端能够加密通信。此外，它还支持多种现代标准，这些标准不仅减少了与权威服务器交换的数据量，提升了隐私性，还增强了DNS的健壮性。其中最为关键的技术包括查询名称最小化、积极利用DNSSEC验证缓存，以及对权威区域的支持，后者可用于加载根区域副本。\nUnbound兼容所有Linux和BSD发行版，以及macOS，大多数平台均有现成安装包。它已被纳入所有主要BSD操作系统的基础系统，以及大多数Linux发行版的标准软件库中，安装与配置简便易行，仅需几行配置即可为单机或网络设置解析器。\n作为遵循BSD许可证的自由开源软件，Unbound的产品开发路线图首要关注用户的安全与隐私。同时，所有功能均需依托成熟的开放标准。我们持续为所有用户优化Unbound的功能，这意味着我们不会为付费客户定制构建或提供专属功能。我们的优先级由用户反馈，特别是拥有支持合同的用户，以及更广泛的互联网社区所引导。在可能的情况下，赞助功能将获得更高优先级，并会逐案评估。 Source\n安装必要的依赖 sudo apt update sudo apt install -y build-essential libssl-dev bison flex libhiredis-dev libevent-dev libsystemd-dev pkg-config make dns-root-data 下载并编译安装 unbound git clone https://github.com/NLnetLabs/unbound cd unbound ./configure --prefix=/usr \\ --sysconfdir=/etc \\ --localstatedir=/var \\ --runstatedir=/run \\ --with-username=unbound \\ --with-ssl \\ --with-libevent \\ --enable-systemd \\ --enable-subnet \\ --enable-tfo-client \\ --enable-tfo-server \\ --enable-cachedb \\ --with-libhiredis \\ --disable-rpath \\ --with-pidfile=/run/unbound/unbound.pid \\ --with-rootkey-file=/var/lib/unbound/root.key \\ --with-libnghttp2 \\ --with-libsodium \\ --with-pthreads \\ --with-chroot-dir= make \u0026amp;\u0026amp; make install 说明 `configure\u0026#39; 配置 unbound 1.23.1 以适应多种类型的系统。 用法: ./configure [选项]... [变量=值]... 要分配环境变量 (例如 CC, CFLAGS...), 请将它们指定为 变量=值。有关一些有用变量的描述，请参见下文。 选项的默认值在中括号内指定。 配置: -h, --help 显示此帮助信息并退出 --help=short 显示此软件包特有的选项 --help=recursive 显示所有包含的软件包的简短帮助信息 -V, --version 显示版本信息并退出 -q, --quiet, --silent 不打印 `checking ...\u0026#39; 消息 --cache-file=FILE 将测试结果缓存在 FILE 中 [禁用] -C, --config-cache `--cache-file=config.cache\u0026#39; 的别名 -n, --no-create 不创建输出文件 --srcdir=DIR 在 DIR 中查找源代码 [配置目录或 `..\u0026#39;] 安装目录: --prefix=PREFIX 将与体系结构无关的文件安装在 PREFIX 中 [/usr/local] --exec-prefix=EPREFIX 将与体系结构相关的文件安装在 EPREFIX 中 [PREFIX] 默认情况下, `make install\u0026#39; 会将所有文件安装在 `/usr/local/bin\u0026#39;, `/usr/local/lib\u0026#39; 等目录中。您可以使用 `--prefix` 指定一个不同于 `/usr/local\u0026#39; 的安装前缀, 例如 `--prefix=$HOME\u0026#39;。 为了更好地控制，请使用以下选项。 微调安装目录: --bindir=DIR 用户可执行文件 [EPREFIX/bin] --sbindir=DIR 系统管理员可执行文件 [EPREFIX/sbin] --libexecdir=DIR 程序可执行文件 [EPREFIX/libexec] --sysconfdir=DIR 只读的单机数据 [PREFIX/etc] --sharedstatedir=DIR 可修改的与体系结构无关的数据 [PREFIX/com] --localstatedir=DIR 可修改的单机数据 [PREFIX/var] --runstatedir=DIR 可修改的每进程数据 [LOCALSTATEDIR/run] --libdir=DIR 目标代码库 [EPREFIX/lib] --includedir=DIR C 头文件 [PREFIX/include] --oldincludedir=DIR 非 gcc 的 C 头文件 [/usr/include] --datarootdir=DIR 只读的与体系结构无关的数据根目录 [PREFIX/share] --datadir=DIR 只读的与体系结构无关的数据 [DATAROOTDIR] --infodir=DIR info 文档 [DATAROOTDIR/info] --localedir=DIR 区域设置相关的数据 [DATAROOTDIR/locale] --mandir=DIR man 文档 [DATAROOTDIR/man] --docdir=DIR 文档根目录 [DATAROOTDIR/doc/unbound] --htmldir=DIR html 文档 [DOCDIR] --dvidir=DIR dvi 文档 [DOCDIR] --pdfdir=DIR pdf 文档 [DOCDIR] --psdir=DIR ps 文档 [DOCDIR] 系统类型: --build=BUILD 为在 BUILD 上构建进行配置 [猜测值] --host=HOST 交叉编译以构建在 HOST 上运行的程序 [BUILD] 可选特性: --disable-option-checking 忽略无法识别的 --enable/--with 选项 --disable-FEATURE 不包含 FEATURE (等同于 --enable-FEATURE=no) --enable-FEATURE[=ARG] 包含 FEATURE [ARG=yes] --enable-checking 启用警告、断言、makefile 依赖关系 --enable-debug 等同于 enable-checking --disable-flto 禁用链接时优化 (gcc 特定选项) --enable-pie 启用位置无关可执行文件 (例如，为了充分 利用 ASLR，会有少量性能损失) --enable-relro-now 在加载时启用完全重定位绑定 (RELRO NOW, 以保护 GOT 和 .dtor 区域) --enable-shared[=PKGS] 构建共享库 [默认=yes] --enable-static[=PKGS] 构建静态库 [默认=yes] --enable-fast-install[=PKGS] 为快速安装进行优化 [默认=yes] --disable-libtool-lock 避免锁定 (可能会破坏并行构建) --disable-rpath 禁用硬编码的 rpath (默认=启用) --disable-largefile 忽略对大文件的支持 --enable-systemd 编译时支持 systemd (需要 libsystemd, pkg-config) --enable-alloc-checks 启用内存分配统计信息，用于调试 --enable-alloc-lite 启用轻量级分配断言，用于调试 --enable-alloc-nonregional 启用非区域分配，速度较慢但会将区域分配暴露给其他内存净化器，用于调试 --disable-swig-version-check 禁用 swig 版本检查，以使用较旧的 swig 构建 python 模块即使这样做不可靠 --disable-sha1 禁用 SHA1 RRSIG 支持，不会禁用 nsec3 支持 --disable-sha2 禁用 SHA256 和 SHA512 RRSIG 支持 --enable-subnet 启用客户端子网 --disable-gost 禁用 GOST 支持 --disable-ecdsa 禁用 ECDSA 支持 --disable-dsa 禁用 DSA 支持 --disable-ed25519 禁用 ED25519 支持 --disable-ed448 禁用 ED448 支持 --enable-event-api 启用 (实验性的) 可插拔事件基础 libunbound API，安装到 unbound-event.h --enable-tfo-client 为客户端模式启用 TCP Fast Open --enable-tfo-server 为服务器模式启用 TCP Fast Open --enable-static-exe 启用以针对未安装的 (事件) 库静态编译 可执行文件，用于调试 --enable-fully-static 启用以完全静态编译 --enable-lock-checks 启用以检查锁定和解锁调用，用于调试 --enable-allsymbols 从 libunbound 导出所有符号并将二进制文件链接到它，安装尺寸更小但 libunbound 导出表会被内部符号污染 --enable-dnstap 启用 dnstap 支持 (需要 protobuf-c) --enable-dnscrypt 启用 dnscrypt 支持 (需要 libsodium) --enable-cachedb 启用 cachedb 模块，可以使用外部缓存存储 --enable-ipsecmod 启用 ipsecmod 模块，以促进机会性 IPsec --enable-ipset 启用 ipset 模块 --disable-explicit-port-randomisation 禁用显式源端口随机化，并依赖 内核提供随机源端口 --enable-linux-ip-local-port-range 定义此项以启用 /proc/sys/net/ipv4/ip_local_port_range 作为默认传出端口范围。这仅适用于 Linux 上的 libunbound 并且不影响 unbound 解析守护进程本身。这可能会严重限制可用的传出端口数量，从而降低随机性。仅当目标系统限制 (例如某些启用 SELinux 的发行版) 使用非临时端口时才定义此项。 可选软件包: --with-PACKAGE[=ARG] 使用 PACKAGE [ARG=yes] --without-PACKAGE 不使用 PACKAGE (等同于 --with-PACKAGE=no) --with-conf-file=path Unbound 配置文件的路径名 --with-run-dir=path 设置 chdir 到的默认目录 (默认为 cfg 文件所在的目录) --with-chroot-dir=path 设置 chroot 到的默认目录 (默认为与 run-dir 相同) --with-share-dir=path 设置共享数据的默认目录 (默认为 share/unbound) --with-pidfile=filename 设置 unbound pid 文件的默认路径名 (默认 run-dir/unbound.pid) --with-rootkey-file=filename 设置根密钥文件的默认路径名 (默认 run-dir/root.key)。此文件会被读取和写入。 --with-rootcert-file=filename 设置根更新证书文件的默认路径名(默认 run-dir/icannbundle.pem)。如果您对内置证书满意，则此文件不必存在。 --with-username=user 设置 unbound 更改到的默认用户 (默认用户是 unbound) --with-pic[=PKGS] 尝试仅使用 PIC/非 PIC 对象 [默认=两者都使用] --with-aix-soname=aix|svr4|both 在 AIX 上提供的共享库版本控制(又名 \u0026#34;SONAME\u0026#34;)变体, [默认=aix]。 --with-gnu-ld 假设 C 编译器使用 GNU ld [默认=no] --with-sysroot[=DIR] 在 DIR 中搜索依赖库 (如果未指定，则为编译器的 sysroot)。 --with-pthreads 使用 pthreads 库，或使用 --without-pthreads禁用线程支持。 --with-solaris-threads 使用 solaris 原生线程库。 --with-syslog-facility=LOCAL0 - LOCAL7 设置 SYSLOG_FACILITY, 默认 DAEMON --with-dynlibmodule 构建动态库模块，或使用 --without-dynlibmodule 禁用它。(默认=no) --with-pyunbound 构建 PyUnbound，或使用 --without-pyunbound 跳过它。 (默认=no) --with-pythonmodule 构建 Python 模块，或使用 --without-pythonmodule 禁用脚本引擎。(默认=no) --with-nss=path 使用 libnss 代替 openssl，安装在 path。 --with-nettle=path 使用 libnettle 作为加密库，安装在 path。 --with-ssl=pathname 启用 SSL (将检查 /usr/local/ssl /usr/lib/ssl /usr/ssl /usr/pkg /usr/local /opt/local /usr/sfw /usr 或指定类似 /usr/include/openssl11) --with-libbsd 使用可移植的 libbsd 函数 --with-deprecate-rsa-1024 弃用 RSA 1024 位长度，使其成为不受支持的密钥，用于 OpenSSL FIPS 拒绝 1024 位验证的情况 --with-libevent=pathname 使用 libevent (将检查 /usr/local /opt/local /usr/lib /usr/pkg /usr/sfw /usr 或您可以指定一个显式路径)。速度较慢，但允许使用大的传出端口范围。 --with-libexpat=path 为 libexpat 指定显式路径。 --with-libhiredis=path 为 libhiredis 指定显式路径。 --with-libnghttp2=path 为 libnghttp2 指定显式路径。 --with-libngtcp2=path 为 libngtcp2 指定显式路径，用于 QUIC。 --with-dnstap-socket-path=pathname 设置默认 dnstap 套接字路径 --with-protobuf-c=path protobuf-c 的安装路径，用于 dnstap --with-libsodium=path libsodium 的安装路径，用于 dnscrypt --with-libmnl=path 为 libmnl 指定显式路径。 --with-libunbound-only 不构建守护进程和工具程序 一些有影响的环境变量: CC C 编译器命令 CFLAGS C 编译器标志 LDFLAGS 链接器标志, 例如 -L\u0026lt;lib dir\u0026gt; 如果您的库在非标准目录 \u0026lt;lib dir\u0026gt; 中 LIBS 传递给链接器的库, 例如 -l\u0026lt;library\u0026gt; CPPFLAGS (Objective) C/C++ 预处理器标志, 例如 -I\u0026lt;include dir\u0026gt; 如果您的头文件在非标准目录 \u0026lt;include dir\u0026gt; 中 YACC 要使用的 `Yet Another Compiler Compiler\u0026#39; 实现。默认为找到的第一个程序: `bison -y\u0026#39;, `byacc\u0026#39;, `yacc\u0026#39;。 YFLAGS 默认传递给 $YACC 的参数列表。此脚本将 YFLAGS 默认为空字符串，以避免某些 make 应用程序给出的默认值 `-d\u0026#39;。 LT_SYS_LIBRARY_PATH 用户定义的运行时库搜索路径。 PKG_CONFIG pkg-config 工具的路径 PKG_CONFIG_PATH 添加到 pkg-config 搜索路径的目录 PKG_CONFIG_LIBDIR 覆盖 pkg-config 内置搜索路径的路径 CPP C 预处理器 SYSTEMD_CFLAGS SYSTEMD 的 C 编译器标志, 覆盖 pkg-config SYSTEMD_LIBS SYSTEMD 的链接器标志, 覆盖 pkg-config SYSTEMD_DAEMON_CFLAGS SYSTEMD_DAEMON 的 C 编译器标志, 覆盖 pkg-config SYSTEMD_DAEMON_LIBS SYSTEMD_DAEMON 的链接器标志, 覆盖 pkg-config PYTHON_VERSION 要使用的已安装 Python 版本，例如 \u0026#39;2.3\u0026#39;。此字符串将附加到 Python 解释器的规范名称。 SOURCE_DATE_EPOCH 如果设置了此变量，则使用该变量的值而不是当前时间作为构建时间戳。格式为 unix时间戳。这可以实现可重现的构建输出。 PROTOBUFC_CFLAGS PROTOBUFC 的 C 编译器标志, 覆盖 pkg-config PROTOBUFC_LIBS PROTOBUFC 的链接器标志, 覆盖 pkg-config 使用这些变量来覆盖 `configure\u0026#39; 所做的选择，或帮助 它找到具有非标准名称/位置的库和程序。 将错误报告给 \u0026lt;unbound-bugs@nlnetlabs.nl 或 https://github.com/NLnetLabs/unbound/issues\u0026gt;。 创建 unbound 用户和组并配置 groupadd --system unbound useradd --no-create-home --system --shell /usr/sbin/nologin unbound mkdir -p /var/lib/unbound cp /usr/share/dns/root.key /var/lib/unbound/root.key chown -R unbound:unbound /var/lib/unbound 创建 unbound 的 systemd 服务文件 cat \u0026lt;\u0026lt;EOF \u0026gt; /etc/systemd/system/unbound.service [Unit] Description=Unbound DNS Resolver (Experimental Build) Documentation=man:unbound(8) man:unbound.conf(5) https://www.nlnetlabs.nl/projects/unbound/documentation.html Wants=network-online.target After=network-online.target # 如果您的 auto-trust-anchor-file 或 cachedb 路径位于 /var/lib/unbound， # 确保 /var 在此服务启动前已挂载。 RequiresMountsFor=/var/lib/unbound /run [Service] # === 基本配置 === Type=notify # Unbound 在 \u0026#39;--enable-systemd\u0026#39; 编译时支持 notify 类型，它会在服务完全准备好后通知 systemd。 # 指定运行 Unbound 的用户和组。 # 您在 ./configure 时使用了 --with-username=unbound。 # 您需要确保 \u0026#39;unbound\u0026#39; 用户和组在系统上存在。 # 例如: # sudo groupadd --system unbound # sudo useradd --system -g unbound -d /var/lib/unbound -s /bin/false -c \u0026#34;Unbound DNS Resolver\u0026#34; unbound User=unbound Group=unbound # 预启动检查配置文件 ExecStartPre=/usr/sbin/unbound-checkconf /etc/unbound/unbound.conf # 启动命令 # -d: 不进行后台守护进程化 (systemd 处理) # -p: 创建 PID 文件 (与 --with-pidfile 编译选项匹配) # -c: 指定配置文件路径 ExecStart=/usr/sbin/unbound -d -p -c /etc/unbound/unbound.conf # 重载配置 (需要 unbound.conf 中启用 remote-control) ExecReload=/usr/sbin/unbound-control reload # 重启策略 Restart=on-failure RestartSec=5s # PID 文件路径 (与 --with-pidfile 编译选项匹配) # RuntimeDirectory 会自动创建 /run/unbound 并设置权限给指定用户 PIDFile=/run/unbound/unbound.pid # === 资源和权限管理 === # 运行时目录，systemd 会创建 /run/unbound 并设置所有权为 User 和 Group 指定的用户/组 RuntimeDirectory=unbound RuntimeDirectoryMode=0750 # 能力绑定 # CAP_NET_BIND_SERVICE 允许 \u0026#39;unbound\u0026#39; 用户绑定到特权端口 (如53) AmbientCapabilities=CAP_NET_BIND_SERVICE CapabilityBoundingSet=CAP_NET_BIND_SERVICE CAP_SETGID CAP_SETUID # 如果在 unbound.conf 中启用了 chroot，并且 Unbound 在降权为 \u0026#39;unbound\u0026#39; 用户后才执行 chroot, # 则可能还需要 CAP_SYS_CHROOT。但通常 chroot 在降权前由root完成，或者Unbound启动时即为\u0026#39;unbound\u0026#39;用户，则无法chroot到任意目录。 # 您的 --with-username=unbound 意味着Unbound会自行处理权限。 # --- 安全强化选项 --- #NoNewPrivileges=yes #ProtectSystem=no # 如果 ProtectSystem=strict 导致 Unbound 无法写入其管理的 root.key 或 cachedb (通常在 /var/lib/unbound/)： # 您需要添加 ReadWritePaths 指令。例如： # ReadWritePaths=/var/lib/unbound # 如果您在 unbound.conf 中使用了 chroot: \u0026#34;/etc/unbound\u0026#34; 并且需要在其中写入 (如 root.key): # ReadWritePaths=/etc/unbound #ProtectHome=no #PrivateTmp=no #PrivateDevices=yes # MemoryDenyWriteExecute=yes # 如果系统和Unbound版本支持，可增强安全性 [Install] WantedBy=multi-user.target EOF 创建 unbound 的配置文件 cat \u0026lt;\u0026lt;EOF \u0026gt; /etc/unbound/unbound.conf # Unbound configuration file # # See unbound.conf(5) man page for more information. # # 注意: 路径 (例如 logfile, root-hints, auto-trust-anchor-file) # 可能需要根据您的操作系统和Unbound安装方式进行调整。 # 确保Unbound进程对指定的日志文件和自动信任锚点文件具有写入权限（或对其目录）。 server: # --- 基本服务器设置 --- verbosity: 0 # 日志详细级别 (0=仅错误, 1=操作信息, 2=详细操作, ... 5=非常详细) #logfile: \u0026#34;/var/log/unbound/unbound.log\u0026#34; # 日志文件路径。如果注释掉或为空，则可能记录到syslog。 # 例如: FreeBSD: /var/unbound/unbound.log, OpenBSD: Unbound chroots and logs via syslog # Linux (from package): often /var/log/unbound.log or uses systemd journal use-syslog: no # 如果指定了 logfile，设为 no 则仅记录到文件。设为 yes 则也发送到 syslog。 module-config: \u0026#34;validator cachedb iterator\u0026#34; interface: 0.0.0.0 # 监听所有 IPv4 地址 interface: ::0 # 监听所有 IPv6 地址 (如果您的系统支持IPv6) port: 54 # 监听的端口 (DNS标准端口) do-ip4: yes # 允许 IPv4 do-ip6: yes # 允许 IPv6 (如果网络支持) do-udp: yes # 允许 UDP do-tcp: yes # 允许 TCP # --- 访问控制 --- # 定义哪些客户端IP地址或子网可以查询此服务器。 # 强烈建议配置此项以防止滥用。 access-control: 127.0.0.0/8 allow # 允许本地回环地址 (IPv4) access-control: ::1/128 allow # 允许本地回环地址 (IPv6) # 示例：允许常见的私有网络范围。根据您的网络调整或添加。 access-control: 192.168.0.0/16 allow access-control: 10.0.0.0/8 allow access-control: 172.16.0.0/12 allow # access-control: ::ffff:127.0.0.1/128 allow # IPv4-mapped IPv6 localhost # --- 性能和缓存设置 --- msg-cache-size: 10m # DNS消息缓存大小 (查询和应答) rrset-cache-size: 20m # RRset缓存大小 (DNS资源记录) # 缓存相关的 slab 数量，通常可以设为接近 num-threads 的值或者2的幂次方。 msg-cache-slabs: 4 rrset-cache-slabs: 4 num-threads: 2 # 创建的线程数。理想情况下，设置为CPU核心数。 # 对于较小的部署，1或2通常足够。 # 增加传出查询可用的端口范围，有助于防止某些类型的攻击。 outgoing-range: 1024 # 每个线程可以并发处理的查询数上限。 num-queries-per-thread: 2048 # --- 过期缓存与预取功能 (Requested \u0026#34;过期缓存功能\u0026#34;) --- prefetch: yes # 在缓存条目过期前主动获取更新，保持常用条目新鲜。 prefetch-key: yes # 在验证DS记录时，提前获取DNSKEY记录，加速后续DNSSEC验证。 serve-expired: yes # 在尝试获取新记录的同时，从缓存中提供已过期的记录。 # 这可以提高当上游权威服务器缓慢或无响应时的可用性。 serve-expired-ttl: 3600 # (1小时) 提供已过期记录时，该记录的TTL值。 serve-expired-reply-ttl: 30 # (30秒) 当提供过期数据时，客户端应该缓存这条过期数据的TTL。 serve-expired-client-timeout: 1000 # (1秒) 在提供过期数据之前，等待新答案的最长时间（毫秒）。 # --- 安全设置 --- harden-glue: yes # 强化对胶水记录的验证。 harden-dnssec-stripped: yes # 防止DNSSEC剥离攻击。 harden-algo-downgrade: yes # 防止算法降级攻击。 use-caps-for-id: yes # 在查询ID中使用随机大小写混合（0x20技巧）来增加欺骗难度。 edns-buffer-size: 1232 # EDNS0 UDP包的建议大小，以减少IP分片。 hide-identity: yes # 拒绝回应 id.server 和 hostname.bind 的查询。 hide-version: yes # 拒绝回应 version.server 和 version.bind 的查询。 # 定义私有地址范围，Unbound会从DNS响应中剥离这些地址，以防止DNS重绑定攻击。 private-address: 10.0.0.0/8 private-address: 172.16.0.0/12 private-address: 192.168.0.0/16 private-address: 169.254.0.0/16 private-address: fd00::/8 private-address: fe80::/10 # private-domain: \u0026#34;example.com\u0026#34; # 如果您有不想被外部解析的内部域名，可以在这里声明。 # 不查询回环地址上的公共域名，防止潜在的循环或安全问题。 do-not-query-localhost: yes # --- DNSSEC 验证 --- # 自动管理和更新根信任锚点。Unbound需要对该文件的目录有写权限，或者您可以手动管理此文件。 # 路径可能为: /var/lib/unbound/root.key (Debian/Ubuntu), /usr/local/etc/unbound/root.key (FreeBSD ports), # /etc/unbound/root.key (generic from source), /opt/homebrew/etc/unbound/root.key (macOS Homebrew) auto-trust-anchor-file: \u0026#34;/var/lib/unbound/root.key\u0026#34; val-log-level: 1 # DNSSEC验证失败时的日志级别 (1=基本信息, 2=详细信息)。 # --- 根提示文件 (Root Hints) --- # 如果Unbound作为递归解析器直接从根服务器开始解析 (而不是转发模式)，则需要此文件。 # 确保此文件存在并且保持最新。 # 路径可能为: /usr/share/dns/root.hints (common on Linux), /etc/unbound/root.hints, # /usr/local/etc/unbound/root.hints root-hints: \u0026#34;/usr/share/dns/root.hints\u0026#34; # --- 转发模式 (可选) --- # 如果您希望Unbound将所有查询转发到其他上游DNS服务器，而不是自己从根进行递归解析， # 请取消注释并配置以下部分。如果启用了转发，则上面的 root-hints 通常不再需要。 # forward-zone: # name: \u0026#34;.\u0026#34; # 转发所有查询 # # 常用的公共DNS服务器示例: # forward-addr: 8.8.8.8@53 # Google # forward-addr: 8.8.4.4@53 # Google # forward-addr: 1.1.1.1@53 # Cloudflare # forward-addr: 1.0.0.1@53 # Cloudflare # # 如果您的上游服务器支持DNS-over-TLS (DoT): # # forward-tls-upstream: yes # # forward-addr: 1.1.1.1@853#cloudflare-dns.com # DoT示例，主机名用于证书验证 # --- 远程控制 (可选) --- # 允许使用 unbound-control 工具管理Unbound服务。 # 如果启用，请确保使用 unbound-control-setup 生成密钥和证书文件。 # remote-control: # control-enable: yes # control-interface: 127.0.0.1 # 监听远程控制连接的IP地址 # control-port: 8953 # 监听远程控制连接的端口 # # 以下文件路径也需要根据您的安装进行调整 # server-key-file: \u0026#34;/etc/unbound/unbound_server.key\u0026#34; # server-cert-file: \u0026#34;/etc/unbound/unbound_server.pem\u0026#34; # control-key-file: \u0026#34;/etc/unbound/unbound_control.key\u0026#34; # control-cert-file: \u0026#34;/etc/unbound/unbound_control.pem\u0026#34; # cachedb: # backend: \u0026#34;redis\u0026#34; # 指定后端为 redis (这通常也适用于Valkey) # --- Redis/Valkey 服务器连接参数 --- # redis-server-host: 192.168.2.11 # redis-server-port: 6379 #redis-server-path: \u0026#34;/run/valkey/valkey-server.sock\u0026#34; # redis-server-password: \u0026#34;your_valkey_password\u0026#34; # 如果Valkey设置了密码 # redis-database: 0 # 可选，Valkey/Redis数据库编号 (默认为0) # --- 可选的 Redis/Valkey 相关超时设置 (如果后端驱动支持) --- # redis-timeout: 100 # 连接和操作超时 (毫秒) # --- 缓存数据密钥前缀 (可选) --- # redis-key-prefix: \u0026#34;unbound_cache:\u0026#34; # 避免与其他应用在同一Valkey实例中的键冲突 # --- 其他 cachedb 通用设置 (可能适用) --- # cachedb-no-store: no # 是否存储否定缓存条目 (默认为no，即存储) EOF 启动 unbound 服务 sudo systemctl daemon-reload sudo systemctl enable unbound sudo systemctl start unbound 检查 unbound 服务状态 sudo systemctl status unbound ","keywords":["Debian","unbound","编译安装"],"articleBody":"unbound 简介 Unbound是一款验证型、递归式、带缓存的DNS解析器，旨在实现快速与轻量化，并融合了基于开放标准的现代特性。\n为增强在线隐私保护，Unbound支持DNS-over-TLS和DNS-over-HTTPS，使客户端能够加密通信。此外，它还支持多种现代标准，这些标准不仅减少了与权威服务器交换的数据量，提升了隐私性，还增强了DNS的健壮性。其中最为关键的技术包括查询名称最小化、积极利用DNSSEC验证缓存，以及对权威区域的支持，后者可用于加载根区域副本。\nUnbound兼容所有Linux和BSD发行版，以及macOS，大多数平台均有现成安装包。它已被纳入所有主要BSD操作系统的基础系统，以及大多数Linux发行版的标准软件库中，安装与配置简便易行，仅需几行配置即可为单机或网络设置解析器。\n作为遵循BSD许可证的自由开源软件，Unbound的产品开发路线图首要关注用户的安全与隐私。同时，所有功能均需依托成熟的开放标准。我们持续为所有用户优化Unbound的功能，这意味着我们不会为付费客户定制构建或提供专属功能。我们的优先级由用户反馈，特别是拥有支持合同的用户，以及更广泛的互联网社区所引导。在可能的情况下，赞助功能将获得更高优先级，并会逐案评估。 Source\n安装必要的依赖 sudo apt update sudo apt install -y build-essential libssl-dev bison flex libhiredis-dev libevent-dev libsystemd-dev pkg-config make dns-root-data 下载并编译安装 unbound git clone https://github.com/NLnetLabs/unbound cd unbound ./configure --prefix=/usr \\ --sysconfdir=/etc \\ --localstatedir=/var \\ --runstatedir=/run \\ --with-username=unbound \\ --with-ssl \\ --with-libevent \\ --enable-systemd \\ --enable-subnet \\ --enable-tfo-client \\ --enable-tfo-server \\ --enable-cachedb \\ --with-libhiredis \\ --disable-rpath \\ --with-pidfile=/run/unbound/unbound.pid \\ --with-rootkey-file=/var/lib/unbound/root.key \\ --with-libnghttp2 \\ --with-libsodium \\ --with-pthreads \\ --with-chroot-dir= make \u0026\u0026 make install 说明 `configure' 配置 unbound 1.23.1 以适应多种类型的系统。 用法: ./configure [选项]... [变量=值]... 要分配环境变量 (例如 CC, CFLAGS...), 请将它们指定为 变量=值。有关一些有用变量的描述，请参见下文。 选项的默认值在中括号内指定。 配置: -h, --help 显示此帮助信息并退出 --help=short 显示此软件包特有的选项 --help=recursive 显示所有包含的软件包的简短帮助信息 -V, --version 显示版本信息并退出 -q, --quiet, --silent 不打印 `checking ...' 消息 --cache-file=FILE 将测试结果缓存在 FILE 中 [禁用] -C, --config-cache `--cache-file=config.cache' 的别名 -n, --no-create 不创建输出文件 --srcdir=DIR 在 DIR 中查找源代码 [配置目录或 `..'] 安装目录: --prefix=PREFIX 将与体系结构无关的文件安装在 PREFIX 中 [/usr/local] --exec-prefix=EPREFIX 将与体系结构相关的文件安装在 EPREFIX 中 [PREFIX] 默认情况下, `make install' 会将所有文件安装在 `/usr/local/bin', `/usr/local/lib' 等目录中。您可以使用 `--prefix` 指定一个不同于 `/usr/local' 的安装前缀, 例如 `--prefix=$HOME'。 为了更好地控制，请使用以下选项。 微调安装目录: --bindir=DIR 用户可执行文件 [EPREFIX/bin] --sbindir=DIR 系统管理员可执行文件 [EPREFIX/sbin] --libexecdir=DIR 程序可执行文件 [EPREFIX/libexec] --sysconfdir=DIR 只读的单机数据 [PREFIX/etc] --sharedstatedir=DIR 可修改的与体系结构无关的数据 [PREFIX/com] --localstatedir=DIR 可修改的单机数据 [PREFIX/var] --runstatedir=DIR 可修改的每进程数据 [LOCALSTATEDIR/run] --libdir=DIR 目标代码库 [EPREFIX/lib] --includedir=DIR C 头文件 [PREFIX/include] --oldincludedir=DIR 非 gcc 的 C 头文件 [/usr/include] --datarootdir=DIR 只读的与体系结构无关的数据根目录 [PREFIX/share] --datadir=DIR 只读的与体系结构无关的数据 [DATAROOTDIR] --infodir=DIR info 文档 [DATAROOTDIR/info] --localedir=DIR 区域设置相关的数据 [DATAROOTDIR/locale] --mandir=DIR man 文档 [DATAROOTDIR/man] --docdir=DIR 文档根目录 [DATAROOTDIR/doc/unbound] --htmldir=DIR html 文档 [DOCDIR] --dvidir=DIR dvi 文档 [DOCDIR] --pdfdir=DIR pdf 文档 [DOCDIR] --psdir=DIR ps 文档 [DOCDIR] 系统类型: --build=BUILD 为在 BUILD 上构建进行配置 [猜测值] --host=HOST 交叉编译以构建在 HOST 上运行的程序 [BUILD] 可选特性: --disable-option-checking 忽略无法识别的 --enable/--with 选项 --disable-FEATURE 不包含 FEATURE (等同于 --enable-FEATURE=no) --enable-FEATURE[=ARG] 包含 FEATURE [ARG=yes] --enable-checking 启用警告、断言、makefile 依赖关系 --enable-debug 等同于 enable-checking --disable-flto 禁用链接时优化 (gcc 特定选项) --enable-pie 启用位置无关可执行文件 (例如，为了充分 利用 ASLR，会有少量性能损失) --enable-relro-now 在加载时启用完全重定位绑定 (RELRO NOW, 以保护 GOT 和 .dtor 区域) --enable-shared[=PKGS] 构建共享库 [默认=yes] --enable-static[=PKGS] 构建静态库 [默认=yes] --enable-fast-install[=PKGS] 为快速安装进行优化 [默认=yes] --disable-libtool-lock 避免锁定 (可能会破坏并行构建) --disable-rpath 禁用硬编码的 rpath (默认=启用) --disable-largefile 忽略对大文件的支持 --enable-systemd 编译时支持 systemd (需要 libsystemd, pkg-config) --enable-alloc-checks 启用内存分配统计信息，用于调试 --enable-alloc-lite 启用轻量级分配断言，用于调试 --enable-alloc-nonregional 启用非区域分配，速度较慢但会将区域分配暴露给其他内存净化器，用于调试 --disable-swig-version-check 禁用 swig 版本检查，以使用较旧的 swig 构建 python 模块即使这样做不可靠 --disable-sha1 禁用 SHA1 RRSIG 支持，不会禁用 nsec3 支持 --disable-sha2 禁用 SHA256 和 SHA512 RRSIG 支持 --enable-subnet 启用客户端子网 --disable-gost 禁用 GOST 支持 --disable-ecdsa 禁用 ECDSA 支持 --disable-dsa 禁用 DSA 支持 --disable-ed25519 禁用 ED25519 支持 --disable-ed448 禁用 ED448 支持 --enable-event-api 启用 (实验性的) 可插拔事件基础 libunbound API，安装到 unbound-event.h --enable-tfo-client 为客户端模式启用 TCP Fast Open --enable-tfo-server 为服务器模式启用 TCP Fast Open --enable-static-exe 启用以针对未安装的 (事件) 库静态编译 可执行文件，用于调试 --enable-fully-static 启用以完全静态编译 --enable-lock-checks 启用以检查锁定和解锁调用，用于调试 --enable-allsymbols 从 libunbound 导出所有符号并将二进制文件链接到它，安装尺寸更小但 libunbound 导出表会被内部符号污染 --enable-dnstap 启用 dnstap 支持 (需要 protobuf-c) --enable-dnscrypt 启用 dnscrypt 支持 (需要 libsodium) --enable-cachedb 启用 cachedb 模块，可以使用外部缓存存储 --enable-ipsecmod 启用 ipsecmod 模块，以促进机会性 IPsec --enable-ipset 启用 ipset 模块 --disable-explicit-port-randomisation 禁用显式源端口随机化，并依赖 内核提供随机源端口 --enable-linux-ip-local-port-range 定义此项以启用 /proc/sys/net/ipv4/ip_local_port_range 作为默认传出端口范围。这仅适用于 Linux 上的 libunbound 并且不影响 unbound 解析守护进程本身。这可能会严重限制可用的传出端口数量，从而降低随机性。仅当目标系统限制 (例如某些启用 SELinux 的发行版) 使用非临时端口时才定义此项。 可选软件包: --with-PACKAGE[=ARG] 使用 PACKAGE [ARG=yes] --without-PACKAGE 不使用 PACKAGE (等同于 --with-PACKAGE=no) --with-conf-file=path Unbound 配置文件的路径名 --with-run-dir=path 设置 chdir 到的默认目录 (默认为 cfg 文件所在的目录) --with-chroot-dir=path 设置 chroot 到的默认目录 (默认为与 run-dir 相同) --with-share-dir=path 设置共享数据的默认目录 (默认为 share/unbound) --with-pidfile=filename 设置 unbound pid 文件的默认路径名 (默认 run-dir/unbound.pid) --with-rootkey-file=filename 设置根密钥文件的默认路径名 (默认 run-dir/root.key)。此文件会被读取和写入。 --with-rootcert-file=filename 设置根更新证书文件的默认路径名(默认 run-dir/icannbundle.pem)。如果您对内置证书满意，则此文件不必存在。 --with-username=user 设置 unbound 更改到的默认用户 (默认用户是 unbound) --with-pic[=PKGS] 尝试仅使用 PIC/非 PIC 对象 [默认=两者都使用] --with-aix-soname=aix|svr4|both 在 AIX 上提供的共享库版本控制(又名 \"SONAME\")变体, [默认=aix]。 --with-gnu-ld 假设 C 编译器使用 GNU ld [默认=no] --with-sysroot[=DIR] 在 DIR 中搜索依赖库 (如果未指定，则为编译器的 sysroot)。 --with-pthreads 使用 pthreads 库，或使用 --without-pthreads禁用线程支持。 --with-solaris-threads 使用 solaris 原生线程库。 --with-syslog-facility=LOCAL0 - LOCAL7 设置 SYSLOG_FACILITY, 默认 DAEMON --with-dynlibmodule 构建动态库模块，或使用 --without-dynlibmodule 禁用它。(默认=no) --with-pyunbound 构建 PyUnbound，或使用 --without-pyunbound 跳过它。 (默认=no) --with-pythonmodule 构建 Python 模块，或使用 --without-pythonmodule 禁用脚本引擎。(默认=no) --with-nss=path 使用 libnss 代替 openssl，安装在 path。 --with-nettle=path 使用 libnettle 作为加密库，安装在 path。 --with-ssl=pathname 启用 SSL (将检查 /usr/local/ssl /usr/lib/ssl /usr/ssl /usr/pkg /usr/local /opt/local /usr/sfw /usr 或指定类似 /usr/include/openssl11) --with-libbsd 使用可移植的 libbsd 函数 --with-deprecate-rsa-1024 弃用 RSA 1024 位长度，使其成为不受支持的密钥，用于 OpenSSL FIPS 拒绝 1024 位验证的情况 --with-libevent=pathname 使用 libevent (将检查 /usr/local /opt/local /usr/lib /usr/pkg /usr/sfw /usr 或您可以指定一个显式路径)。速度较慢，但允许使用大的传出端口范围。 --with-libexpat=path 为 libexpat 指定显式路径。 --with-libhiredis=path 为 libhiredis 指定显式路径。 --with-libnghttp2=path 为 libnghttp2 指定显式路径。 --with-libngtcp2=path 为 libngtcp2 指定显式路径，用于 QUIC。 --with-dnstap-socket-path=pathname 设置默认 dnstap 套接字路径 --with-protobuf-c=path protobuf-c 的安装路径，用于 dnstap --with-libsodium=path libsodium 的安装路径，用于 dnscrypt --with-libmnl=path 为 libmnl 指定显式路径。 --with-libunbound-only 不构建守护进程和工具程序 一些有影响的环境变量: CC C 编译器命令 CFLAGS C 编译器标志 LDFLAGS 链接器标志, 例如 -L 如果您的库在非标准目录 中 LIBS 传递给链接器的库, 例如 -l CPPFLAGS (Objective) C/C++ 预处理器标志, 例如 -I 如果您的头文件在非标准目录 中 YACC 要使用的 `Yet Another Compiler Compiler' 实现。默认为找到的第一个程序: `bison -y', `byacc', `yacc'。 YFLAGS 默认传递给 $YACC 的参数列表。此脚本将 YFLAGS 默认为空字符串，以避免某些 make 应用程序给出的默认值 `-d'。 LT_SYS_LIBRARY_PATH 用户定义的运行时库搜索路径。 PKG_CONFIG pkg-config 工具的路径 PKG_CONFIG_PATH 添加到 pkg-config 搜索路径的目录 PKG_CONFIG_LIBDIR 覆盖 pkg-config 内置搜索路径的路径 CPP C 预处理器 SYSTEMD_CFLAGS SYSTEMD 的 C 编译器标志, 覆盖 pkg-config SYSTEMD_LIBS SYSTEMD 的链接器标志, 覆盖 pkg-config SYSTEMD_DAEMON_CFLAGS SYSTEMD_DAEMON 的 C 编译器标志, 覆盖 pkg-config SYSTEMD_DAEMON_LIBS SYSTEMD_DAEMON 的链接器标志, 覆盖 pkg-config PYTHON_VERSION 要使用的已安装 Python 版本，例如 '2.3'。此字符串将附加到 Python 解释器的规范名称。 SOURCE_DATE_EPOCH 如果设置了此变量，则使用该变量的值而不是当前时间作为构建时间戳。格式为 unix时间戳。这可以实现可重现的构建输出。 PROTOBUFC_CFLAGS PROTOBUFC 的 C 编译器标志, 覆盖 pkg-config PROTOBUFC_LIBS PROTOBUFC 的链接器标志, 覆盖 pkg-config 使用这些变量来覆盖 `configure' 所做的选择，或帮助 它找到具有非标准名称/位置的库和程序。 将错误报告给 。 创建 unbound 用户和组并配置 groupadd --system unbound useradd --no-create-home --system --shell /usr/sbin/nologin unbound mkdir -p /var/lib/unbound cp /usr/share/dns/root.key /var/lib/unbound/root.key chown -R unbound:unbound /var/lib/unbound 创建 unbound 的 systemd 服务文件 cat \u003c /etc/systemd/system/unbound.service [Unit] Description=Unbound DNS Resolver (Experimental Build) Documentation=man:unbound(8) man:unbound.conf(5) https://www.nlnetlabs.nl/projects/unbound/documentation.html Wants=network-online.target After=network-online.target # 如果您的 auto-trust-anchor-file 或 cachedb 路径位于 /var/lib/unbound， # 确保 /var 在此服务启动前已挂载。 RequiresMountsFor=/var/lib/unbound /run [Service] # === 基本配置 === Type=notify # Unbound 在 '--enable-systemd' 编译时支持 notify 类型，它会在服务完全准备好后通知 systemd。 # 指定运行 Unbound 的用户和组。 # 您在 ./configure 时使用了 --with-username=unbound。 # 您需要确保 'unbound' 用户和组在系统上存在。 # 例如: # sudo groupadd --system unbound # sudo useradd --system -g unbound -d /var/lib/unbound -s /bin/false -c \"Unbound DNS Resolver\" unbound User=unbound Group=unbound # 预启动检查配置文件 ExecStartPre=/usr/sbin/unbound-checkconf /etc/unbound/unbound.conf # 启动命令 # -d: 不进行后台守护进程化 (systemd 处理) # -p: 创建 PID 文件 (与 --with-pidfile 编译选项匹配) # -c: 指定配置文件路径 ExecStart=/usr/sbin/unbound -d -p -c /etc/unbound/unbound.conf # 重载配置 (需要 unbound.conf 中启用 remote-control) ExecReload=/usr/sbin/unbound-control reload # 重启策略 Restart=on-failure RestartSec=5s # PID 文件路径 (与 --with-pidfile 编译选项匹配) # RuntimeDirectory 会自动创建 /run/unbound 并设置权限给指定用户 PIDFile=/run/unbound/unbound.pid # === 资源和权限管理 === # 运行时目录，systemd 会创建 /run/unbound 并设置所有权为 User 和 Group 指定的用户/组 RuntimeDirectory=unbound RuntimeDirectoryMode=0750 # 能力绑定 # CAP_NET_BIND_SERVICE 允许 'unbound' 用户绑定到特权端口 (如53) AmbientCapabilities=CAP_NET_BIND_SERVICE CapabilityBoundingSet=CAP_NET_BIND_SERVICE CAP_SETGID CAP_SETUID # 如果在 unbound.conf 中启用了 chroot，并且 Unbound 在降权为 'unbound' 用户后才执行 chroot, # 则可能还需要 CAP_SYS_CHROOT。但通常 chroot 在降权前由root完成，或者Unbound启动时即为'unbound'用户，则无法chroot到任意目录。 # 您的 --with-username=unbound 意味着Unbound会自行处理权限。 # --- 安全强化选项 --- #NoNewPrivileges=yes #ProtectSystem=no # 如果 ProtectSystem=strict 导致 Unbound 无法写入其管理的 root.key 或 cachedb (通常在 /var/lib/unbound/)： # 您需要添加 ReadWritePaths 指令。例如： # ReadWritePaths=/var/lib/unbound # 如果您在 unbound.conf 中使用了 chroot: \"/etc/unbound\" 并且需要在其中写入 (如 root.key): # ReadWritePaths=/etc/unbound #ProtectHome=no #PrivateTmp=no #PrivateDevices=yes # MemoryDenyWriteExecute=yes # 如果系统和Unbound版本支持，可增强安全性 [Install] WantedBy=multi-user.target EOF 创建 unbound 的配置文件 cat \u003c /etc/unbound/unbound.conf # Unbound configuration file # # See unbound.conf(5) man page for more information. # # 注意: 路径 (例如 logfile, root-hints, auto-trust-anchor-file) # 可能需要根据您的操作系统和Unbound安装方式进行调整。 # 确保Unbound进程对指定的日志文件和自动信任锚点文件具有写入权限（或对其目录）。 server: # --- 基本服务器设置 --- verbosity: 0 # 日志详细级别 (0=仅错误, 1=操作信息, 2=详细操作, ... 5=非常详细) #logfile: \"/var/log/unbound/unbound.log\" # 日志文件路径。如果注释掉或为空，则可能记录到syslog。 # 例如: FreeBSD: /var/unbound/unbound.log, OpenBSD: Unbound chroots and logs via syslog # Linux (from package): often /var/log/unbound.log or uses systemd journal use-syslog: no # 如果指定了 logfile，设为 no 则仅记录到文件。设为 yes 则也发送到 syslog。 module-config: \"validator cachedb iterator\" interface: 0.0.0.0 # 监听所有 IPv4 地址 interface: ::0 # 监听所有 IPv6 地址 (如果您的系统支持IPv6) port: 54 # 监听的端口 (DNS标准端口) do-ip4: yes # 允许 IPv4 do-ip6: yes # 允许 IPv6 (如果网络支持) do-udp: yes # 允许 UDP do-tcp: yes # 允许 TCP # --- 访问控制 --- # 定义哪些客户端IP地址或子网可以查询此服务器。 # 强烈建议配置此项以防止滥用。 access-control: 127.0.0.0/8 allow # 允许本地回环地址 (IPv4) access-control: ::1/128 allow # 允许本地回环地址 (IPv6) # 示例：允许常见的私有网络范围。根据您的网络调整或添加。 access-control: 192.168.0.0/16 allow access-control: 10.0.0.0/8 allow access-control: 172.16.0.0/12 allow # access-control: ::ffff:127.0.0.1/128 allow # IPv4-mapped IPv6 localhost # --- 性能和缓存设置 --- msg-cache-size: 10m # DNS消息缓存大小 (查询和应答) rrset-cache-size: 20m # RRset缓存大小 (DNS资源记录) # 缓存相关的 slab 数量，通常可以设为接近 num-threads 的值或者2的幂次方。 msg-cache-slabs: 4 rrset-cache-slabs: 4 num-threads: 2 # 创建的线程数。理想情况下，设置为CPU核心数。 # 对于较小的部署，1或2通常足够。 # 增加传出查询可用的端口范围，有助于防止某些类型的攻击。 outgoing-range: 1024 # 每个线程可以并发处理的查询数上限。 num-queries-per-thread: 2048 # --- 过期缓存与预取功能 (Requested \"过期缓存功能\") --- prefetch: yes # 在缓存条目过期前主动获取更新，保持常用条目新鲜。 prefetch-key: yes # 在验证DS记录时，提前获取DNSKEY记录，加速后续DNSSEC验证。 serve-expired: yes # 在尝试获取新记录的同时，从缓存中提供已过期的记录。 # 这可以提高当上游权威服务器缓慢或无响应时的可用性。 serve-expired-ttl: 3600 # (1小时) 提供已过期记录时，该记录的TTL值。 serve-expired-reply-ttl: 30 # (30秒) 当提供过期数据时，客户端应该缓存这条过期数据的TTL。 serve-expired-client-timeout: 1000 # (1秒) 在提供过期数据之前，等待新答案的最长时间（毫秒）。 # --- 安全设置 --- harden-glue: yes # 强化对胶水记录的验证。 harden-dnssec-stripped: yes # 防止DNSSEC剥离攻击。 harden-algo-downgrade: yes # 防止算法降级攻击。 use-caps-for-id: yes # 在查询ID中使用随机大小写混合（0x20技巧）来增加欺骗难度。 edns-buffer-size: 1232 # EDNS0 UDP包的建议大小，以减少IP分片。 hide-identity: yes # 拒绝回应 id.server 和 hostname.bind 的查询。 hide-version: yes # 拒绝回应 version.server 和 version.bind 的查询。 # 定义私有地址范围，Unbound会从DNS响应中剥离这些地址，以防止DNS重绑定攻击。 private-address: 10.0.0.0/8 private-address: 172.16.0.0/12 private-address: 192.168.0.0/16 private-address: 169.254.0.0/16 private-address: fd00::/8 private-address: fe80::/10 # private-domain: \"example.com\" # 如果您有不想被外部解析的内部域名，可以在这里声明。 # 不查询回环地址上的公共域名，防止潜在的循环或安全问题。 do-not-query-localhost: yes # --- DNSSEC 验证 --- # 自动管理和更新根信任锚点。Unbound需要对该文件的目录有写权限，或者您可以手动管理此文件。 # 路径可能为: /var/lib/unbound/root.key (Debian/Ubuntu), /usr/local/etc/unbound/root.key (FreeBSD ports), # /etc/unbound/root.key (generic from source), /opt/homebrew/etc/unbound/root.key (macOS Homebrew) auto-trust-anchor-file: \"/var/lib/unbound/root.key\" val-log-level: 1 # DNSSEC验证失败时的日志级别 (1=基本信息, 2=详细信息)。 # --- 根提示文件 (Root Hints) --- # 如果Unbound作为递归解析器直接从根服务器开始解析 (而不是转发模式)，则需要此文件。 # 确保此文件存在并且保持最新。 # 路径可能为: /usr/share/dns/root.hints (common on Linux), /etc/unbound/root.hints, # /usr/local/etc/unbound/root.hints root-hints: \"/usr/share/dns/root.hints\" # --- 转发模式 (可选) --- # 如果您希望Unbound将所有查询转发到其他上游DNS服务器，而不是自己从根进行递归解析， # 请取消注释并配置以下部分。如果启用了转发，则上面的 root-hints 通常不再需要。 # forward-zone: # name: \".\" # 转发所有查询 # # 常用的公共DNS服务器示例: # forward-addr: 8.8.8.8@53 # Google # forward-addr: 8.8.4.4@53 # Google # forward-addr: 1.1.1.1@53 # Cloudflare # forward-addr: 1.0.0.1@53 # Cloudflare # # 如果您的上游服务器支持DNS-over-TLS (DoT): # # forward-tls-upstream: yes # # forward-addr: 1.1.1.1@853#cloudflare-dns.com # DoT示例，主机名用于证书验证 # --- 远程控制 (可选) --- # 允许使用 unbound-control 工具管理Unbound服务。 # 如果启用，请确保使用 unbound-control-setup 生成密钥和证书文件。 # remote-control: # control-enable: yes # control-interface: 127.0.0.1 # 监听远程控制连接的IP地址 # control-port: 8953 # 监听远程控制连接的端口 # # 以下文件路径也需要根据您的安装进行调整 # server-key-file: \"/etc/unbound/unbound_server.key\" # server-cert-file: \"/etc/unbound/unbound_server.pem\" # control-key-file: \"/etc/unbound/unbound_control.key\" # control-cert-file: \"/etc/unbound/unbound_control.pem\" # cachedb: # backend: \"redis\" # 指定后端为 redis (这通常也适用于Valkey) # --- Redis/Valkey 服务器连接参数 --- # redis-server-host: 192.168.2.11 # redis-server-port: 6379 #redis-server-path: \"/run/valkey/valkey-server.sock\" # redis-server-password: \"your_valkey_password\" # 如果Valkey设置了密码 # redis-database: 0 # 可选，Valkey/Redis数据库编号 (默认为0) # --- 可选的 Redis/Valkey 相关超时设置 (如果后端驱动支持) --- # redis-timeout: 100 # 连接和操作超时 (毫秒) # --- 缓存数据密钥前缀 (可选) --- # redis-key-prefix: \"unbound_cache:\" # 避免与其他应用在同一Valkey实例中的键冲突 # --- 其他 cachedb 通用设置 (可能适用) --- # cachedb-no-store: no # 是否存储否定缓存条目 (默认为no，即存储) EOF 启动 unbound 服务 sudo systemctl daemon-reload sudo systemctl enable unbound sudo systemctl start unbound 检查 unbound 服务状态 sudo systemctl status unbound ","wordCount":"1525","inLanguage":"en","datePublished":"2025-05-20T22:17:40+08:00","dateModified":"2025-05-20T22:17:40+08:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://tnzzz.top/posts/%E6%95%99%E7%A8%8B/debian%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85unbound/"},"publisher":{"@type":"Organization","name":"明天吃什么？","logo":{"@type":"ImageObject","url":"https://tnzzz.top/favicon.ico"}}}</script></head><body id=top><script defer src=https://static.cloudflareinsights.com/beacon.min.js data-cf-beacon='{"token": "ccaaab867b5e4fe590baed8e233a2d10"}'></script><script>localStorage.getItem("pref-theme")==="dark"?document.body.classList.add("dark"):localStorage.getItem("pref-theme")==="light"?document.body.classList.remove("dark"):window.matchMedia("(prefers-color-scheme: dark)").matches&&document.body.classList.add("dark")</script><header class=header><nav class=nav><div class=logo><a href=https://tnzzz.top/ accesskey=h title="明天吃什么？ (Alt + H)">明天吃什么？</a><div class=logo-switches><button id=theme-toggle accesskey=t title="(Alt + T)" aria-label="Toggle theme">
+<svg id="moon" width="24" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+<svg id="sun" width="24" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></button></div></div><ul id=menu><li><a href=https://tnzzz.top/categories/ title=分类><span>分类</span></a></li></ul></nav></header><main class=main><article class=post-single><header class=post-header><h1 class="post-title entry-hint-parent">Debian 编译安装 unbound</h1><div class=post-meta><span title='2025-05-20 22:17:40 +0800 +0800'>May 20, 2025</span></div></header><div class=post-content><h3 id=unbound-简介>unbound 简介<a hidden class=anchor aria-hidden=true href=#unbound-简介>#</a></h3><p>Unbound是一款验证型、递归式、带缓存的DNS解析器，旨在实现快速与轻量化，并融合了基于开放标准的现代特性。</p><p>为增强在线隐私保护，Unbound支持DNS-over-TLS和DNS-over-HTTPS，使客户端能够加密通信。此外，它还支持多种现代标准，这些标准不仅减少了与权威服务器交换的数据量，提升了隐私性，还增强了DNS的健壮性。其中最为关键的技术包括查询名称最小化、积极利用DNSSEC验证缓存，以及对权威区域的支持，后者可用于加载根区域副本。</p><p>Unbound兼容所有Linux和BSD发行版，以及macOS，大多数平台均有现成安装包。它已被纳入所有主要BSD操作系统的基础系统，以及大多数Linux发行版的标准软件库中，安装与配置简便易行，仅需几行配置即可为单机或网络设置解析器。</p><p>作为遵循BSD许可证的自由开源软件，Unbound的产品开发路线图首要关注用户的安全与隐私。同时，所有功能均需依托成熟的开放标准。我们持续为所有用户优化Unbound的功能，这意味着我们不会为付费客户定制构建或提供专属功能。我们的优先级由用户反馈，特别是拥有支持合同的用户，以及更广泛的互联网社区所引导。在可能的情况下，赞助功能将获得更高优先级，并会逐案评估。
+<a href=https://www.nlnetlabs.nl/projects/unbound/about/>Source</a></p><h3 id=安装必要的依赖>安装必要的依赖<a hidden class=anchor aria-hidden=true href=#安装必要的依赖>#</a></h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>sudo apt update
+</span></span><span style=display:flex><span>sudo apt install -y build-essential libssl-dev bison flex libhiredis-dev libevent-dev libsystemd-dev pkg-config make dns-root-data
+</span></span></code></pre></div><h3 id=下载并编译安装-unbound>下载并编译安装 unbound<a hidden class=anchor aria-hidden=true href=#下载并编译安装-unbound>#</a></h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>git clone https://github.com/NLnetLabs/unbound
+</span></span><span style=display:flex><span>cd unbound
+</span></span><span style=display:flex><span>./configure --prefix<span style=color:#f92672>=</span>/usr <span style=color:#ae81ff>\
+</span></span></span><span style=display:flex><span><span style=color:#ae81ff></span> --sysconfdir<span style=color:#f92672>=</span>/etc <span style=color:#ae81ff>\
+</span></span></span><span style=display:flex><span><span style=color:#ae81ff></span>    --localstatedir<span style=color:#f92672>=</span>/var <span style=color:#ae81ff>\
+</span></span></span><span style=display:flex><span><span style=color:#ae81ff></span>    --runstatedir<span style=color:#f92672>=</span>/run <span style=color:#ae81ff>\
+</span></span></span><span style=display:flex><span><span style=color:#ae81ff></span>    --with-username<span style=color:#f92672>=</span>unbound <span style=color:#ae81ff>\
+</span></span></span><span style=display:flex><span><span style=color:#ae81ff></span>    --with-ssl <span style=color:#ae81ff>\
+</span></span></span><span style=display:flex><span><span style=color:#ae81ff></span>    --with-libevent <span style=color:#ae81ff>\
+</span></span></span><span style=display:flex><span><span style=color:#ae81ff></span>    --enable-systemd <span style=color:#ae81ff>\
+</span></span></span><span style=display:flex><span><span style=color:#ae81ff></span>    --enable-subnet <span style=color:#ae81ff>\
+</span></span></span><span style=display:flex><span><span style=color:#ae81ff></span>    --enable-tfo-client <span style=color:#ae81ff>\
+</span></span></span><span style=display:flex><span><span style=color:#ae81ff></span>    --enable-tfo-server <span style=color:#ae81ff>\
+</span></span></span><span style=display:flex><span><span style=color:#ae81ff></span>    --enable-cachedb <span style=color:#ae81ff>\
+</span></span></span><span style=display:flex><span><span style=color:#ae81ff></span>    --with-libhiredis <span style=color:#ae81ff>\
+</span></span></span><span style=display:flex><span><span style=color:#ae81ff></span>    --disable-rpath <span style=color:#ae81ff>\
+</span></span></span><span style=display:flex><span><span style=color:#ae81ff></span>    --with-pidfile<span style=color:#f92672>=</span>/run/unbound/unbound.pid <span style=color:#ae81ff>\
+</span></span></span><span style=display:flex><span><span style=color:#ae81ff></span>    --with-rootkey-file<span style=color:#f92672>=</span>/var/lib/unbound/root.key <span style=color:#ae81ff>\
+</span></span></span><span style=display:flex><span><span style=color:#ae81ff></span>    --with-libnghttp2 <span style=color:#ae81ff>\
+</span></span></span><span style=display:flex><span><span style=color:#ae81ff></span>    --with-libsodium <span style=color:#ae81ff>\
+</span></span></span><span style=display:flex><span><span style=color:#ae81ff></span>    --with-pthreads <span style=color:#ae81ff>\
+</span></span></span><span style=display:flex><span><span style=color:#ae81ff></span>    --with-chroot-dir<span style=color:#f92672>=</span>
+</span></span><span style=display:flex><span>make <span style=color:#f92672>&amp;&amp;</span> make install
+</span></span></code></pre></div><h4 id=说明>说明<a hidden class=anchor aria-hidden=true href=#说明>#</a></h4><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-plaintext data-lang=plaintext><span style=display:flex><span>`configure&#39; 配置 unbound 1.23.1 以适应多种类型的系统。
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>用法: ./configure [选项]... [变量=值]...
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>要分配环境变量 (例如 CC, CFLAGS...), 请将它们指定为
+</span></span><span style=display:flex><span>变量=值。有关一些有用变量的描述，请参见下文。
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>选项的默认值在中括号内指定。
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>配置:
+</span></span><span style=display:flex><span>    -h, --help              显示此帮助信息并退出
+</span></span><span style=display:flex><span>    --help=short            显示此软件包特有的选项
+</span></span><span style=display:flex><span>    --help=recursive        显示所有包含的软件包的简短帮助信息
+</span></span><span style=display:flex><span>    -V, --version           显示版本信息并退出
+</span></span><span style=display:flex><span>    -q, --quiet, --silent   不打印 `checking ...&#39; 消息
+</span></span><span style=display:flex><span>    --cache-file=FILE       将测试结果缓存在 FILE 中 [禁用]
+</span></span><span style=display:flex><span>    -C, --config-cache      `--cache-file=config.cache&#39; 的别名
+</span></span><span style=display:flex><span>    -n, --no-create         不创建输出文件
+</span></span><span style=display:flex><span>    --srcdir=DIR            在 DIR 中查找源代码 [配置目录或 `..&#39;]
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>安装目录:
+</span></span><span style=display:flex><span>    --prefix=PREFIX         将与体系结构无关的文件安装在 PREFIX 中
+</span></span><span style=display:flex><span>                                                    [/usr/local]
+</span></span><span style=display:flex><span>    --exec-prefix=EPREFIX   将与体系结构相关的文件安装在 EPREFIX 中
+</span></span><span style=display:flex><span>                                                    [PREFIX]
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>默认情况下, `make install&#39; 会将所有文件安装在 `/usr/local/bin&#39;, `/usr/local/lib&#39; 等目录中。您可以使用 `--prefix` 指定一个不同于 `/usr/local&#39; 的安装前缀, 例如 `--prefix=$HOME&#39;。
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>为了更好地控制，请使用以下选项。
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>微调安装目录:
+</span></span><span style=display:flex><span>    --bindir=DIR            用户可执行文件 [EPREFIX/bin]
+</span></span><span style=display:flex><span>    --sbindir=DIR           系统管理员可执行文件 [EPREFIX/sbin]
+</span></span><span style=display:flex><span>    --libexecdir=DIR        程序可执行文件 [EPREFIX/libexec]
+</span></span><span style=display:flex><span>    --sysconfdir=DIR        只读的单机数据 [PREFIX/etc]
+</span></span><span style=display:flex><span>    --sharedstatedir=DIR    可修改的与体系结构无关的数据 [PREFIX/com]
+</span></span><span style=display:flex><span>    --localstatedir=DIR     可修改的单机数据 [PREFIX/var]
+</span></span><span style=display:flex><span>    --runstatedir=DIR       可修改的每进程数据 [LOCALSTATEDIR/run]
+</span></span><span style=display:flex><span>    --libdir=DIR            目标代码库 [EPREFIX/lib]
+</span></span><span style=display:flex><span>    --includedir=DIR        C 头文件 [PREFIX/include]
+</span></span><span style=display:flex><span>    --oldincludedir=DIR     非 gcc 的 C 头文件 [/usr/include]
+</span></span><span style=display:flex><span>    --datarootdir=DIR       只读的与体系结构无关的数据根目录 [PREFIX/share]
+</span></span><span style=display:flex><span>    --datadir=DIR           只读的与体系结构无关的数据 [DATAROOTDIR]
+</span></span><span style=display:flex><span>    --infodir=DIR           info 文档 [DATAROOTDIR/info]
+</span></span><span style=display:flex><span>    --localedir=DIR         区域设置相关的数据 [DATAROOTDIR/locale]
+</span></span><span style=display:flex><span>    --mandir=DIR            man 文档 [DATAROOTDIR/man]
+</span></span><span style=display:flex><span>    --docdir=DIR            文档根目录 [DATAROOTDIR/doc/unbound]
+</span></span><span style=display:flex><span>    --htmldir=DIR           html 文档 [DOCDIR]
+</span></span><span style=display:flex><span>    --dvidir=DIR            dvi 文档 [DOCDIR]
+</span></span><span style=display:flex><span>    --pdfdir=DIR            pdf 文档 [DOCDIR]
+</span></span><span style=display:flex><span>    --psdir=DIR             ps 文档 [DOCDIR]
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>系统类型:
+</span></span><span style=display:flex><span>    --build=BUILD     为在 BUILD 上构建进行配置 [猜测值]
+</span></span><span style=display:flex><span>    --host=HOST       交叉编译以构建在 HOST 上运行的程序 [BUILD]
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>可选特性:
+</span></span><span style=display:flex><span>    --disable-option-checking  忽略无法识别的 --enable/--with 选项
+</span></span><span style=display:flex><span>    --disable-FEATURE       不包含 FEATURE (等同于 --enable-FEATURE=no)
+</span></span><span style=display:flex><span>    --enable-FEATURE[=ARG]  包含 FEATURE [ARG=yes]
+</span></span><span style=display:flex><span>    --enable-checking       启用警告、断言、makefile 依赖关系
+</span></span><span style=display:flex><span>    --enable-debug          等同于 enable-checking
+</span></span><span style=display:flex><span>    --disable-flto          禁用链接时优化 (gcc 特定选项)
+</span></span><span style=display:flex><span>    --enable-pie            启用位置无关可执行文件 (例如，为了充分
+</span></span><span style=display:flex><span>                                                    利用 ASLR，会有少量性能损失)
+</span></span><span style=display:flex><span>    --enable-relro-now      在加载时启用完全重定位绑定 (RELRO
+</span></span><span style=display:flex><span>                                                    NOW, 以保护 GOT 和 .dtor 区域)
+</span></span><span style=display:flex><span>    --enable-shared[=PKGS]  构建共享库 [默认=yes]
+</span></span><span style=display:flex><span>    --enable-static[=PKGS]  构建静态库 [默认=yes]
+</span></span><span style=display:flex><span>    --enable-fast-install[=PKGS]
+</span></span><span style=display:flex><span>                                                    为快速安装进行优化 [默认=yes]
+</span></span><span style=display:flex><span>    --disable-libtool-lock  避免锁定 (可能会破坏并行构建)
+</span></span><span style=display:flex><span>    --disable-rpath         禁用硬编码的 rpath (默认=启用)
+</span></span><span style=display:flex><span>    --disable-largefile     忽略对大文件的支持
+</span></span><span style=display:flex><span>    --enable-systemd        编译时支持 systemd (需要 libsystemd,
+</span></span><span style=display:flex><span>                                                    pkg-config)
+</span></span><span style=display:flex><span>    --enable-alloc-checks   启用内存分配统计信息，用于调试
+</span></span><span style=display:flex><span>    --enable-alloc-lite     启用轻量级分配断言，用于调试
+</span></span><span style=display:flex><span>    --enable-alloc-nonregional 启用非区域分配，速度较慢但会将区域分配暴露给其他内存净化器，用于调试
+</span></span><span style=display:flex><span>    --disable-swig-version-check 禁用 swig 版本检查，以使用较旧的 swig 构建 python 模块即使这样做不可靠
+</span></span><span style=display:flex><span>    --disable-sha1          禁用 SHA1 RRSIG 支持，不会禁用 nsec3 支持
+</span></span><span style=display:flex><span>    --disable-sha2          禁用 SHA256 和 SHA512 RRSIG 支持
+</span></span><span style=display:flex><span>    --enable-subnet         启用客户端子网
+</span></span><span style=display:flex><span>    --disable-gost          禁用 GOST 支持
+</span></span><span style=display:flex><span>    --disable-ecdsa         禁用 ECDSA 支持
+</span></span><span style=display:flex><span>    --disable-dsa           禁用 DSA 支持
+</span></span><span style=display:flex><span>    --disable-ed25519       禁用 ED25519 支持
+</span></span><span style=display:flex><span>    --disable-ed448         禁用 ED448 支持
+</span></span><span style=display:flex><span>    --enable-event-api      启用 (实验性的) 可插拔事件基础
+</span></span><span style=display:flex><span>                                                    libunbound API，安装到 unbound-event.h
+</span></span><span style=display:flex><span>    --enable-tfo-client     为客户端模式启用 TCP Fast Open
+</span></span><span style=display:flex><span>    --enable-tfo-server     为服务器模式启用 TCP Fast Open
+</span></span><span style=display:flex><span>    --enable-static-exe     启用以针对未安装的 (事件) 库静态编译
+</span></span><span style=display:flex><span>                                                    可执行文件，用于调试
+</span></span><span style=display:flex><span>    --enable-fully-static   启用以完全静态编译
+</span></span><span style=display:flex><span>    --enable-lock-checks    启用以检查锁定和解锁调用，用于调试
+</span></span><span style=display:flex><span>    --enable-allsymbols     从 libunbound 导出所有符号并将二进制文件链接到它，安装尺寸更小但 libunbound 导出表会被内部符号污染
+</span></span><span style=display:flex><span>    --enable-dnstap         启用 dnstap 支持 (需要 protobuf-c)
+</span></span><span style=display:flex><span>    --enable-dnscrypt       启用 dnscrypt 支持 (需要 libsodium)
+</span></span><span style=display:flex><span>    --enable-cachedb        启用 cachedb 模块，可以使用外部缓存存储
+</span></span><span style=display:flex><span>    --enable-ipsecmod       启用 ipsecmod 模块，以促进机会性 IPsec
+</span></span><span style=display:flex><span>    --enable-ipset          启用 ipset 模块
+</span></span><span style=display:flex><span>    --disable-explicit-port-randomisation 禁用显式源端口随机化，并依赖 内核提供随机源端口
+</span></span><span style=display:flex><span>    --enable-linux-ip-local-port-range 定义此项以启用 /proc/sys/net/ipv4/ip_local_port_range 作为默认传出端口范围。这仅适用于 Linux 上的 libunbound 并且不影响 unbound 解析守护进程本身。这可能会严重限制可用的传出端口数量，从而降低随机性。仅当目标系统限制 (例如某些启用 SELinux 的发行版) 使用非临时端口时才定义此项。
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>可选软件包:
+</span></span><span style=display:flex><span>    --with-PACKAGE[=ARG]    使用 PACKAGE [ARG=yes]
+</span></span><span style=display:flex><span>    --without-PACKAGE       不使用 PACKAGE (等同于 --with-PACKAGE=no)
+</span></span><span style=display:flex><span>    --with-conf-file=path   Unbound 配置文件的路径名
+</span></span><span style=display:flex><span>    --with-run-dir=path     设置 chdir 到的默认目录 (默认为 cfg 文件所在的目录)
+</span></span><span style=display:flex><span>    --with-chroot-dir=path  设置 chroot 到的默认目录 (默认为与 run-dir 相同)
+</span></span><span style=display:flex><span>    --with-share-dir=path   设置共享数据的默认目录 (默认为 share/unbound)
+</span></span><span style=display:flex><span>    --with-pidfile=filename 设置 unbound pid 文件的默认路径名 (默认 run-dir/unbound.pid)
+</span></span><span style=display:flex><span>    --with-rootkey-file=filename 设置根密钥文件的默认路径名 (默认 run-dir/root.key)。此文件会被读取和写入。
+</span></span><span style=display:flex><span>    --with-rootcert-file=filename 设置根更新证书文件的默认路径名(默认 run-dir/icannbundle.pem)。如果您对内置证书满意，则此文件不必存在。
+</span></span><span style=display:flex><span>    --with-username=user    设置 unbound 更改到的默认用户 (默认用户是 unbound)
+</span></span><span style=display:flex><span>    --with-pic[=PKGS]       尝试仅使用 PIC/非 PIC 对象 [默认=两者都使用]
+</span></span><span style=display:flex><span>    --with-aix-soname=aix|svr4|both 在 AIX 上提供的共享库版本控制(又名 &#34;SONAME&#34;)变体, [默认=aix]。
+</span></span><span style=display:flex><span>    --with-gnu-ld           假设 C 编译器使用 GNU ld [默认=no]
+</span></span><span style=display:flex><span>    --with-sysroot[=DIR]    在 DIR 中搜索依赖库 (如果未指定，则为编译器的 sysroot)。
+</span></span><span style=display:flex><span>    --with-pthreads         使用 pthreads 库，或使用 --without-pthreads禁用线程支持。
+</span></span><span style=display:flex><span>    --with-solaris-threads  使用 solaris 原生线程库。
+</span></span><span style=display:flex><span>    --with-syslog-facility=LOCAL0 - LOCAL7 设置 SYSLOG_FACILITY, 默认 DAEMON
+</span></span><span style=display:flex><span>    --with-dynlibmodule     构建动态库模块，或使用 --without-dynlibmodule 禁用它。(默认=no)
+</span></span><span style=display:flex><span>    --with-pyunbound        构建 PyUnbound，或使用 --without-pyunbound 跳过它。 (默认=no)
+</span></span><span style=display:flex><span>    --with-pythonmodule     构建 Python 模块，或使用 --without-pythonmodule 禁用脚本引擎。(默认=no)
+</span></span><span style=display:flex><span>    --with-nss=path         使用 libnss 代替 openssl，安装在 path。
+</span></span><span style=display:flex><span>    --with-nettle=path      使用 libnettle 作为加密库，安装在 path。
+</span></span><span style=display:flex><span>    --with-ssl=pathname     启用 SSL (将检查 /usr/local/ssl /usr/lib/ssl /usr/ssl /usr/pkg /usr/local /opt/local /usr/sfw /usr 或指定类似 /usr/include/openssl11)
+</span></span><span style=display:flex><span>    --with-libbsd           使用可移植的 libbsd 函数
+</span></span><span style=display:flex><span>    --with-deprecate-rsa-1024 弃用 RSA 1024 位长度，使其成为不受支持的密钥，用于 OpenSSL FIPS 拒绝 1024 位验证的情况
+</span></span><span style=display:flex><span>    --with-libevent=pathname 使用 libevent (将检查 /usr/local /opt/local /usr/lib /usr/pkg /usr/sfw /usr 或您可以指定一个显式路径)。速度较慢，但允许使用大的传出端口范围。
+</span></span><span style=display:flex><span>    --with-libexpat=path    为 libexpat 指定显式路径。
+</span></span><span style=display:flex><span>    --with-libhiredis=path  为 libhiredis 指定显式路径。
+</span></span><span style=display:flex><span>    --with-libnghttp2=path  为 libnghttp2 指定显式路径。
+</span></span><span style=display:flex><span>    --with-libngtcp2=path   为 libngtcp2 指定显式路径，用于 QUIC。
+</span></span><span style=display:flex><span>    --with-dnstap-socket-path=pathname 设置默认 dnstap 套接字路径
+</span></span><span style=display:flex><span>    --with-protobuf-c=path  protobuf-c 的安装路径，用于 dnstap
+</span></span><span style=display:flex><span>    --with-libsodium=path   libsodium 的安装路径，用于 dnscrypt
+</span></span><span style=display:flex><span>    --with-libmnl=path      为 libmnl 指定显式路径。
+</span></span><span style=display:flex><span>    --with-libunbound-only  不构建守护进程和工具程序
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>一些有影响的环境变量:
+</span></span><span style=display:flex><span>    CC          C 编译器命令
+</span></span><span style=display:flex><span>    CFLAGS      C 编译器标志
+</span></span><span style=display:flex><span>    LDFLAGS     链接器标志, 例如 -L&lt;lib dir&gt; 如果您的库在非标准目录 &lt;lib dir&gt; 中
+</span></span><span style=display:flex><span>    LIBS        传递给链接器的库, 例如 -l&lt;library&gt;
+</span></span><span style=display:flex><span>    CPPFLAGS    (Objective) C/C++ 预处理器标志, 例如 -I&lt;include dir&gt; 如果您的头文件在非标准目录 &lt;include dir&gt; 中
+</span></span><span style=display:flex><span>    YACC        要使用的 `Yet Another Compiler Compiler&#39; 实现。默认为找到的第一个程序: `bison -y&#39;, `byacc&#39;, `yacc&#39;。
+</span></span><span style=display:flex><span>    YFLAGS      默认传递给 $YACC 的参数列表。此脚本将 YFLAGS 默认为空字符串，以避免某些 make 应用程序给出的默认值 `-d&#39;。
+</span></span><span style=display:flex><span>    LT_SYS_LIBRARY_PATH 用户定义的运行时库搜索路径。
+</span></span><span style=display:flex><span>    PKG_CONFIG  pkg-config 工具的路径
+</span></span><span style=display:flex><span>    PKG_CONFIG_PATH 添加到 pkg-config 搜索路径的目录
+</span></span><span style=display:flex><span>    PKG_CONFIG_LIBDIR 覆盖 pkg-config 内置搜索路径的路径
+</span></span><span style=display:flex><span>    CPP         C 预处理器
+</span></span><span style=display:flex><span>    SYSTEMD_CFLAGS SYSTEMD 的 C 编译器标志, 覆盖 pkg-config
+</span></span><span style=display:flex><span>    SYSTEMD_LIBS SYSTEMD 的链接器标志, 覆盖 pkg-config
+</span></span><span style=display:flex><span>    SYSTEMD_DAEMON_CFLAGS SYSTEMD_DAEMON 的 C 编译器标志, 覆盖 pkg-config
+</span></span><span style=display:flex><span>    SYSTEMD_DAEMON_LIBS SYSTEMD_DAEMON 的链接器标志, 覆盖 pkg-config
+</span></span><span style=display:flex><span>    PYTHON_VERSION 要使用的已安装 Python 版本，例如 &#39;2.3&#39;。此字符串将附加到 Python 解释器的规范名称。
+</span></span><span style=display:flex><span>    SOURCE_DATE_EPOCH 如果设置了此变量，则使用该变量的值而不是当前时间作为构建时间戳。格式为 unix时间戳。这可以实现可重现的构建输出。
+</span></span><span style=display:flex><span>    PROTOBUFC_CFLAGS PROTOBUFC 的 C 编译器标志, 覆盖 pkg-config
+</span></span><span style=display:flex><span>    PROTOBUFC_LIBS PROTOBUFC 的链接器标志, 覆盖 pkg-config
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>使用这些变量来覆盖 `configure&#39; 所做的选择，或帮助
+</span></span><span style=display:flex><span>它找到具有非标准名称/位置的库和程序。
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>将错误报告给 &lt;unbound-bugs@nlnetlabs.nl 或 https://github.com/NLnetLabs/unbound/issues&gt;。
+</span></span></code></pre></div><h3 id=创建-unbound-用户和组并配置>创建 unbound 用户和组并配置<a hidden class=anchor aria-hidden=true href=#创建-unbound-用户和组并配置>#</a></h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>groupadd --system unbound
+</span></span><span style=display:flex><span>useradd --no-create-home --system --shell /usr/sbin/nologin unbound
+</span></span><span style=display:flex><span>mkdir -p /var/lib/unbound
+</span></span><span style=display:flex><span>cp /usr/share/dns/root.key /var/lib/unbound/root.key
+</span></span><span style=display:flex><span>chown -R unbound:unbound /var/lib/unbound
+</span></span></code></pre></div><h3 id=创建-unbound-的-systemd-服务文件>创建 unbound 的 systemd 服务文件<a hidden class=anchor aria-hidden=true href=#创建-unbound-的-systemd-服务文件>#</a></h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>cat <span style=color:#e6db74>&lt;&lt;EOF &gt; /etc/systemd/system/unbound.service
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>[Unit]
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>Description=Unbound DNS Resolver (Experimental Build)
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>Documentation=man:unbound(8) man:unbound.conf(5) https://www.nlnetlabs.nl/projects/unbound/documentation.html
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>Wants=network-online.target
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>After=network-online.target
+</span></span></span><span style=display:flex><span><span style=color:#e6db74># 如果您的 auto-trust-anchor-file 或 cachedb 路径位于 /var/lib/unbound，
+</span></span></span><span style=display:flex><span><span style=color:#e6db74># 确保 /var 在此服务启动前已挂载。
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>RequiresMountsFor=/var/lib/unbound /run
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>[Service]
+</span></span></span><span style=display:flex><span><span style=color:#e6db74># === 基本配置 ===
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>Type=notify
+</span></span></span><span style=display:flex><span><span style=color:#e6db74># Unbound 在 &#39;--enable-systemd&#39; 编译时支持 notify 类型，它会在服务完全准备好后通知 systemd。
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>
+</span></span></span><span style=display:flex><span><span style=color:#e6db74># 指定运行 Unbound 的用户和组。
+</span></span></span><span style=display:flex><span><span style=color:#e6db74># 您在 ./configure 时使用了 --with-username=unbound。
+</span></span></span><span style=display:flex><span><span style=color:#e6db74># 您需要确保 &#39;unbound&#39; 用户和组在系统上存在。
+</span></span></span><span style=display:flex><span><span style=color:#e6db74># 例如:
+</span></span></span><span style=display:flex><span><span style=color:#e6db74># sudo groupadd --system unbound
+</span></span></span><span style=display:flex><span><span style=color:#e6db74># sudo useradd --system -g unbound -d /var/lib/unbound -s /bin/false -c &#34;Unbound DNS Resolver&#34; unbound
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>User=unbound
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>Group=unbound
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>
+</span></span></span><span style=display:flex><span><span style=color:#e6db74># 预启动检查配置文件
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>ExecStartPre=/usr/sbin/unbound-checkconf /etc/unbound/unbound.conf
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>
+</span></span></span><span style=display:flex><span><span style=color:#e6db74># 启动命令
+</span></span></span><span style=display:flex><span><span style=color:#e6db74># -d: 不进行后台守护进程化 (systemd 处理)
+</span></span></span><span style=display:flex><span><span style=color:#e6db74># -p: 创建 PID 文件 (与 --with-pidfile 编译选项匹配)
+</span></span></span><span style=display:flex><span><span style=color:#e6db74># -c: 指定配置文件路径
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>ExecStart=/usr/sbin/unbound -d -p -c /etc/unbound/unbound.conf
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>
+</span></span></span><span style=display:flex><span><span style=color:#e6db74># 重载配置 (需要 unbound.conf 中启用 remote-control)
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>ExecReload=/usr/sbin/unbound-control reload
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>
+</span></span></span><span style=display:flex><span><span style=color:#e6db74># 重启策略
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>Restart=on-failure
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>RestartSec=5s
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>
+</span></span></span><span style=display:flex><span><span style=color:#e6db74># PID 文件路径 (与 --with-pidfile 编译选项匹配)
+</span></span></span><span style=display:flex><span><span style=color:#e6db74># RuntimeDirectory 会自动创建 /run/unbound 并设置权限给指定用户
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>PIDFile=/run/unbound/unbound.pid
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>
+</span></span></span><span style=display:flex><span><span style=color:#e6db74># === 资源和权限管理 ===
+</span></span></span><span style=display:flex><span><span style=color:#e6db74># 运行时目录，systemd 会创建 /run/unbound 并设置所有权为 User 和 Group 指定的用户/组
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>RuntimeDirectory=unbound
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>RuntimeDirectoryMode=0750
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>
+</span></span></span><span style=display:flex><span><span style=color:#e6db74># 能力绑定
+</span></span></span><span style=display:flex><span><span style=color:#e6db74># CAP_NET_BIND_SERVICE 允许 &#39;unbound&#39; 用户绑定到特权端口 (如53)
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>AmbientCapabilities=CAP_NET_BIND_SERVICE
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>CapabilityBoundingSet=CAP_NET_BIND_SERVICE CAP_SETGID CAP_SETUID
+</span></span></span><span style=display:flex><span><span style=color:#e6db74># 如果在 unbound.conf 中启用了 chroot，并且 Unbound 在降权为 &#39;unbound&#39; 用户后才执行 chroot,
+</span></span></span><span style=display:flex><span><span style=color:#e6db74># 则可能还需要 CAP_SYS_CHROOT。但通常 chroot 在降权前由root完成，或者Unbound启动时即为&#39;unbound&#39;用户，则无法chroot到任意目录。
+</span></span></span><span style=display:flex><span><span style=color:#e6db74># 您的 --with-username=unbound 意味着Unbound会自行处理权限。
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>
+</span></span></span><span style=display:flex><span><span style=color:#e6db74># --- 安全强化选项 ---
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>#NoNewPrivileges=yes
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>#ProtectSystem=no
+</span></span></span><span style=display:flex><span><span style=color:#e6db74># 如果 ProtectSystem=strict 导致 Unbound 无法写入其管理的 root.key 或 cachedb (通常在 /var/lib/unbound/)：
+</span></span></span><span style=display:flex><span><span style=color:#e6db74># 您需要添加 ReadWritePaths 指令。例如：
+</span></span></span><span style=display:flex><span><span style=color:#e6db74># ReadWritePaths=/var/lib/unbound
+</span></span></span><span style=display:flex><span><span style=color:#e6db74># 如果您在 unbound.conf 中使用了 chroot: &#34;/etc/unbound&#34; 并且需要在其中写入 (如 root.key):
+</span></span></span><span style=display:flex><span><span style=color:#e6db74># ReadWritePaths=/etc/unbound
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>#ProtectHome=no
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>#PrivateTmp=no
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>#PrivateDevices=yes
+</span></span></span><span style=display:flex><span><span style=color:#e6db74># MemoryDenyWriteExecute=yes # 如果系统和Unbound版本支持，可增强安全性
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>[Install]
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>WantedBy=multi-user.target
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>EOF</span>
+</span></span></code></pre></div><h3 id=创建-unbound-的配置文件>创建 unbound 的配置文件<a hidden class=anchor aria-hidden=true href=#创建-unbound-的配置文件>#</a></h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>cat <span style=color:#e6db74>&lt;&lt;EOF &gt; /etc/unbound/unbound.conf
+</span></span></span><span style=display:flex><span><span style=color:#e6db74># Unbound configuration file
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>#
+</span></span></span><span style=display:flex><span><span style=color:#e6db74># See unbound.conf(5) man page for more information.
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>#
+</span></span></span><span style=display:flex><span><span style=color:#e6db74># 注意: 路径 (例如 logfile, root-hints, auto-trust-anchor-file)
+</span></span></span><span style=display:flex><span><span style=color:#e6db74># 可能需要根据您的操作系统和Unbound安装方式进行调整。
+</span></span></span><span style=display:flex><span><span style=color:#e6db74># 确保Unbound进程对指定的日志文件和自动信任锚点文件具有写入权限（或对其目录）。
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>server:
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    # --- 基本服务器设置 ---
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    verbosity: 0                     # 日志详细级别 (0=仅错误, 1=操作信息, 2=详细操作, ... 5=非常详细)
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    #logfile: &#34;/var/log/unbound/unbound.log&#34; # 日志文件路径。如果注释掉或为空，则可能记录到syslog。
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>                                              # 例如: FreeBSD: /var/unbound/unbound.log, OpenBSD: Unbound chroots and logs via syslog
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>                                              # Linux (from package): often /var/log/unbound.log or uses systemd journal
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    use-syslog: no                  # 如果指定了 logfile，设为 no 则仅记录到文件。设为 yes 则也发送到 syslog。
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    module-config: &#34;validator cachedb iterator&#34;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    interface: 0.0.0.0               # 监听所有 IPv4 地址
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    interface: ::0                   # 监听所有 IPv6 地址 (如果您的系统支持IPv6)
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    port: 54                         # 监听的端口 (DNS标准端口)
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    do-ip4: yes                      # 允许 IPv4
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    do-ip6: yes                      # 允许 IPv6 (如果网络支持)
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    do-udp: yes                      # 允许 UDP
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    do-tcp: yes                      # 允许 TCP
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    # --- 访问控制 ---
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    # 定义哪些客户端IP地址或子网可以查询此服务器。
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    # 强烈建议配置此项以防止滥用。
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    access-control: 127.0.0.0/8 allow    # 允许本地回环地址 (IPv4)
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    access-control: ::1/128 allow        # 允许本地回环地址 (IPv6)
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    # 示例：允许常见的私有网络范围。根据您的网络调整或添加。
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    access-control: 192.168.0.0/16 allow
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    access-control: 10.0.0.0/8 allow
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    access-control: 172.16.0.0/12 allow
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    # access-control: ::ffff:127.0.0.1/128 allow # IPv4-mapped IPv6 localhost
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    # --- 性能和缓存设置 ---
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    msg-cache-size: 10m              # DNS消息缓存大小 (查询和应答)
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    rrset-cache-size: 20m            # RRset缓存大小 (DNS资源记录)
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    # 缓存相关的 slab 数量，通常可以设为接近 num-threads 的值或者2的幂次方。
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    msg-cache-slabs: 4
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    rrset-cache-slabs: 4
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    num-threads: 2                   # 创建的线程数。理想情况下，设置为CPU核心数。
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>                                     # 对于较小的部署，1或2通常足够。
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    # 增加传出查询可用的端口范围，有助于防止某些类型的攻击。
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    outgoing-range: 1024
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    # 每个线程可以并发处理的查询数上限。
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    num-queries-per-thread: 2048
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    # --- 过期缓存与预取功能 (Requested &#34;过期缓存功能&#34;) ---
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    prefetch: yes                    # 在缓存条目过期前主动获取更新，保持常用条目新鲜。
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    prefetch-key: yes                # 在验证DS记录时，提前获取DNSKEY记录，加速后续DNSSEC验证。
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    serve-expired: yes               # 在尝试获取新记录的同时，从缓存中提供已过期的记录。
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>                                     # 这可以提高当上游权威服务器缓慢或无响应时的可用性。
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    serve-expired-ttl: 3600          # (1小时) 提供已过期记录时，该记录的TTL值。
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    serve-expired-reply-ttl: 30      # (30秒) 当提供过期数据时，客户端应该缓存这条过期数据的TTL。
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    serve-expired-client-timeout: 1000 # (1秒) 在提供过期数据之前，等待新答案的最长时间（毫秒）。
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    # --- 安全设置 ---
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    harden-glue: yes                 # 强化对胶水记录的验证。
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    harden-dnssec-stripped: yes      # 防止DNSSEC剥离攻击。
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    harden-algo-downgrade: yes       # 防止算法降级攻击。
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    use-caps-for-id: yes             # 在查询ID中使用随机大小写混合（0x20技巧）来增加欺骗难度。
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    edns-buffer-size: 1232           # EDNS0 UDP包的建议大小，以减少IP分片。
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    hide-identity: yes               # 拒绝回应 id.server 和 hostname.bind 的查询。
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    hide-version: yes                # 拒绝回应 version.server 和 version.bind 的查询。
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    # 定义私有地址范围，Unbound会从DNS响应中剥离这些地址，以防止DNS重绑定攻击。
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    private-address: 10.0.0.0/8
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    private-address: 172.16.0.0/12
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    private-address: 192.168.0.0/16
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    private-address: 169.254.0.0/16
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    private-address: fd00::/8
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    private-address: fe80::/10
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    # private-domain: &#34;example.com&#34; # 如果您有不想被外部解析的内部域名，可以在这里声明。
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    # 不查询回环地址上的公共域名，防止潜在的循环或安全问题。
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    do-not-query-localhost: yes
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    # --- DNSSEC 验证 ---
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    # 自动管理和更新根信任锚点。Unbound需要对该文件的目录有写权限，或者您可以手动管理此文件。
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    # 路径可能为: /var/lib/unbound/root.key (Debian/Ubuntu), /usr/local/etc/unbound/root.key (FreeBSD ports),
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    # /etc/unbound/root.key (generic from source), /opt/homebrew/etc/unbound/root.key (macOS Homebrew)
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    auto-trust-anchor-file: &#34;/var/lib/unbound/root.key&#34;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    val-log-level: 1                 # DNSSEC验证失败时的日志级别 (1=基本信息, 2=详细信息)。
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    # --- 根提示文件 (Root Hints) ---
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    # 如果Unbound作为递归解析器直接从根服务器开始解析 (而不是转发模式)，则需要此文件。
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    # 确保此文件存在并且保持最新。
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    # 路径可能为: /usr/share/dns/root.hints (common on Linux), /etc/unbound/root.hints,
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    # /usr/local/etc/unbound/root.hints
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    root-hints: &#34;/usr/share/dns/root.hints&#34;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    # --- 转发模式 (可选) ---
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    # 如果您希望Unbound将所有查询转发到其他上游DNS服务器，而不是自己从根进行递归解析，
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    # 请取消注释并配置以下部分。如果启用了转发，则上面的 root-hints 通常不再需要。
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    # forward-zone:
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    #   name: &#34;.&#34;  # 转发所有查询
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    #   # 常用的公共DNS服务器示例:
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    #   forward-addr: 8.8.8.8@53      # Google
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    #   forward-addr: 8.8.4.4@53      # Google
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    #   forward-addr: 1.1.1.1@53      # Cloudflare
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    #   forward-addr: 1.0.0.1@53      # Cloudflare
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    #   # 如果您的上游服务器支持DNS-over-TLS (DoT):
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    #   # forward-tls-upstream: yes
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    #   # forward-addr: 1.1.1.1@853#cloudflare-dns.com # DoT示例，主机名用于证书验证
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>
+</span></span></span><span style=display:flex><span><span style=color:#e6db74># --- 远程控制 (可选) ---
+</span></span></span><span style=display:flex><span><span style=color:#e6db74># 允许使用 unbound-control 工具管理Unbound服务。
+</span></span></span><span style=display:flex><span><span style=color:#e6db74># 如果启用，请确保使用 unbound-control-setup 生成密钥和证书文件。
+</span></span></span><span style=display:flex><span><span style=color:#e6db74># remote-control:
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>#   control-enable: yes
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>#   control-interface: 127.0.0.1    # 监听远程控制连接的IP地址
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>#   control-port: 8953              # 监听远程控制连接的端口
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>#   # 以下文件路径也需要根据您的安装进行调整
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>#   server-key-file: &#34;/etc/unbound/unbound_server.key&#34;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>#   server-cert-file: &#34;/etc/unbound/unbound_server.pem&#34;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>#   control-key-file: &#34;/etc/unbound/unbound_control.key&#34;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>#   control-cert-file: &#34;/etc/unbound/unbound_control.pem&#34;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>
+</span></span></span><span style=display:flex><span><span style=color:#e6db74># cachedb:
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    # backend: &#34;redis&#34;  # 指定后端为 redis (这通常也适用于Valkey)
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    # --- Redis/Valkey 服务器连接参数 ---
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    # redis-server-host: 192.168.2.11
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    # redis-server-port: 6379
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    #redis-server-path: &#34;/run/valkey/valkey-server.sock&#34;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    # redis-server-password: &#34;your_valkey_password&#34; # 如果Valkey设置了密码
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    # redis-database: 0                # 可选，Valkey/Redis数据库编号 (默认为0)
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    # --- 可选的 Redis/Valkey 相关超时设置 (如果后端驱动支持) ---
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    # redis-timeout: 100               # 连接和操作超时 (毫秒)
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    # --- 缓存数据密钥前缀 (可选) ---
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    # redis-key-prefix: &#34;unbound_cache:&#34; # 避免与其他应用在同一Valkey实例中的键冲突
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    # --- 其他 cachedb 通用设置 (可能适用) ---
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    # cachedb-no-store: no        # 是否存储否定缓存条目 (默认为no，即存储)
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>EOF</span>
+</span></span></code></pre></div><h3 id=启动-unbound-服务>启动 unbound 服务<a hidden class=anchor aria-hidden=true href=#启动-unbound-服务>#</a></h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>sudo systemctl daemon-reload
+</span></span><span style=display:flex><span>sudo systemctl enable unbound
+</span></span><span style=display:flex><span>sudo systemctl start unbound
+</span></span></code></pre></div><h3 id=检查-unbound-服务状态>检查 unbound 服务状态<a hidden class=anchor aria-hidden=true href=#检查-unbound-服务状态>#</a></h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>sudo systemctl status unbound
+</span></span></code></pre></div></div><footer class=post-footer><ul class=post-tags></ul></footer></article></main><footer class=footer><span>&copy; 2025 <a href=https://tnzzz.top/>明天吃什么？</a></span> ·
+<span>Powered by
+<a href=https://gohugo.io/ rel="noopener noreferrer" target=_blank>Hugo</a> &
+<a href=https://github.com/adityatelange/hugo-PaperMod/ rel=noopener target=_blank>PaperMod</a> &
+<a href=https://beian.miit.gov.cn/#/Integrated/index>粤ICP备2022076439号</a></span></footer><a href=#top aria-label="go to top" title="Go to Top (Alt + G)" class=top-link id=top-link accesskey=g><svg viewBox="0 0 12 6" fill="currentColor"><path d="M12 6H0l6-6z"/></svg>
+</a><script>let menu=document.getElementById("menu");menu&&(menu.scrollLeft=localStorage.getItem("menu-scroll-position"),menu.onscroll=function(){localStorage.setItem("menu-scroll-position",menu.scrollLeft)}),document.querySelectorAll('a[href^="#"]').forEach(e=>{e.addEventListener("click",function(e){e.preventDefault();var t=this.getAttribute("href").substr(1);window.matchMedia("(prefers-reduced-motion: reduce)").matches?document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView():document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView({behavior:"smooth"}),t==="top"?history.replaceState(null,null," "):history.pushState(null,null,`#${t}`)})})</script><script>var mybutton=document.getElementById("top-link");window.onscroll=function(){document.body.scrollTop>800||document.documentElement.scrollTop>800?(mybutton.style.visibility="visible",mybutton.style.opacity="1"):(mybutton.style.visibility="hidden",mybutton.style.opacity="0")}</script><script>document.getElementById("theme-toggle").addEventListener("click",()=>{document.body.className.includes("dark")?(document.body.classList.remove("dark"),localStorage.setItem("pref-theme","light")):(document.body.classList.add("dark"),localStorage.setItem("pref-theme","dark"))})</script><script>document.querySelectorAll("pre > code").forEach(e=>{const n=e.parentNode.parentNode,t=document.createElement("button");t.classList.add("copy-code"),t.innerHTML="copy";function s(){t.innerHTML="copied!",setTimeout(()=>{t.innerHTML="copy"},2e3)}t.addEventListener("click",t=>{if("clipboard"in navigator){navigator.clipboard.writeText(e.textContent),s();return}const n=document.createRange();n.selectNodeContents(e);const o=window.getSelection();o.removeAllRanges(),o.addRange(n);try{document.execCommand("copy"),s()}catch{}o.removeRange(n)}),n.classList.contains("highlight")?n.appendChild(t):n.parentNode.firstChild==n||(e.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName=="TABLE"?e.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(t):e.parentNode.appendChild(t))})</script></body></html>

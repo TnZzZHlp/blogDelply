@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>学习 on 明天吃什么？</title><link>https://tnzzz.top/categories/%E5%AD%A6%E4%B9%A0/</link><description>Recent content in 学习 on 明天吃什么？</description><generator>Hugo -- 0.147.8</generator><language>zh-cn</language><lastBuildDate>Tue, 17 Jun 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://tnzzz.top/categories/%E5%AD%A6%E4%B9%A0/index.xml" rel="self" type="application/rss+xml"/><item><title>JavaScript 中的 this 指向</title><link>https://tnzzz.top/posts/%E5%AD%A6%E4%B9%A0/js/this/</link><pubDate>Tue, 17 Jun 2025 00:00:00 +0000</pubDate><guid>https://tnzzz.top/posts/%E5%AD%A6%E4%B9%A0/js/this/</guid><description>&lt;h3 id="this-的值是运行时计算出来的">this 的值是运行时计算出来的&lt;/h3>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-javascript" data-lang="javascript">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">let&lt;/span> &lt;span style="color:#a6e22e">user&lt;/span> &lt;span style="color:#f92672">=&lt;/span> { &lt;span style="color:#a6e22e">name&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#e6db74">&amp;#34;John&amp;#34;&lt;/span> };
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">let&lt;/span> &lt;span style="color:#a6e22e">admin&lt;/span> &lt;span style="color:#f92672">=&lt;/span> { &lt;span style="color:#a6e22e">name&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#e6db74">&amp;#34;Admin&amp;#34;&lt;/span> };
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">function&lt;/span> &lt;span style="color:#a6e22e">sayHi&lt;/span>() {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">alert&lt;/span>( &lt;span style="color:#66d9ef">this&lt;/span>.&lt;span style="color:#a6e22e">name&lt;/span> );
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// 在两个对象中使用相同的函数
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#a6e22e">user&lt;/span>.&lt;span style="color:#a6e22e">f&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#a6e22e">sayHi&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">admin&lt;/span>.&lt;span style="color:#a6e22e">f&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#a6e22e">sayHi&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// 这两个调用有不同的 this 值
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// 函数内部的 &amp;#34;this&amp;#34; 是“点符号前面”的那个对象
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#a6e22e">user&lt;/span>.&lt;span style="color:#a6e22e">f&lt;/span>(); &lt;span style="color:#75715e">// John（this == user）
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#a6e22e">admin&lt;/span>.&lt;span style="color:#a6e22e">f&lt;/span>(); &lt;span style="color:#75715e">// Admin（this == admin）
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">admin&lt;/span>[&lt;span style="color:#e6db74">&amp;#39;f&amp;#39;&lt;/span>](); &lt;span style="color:#75715e">// Admin（使用点符号或方括号语法来访问这个方法，都没有关系。）
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="没有对象的情况下">没有对象的情况下&lt;/h3>
+&lt;ul>
+&lt;li>在严格模式下，函数中的 this 是 undefined。&lt;/li>
+&lt;li>在非严格模式下，this 是全局对象（浏览器中是 window 对象）。&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-javascript" data-lang="javascript">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">function&lt;/span> &lt;span style="color:#a6e22e">showThis&lt;/span>() {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">console&lt;/span>.&lt;span style="color:#a6e22e">log&lt;/span>(&lt;span style="color:#66d9ef">this&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">showThis&lt;/span>(); &lt;span style="color:#75715e">// 在非严格模式下，this指向全局对象
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="箭头函数没有自己的this">箭头函数没有自己的this&lt;/h3>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-javascript" data-lang="javascript">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">let&lt;/span> &lt;span style="color:#a6e22e">user&lt;/span> &lt;span style="color:#f92672">=&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">firstName&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#e6db74">&amp;#34;Ilya&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">sayHi&lt;/span>() {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">let&lt;/span> &lt;span style="color:#a6e22e">arrow&lt;/span> &lt;span style="color:#f92672">=&lt;/span> () =&amp;gt; &lt;span style="color:#a6e22e">console&lt;/span>.&lt;span style="color:#a6e22e">log&lt;/span>(&lt;span style="color:#66d9ef">this&lt;/span>.&lt;span style="color:#a6e22e">firstName&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">arrow&lt;/span>();
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>};
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">user&lt;/span>.&lt;span style="color:#a6e22e">sayHi&lt;/span>(); &lt;span style="color:#75715e">// Ilya
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="调用函数时指定this">调用函数时指定this&lt;/h3>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-javascript" data-lang="javascript">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">function&lt;/span> &lt;span style="color:#a6e22e">say&lt;/span>(&lt;span style="color:#a6e22e">phrase&lt;/span>) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">alert&lt;/span>(&lt;span style="color:#66d9ef">this&lt;/span>.&lt;span style="color:#a6e22e">name&lt;/span> &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#e6db74">&amp;#39;: &amp;#39;&lt;/span> &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#a6e22e">phrase&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">let&lt;/span> &lt;span style="color:#a6e22e">user&lt;/span> &lt;span style="color:#f92672">=&lt;/span> { &lt;span style="color:#a6e22e">name&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#e6db74">&amp;#34;John&amp;#34;&lt;/span> };
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">let&lt;/span> &lt;span style="color:#a6e22e">admin&lt;/span> &lt;span style="color:#f92672">=&lt;/span> { &lt;span style="color:#a6e22e">name&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#e6db74">&amp;#34;Admin&amp;#34;&lt;/span> };
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">say&lt;/span>.&lt;span style="color:#a6e22e">call&lt;/span>(&lt;span style="color:#a6e22e">user&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;Hello&amp;#34;&lt;/span>); &lt;span style="color:#75715e">// John: Hello
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#a6e22e">say&lt;/span>.&lt;span style="color:#a6e22e">call&lt;/span>(&lt;span style="color:#a6e22e">admin&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;Hello&amp;#34;&lt;/span>); &lt;span style="color:#75715e">// Admin: Hello
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#a6e22e">say&lt;/span>.&lt;span style="color:#a6e22e">apply&lt;/span>(&lt;span style="color:#a6e22e">user&lt;/span>, [&lt;span style="color:#e6db74">&amp;#34;Hello&amp;#34;&lt;/span>]); &lt;span style="color:#75715e">// John: Hello
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#a6e22e">say&lt;/span>.&lt;span style="color:#a6e22e">apply&lt;/span>(&lt;span style="color:#a6e22e">admin&lt;/span>, [&lt;span style="color:#e6db74">&amp;#34;Hello&amp;#34;&lt;/span>]); &lt;span style="color:#75715e">// Admin: Hello
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#a6e22e">say&lt;/span>.&lt;span style="color:#a6e22e">bind&lt;/span>(&lt;span style="color:#a6e22e">user&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;Hello&amp;#34;&lt;/span>)(); &lt;span style="color:#75715e">// John: Hello
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#a6e22e">say&lt;/span>.&lt;span style="color:#a6e22e">bind&lt;/span>(&lt;span style="color:#a6e22e">admin&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;Hello&amp;#34;&lt;/span>)(); &lt;span style="color:#75715e">// Admin: Hello
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="例子">例子&lt;/h3>
+&lt;h4 id="在对象字面量中使用-this">在对象字面量中使用 &amp;ldquo;this&amp;rdquo;&lt;/h4>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-javascript" data-lang="javascript">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">function&lt;/span> &lt;span style="color:#a6e22e">makeUser&lt;/span>() {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">name&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#e6db74">&amp;#34;John&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">ref&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#66d9ef">this&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> };
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">let&lt;/span> &lt;span style="color:#a6e22e">user&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#a6e22e">makeUser&lt;/span>();
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">alert&lt;/span>( &lt;span style="color:#a6e22e">user&lt;/span>.&lt;span style="color:#a6e22e">ref&lt;/span>.&lt;span style="color:#a6e22e">name&lt;/span> ); &lt;span style="color:#75715e">// 结果是什么？
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;!-- raw HTML omitted -->
+&lt;p>因为在调用 &lt;code>makeUser&lt;/code> 函数时，不是通过对象调用的，所以 &lt;code>this&lt;/code> 是 &lt;code>undefined&lt;/code>。因此，&lt;code>user.ref&lt;/code> 是 &lt;code>undefined&lt;/code>，访问 &lt;code>user.ref.name&lt;/code> 会导致错误。&lt;/p></description></item><item><title>日语 - Day 2</title><link>https://tnzzz.top/posts/%E5%AD%A6%E4%B9%A0/%E6%97%A5%E8%AF%AD/day-2/</link><pubDate>Mon, 16 Jun 2025 00:00:00 +0000</pubDate><guid>https://tnzzz.top/posts/%E5%AD%A6%E4%B9%A0/%E6%97%A5%E8%AF%AD/day-2/</guid><description>&lt;h2 id="か行假名">か行假名&lt;/h2>
+&lt;p>か　き　く　け　こ
+カ　キ　ク　ケ　コ&lt;/p>
+&lt;h2 id="さ行假名">さ行假名&lt;/h2>
+&lt;p>さ　し　す　せ　そ
+サ　シ　ス　セ　ソ&lt;/p>
+&lt;h2 id="た行假名">た行假名&lt;/h2>
+&lt;p>た　ち　つ　て　と
+タ　チ　ツ　テ　ト&lt;/p></description></item><item><title>日语 - Day 3</title><link>https://tnzzz.top/posts/%E5%AD%A6%E4%B9%A0/%E6%97%A5%E8%AF%AD/day-3/</link><pubDate>Mon, 16 Jun 2025 00:00:00 +0000</pubDate><guid>https://tnzzz.top/posts/%E5%AD%A6%E4%B9%A0/%E6%97%A5%E8%AF%AD/day-3/</guid><description>&lt;h2 id="な行假名">な行假名&lt;/h2>
+&lt;p>な　に　ぬ　ね　の
+ナ　ニ　ヌ　ネ　ノ&lt;/p>
+&lt;h2 id="は行假名">は行假名&lt;/h2>
+&lt;p>は　ひ　ふ　へ　ほ
+ハ　ヒ　フ　ヘ　ホ&lt;/p>
+&lt;h2 id="ま行假名">ま行假名&lt;/h2>
+&lt;p>ま　み　む　め　も
+マ　ミ　ム　メ　モ&lt;/p></description></item><item><title>日语 - Day 1</title><link>https://tnzzz.top/posts/%E5%AD%A6%E4%B9%A0/%E6%97%A5%E8%AF%AD/day-1/</link><pubDate>Sun, 15 Jun 2025 00:00:00 +0000</pubDate><guid>https://tnzzz.top/posts/%E5%AD%A6%E4%B9%A0/%E6%97%A5%E8%AF%AD/day-1/</guid><description>&lt;h2 id="浊音">浊音&lt;/h2>
+&lt;p>&lt;img alt="浊音" loading="lazy" src="https://tnzzz.top/posts/%E5%AD%A6%E4%B9%A0/%E6%97%A5%E8%AF%AD/day-1/img/image-1.png">&lt;/p>
+&lt;ul>
+&lt;li>か、た、ぱ行假名位于单词词中或词末时可以念不送气音 不送气音 ≠ 浊音&lt;/li>
+&lt;/ul>
+&lt;h2 id="音调">音调&lt;/h2>
+&lt;p>&lt;img alt="规律" loading="lazy" src="https://tnzzz.top/posts/%E5%AD%A6%E4%B9%A0/%E6%97%A5%E8%AF%AD/day-1/img/image.png">&lt;/p>
+&lt;h3 id="一个假名一个音节">一个假名一个音节&lt;/h3>
+&lt;h4 id="规律总结">规律总结&lt;/h4>
+&lt;ul>
+&lt;li>前面标的序号就代表在第几个音节音调下降，都是在第一个音节开始上升后保持不变&lt;/li>
+&lt;li>0 调是例外，在第一个音节后就保持在高音调&lt;/li>
+&lt;/ul></description></item><item><title>亚马逊 - Day 1</title><link>https://tnzzz.top/posts/%E5%AD%A6%E4%B9%A0/%E7%94%B5%E5%95%86/%E4%BA%9A%E9%A9%AC%E9%80%8A/day-1/</link><pubDate>Wed, 11 Jun 2025 00:00:00 +0000</pubDate><guid>https://tnzzz.top/posts/%E5%AD%A6%E4%B9%A0/%E7%94%B5%E5%95%86/%E4%BA%9A%E9%A9%AC%E9%80%8A/day-1/</guid><description>&lt;h2 id="选品">选品&lt;/h2>
+&lt;h3 id="选品的原则">选品的原则&lt;/h3>
+&lt;ul>
+&lt;li>多SKU / 多新款&lt;/li>
+&lt;li>品牌并不重要&lt;/li>
+&lt;li>品牌集中度低&lt;/li>
+&lt;/ul>
+&lt;h4 id="推荐品类">推荐品类&lt;/h4>
+&lt;ul>
+&lt;li>玩具
+&lt;ul>
+&lt;li>优点
+&lt;ul>
+&lt;li>SKU多&lt;/li>
+&lt;li>新款多&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>风险
+&lt;ul>
+&lt;li>易侵权&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>MRO ( Maintenance, Repair, and Operations) 维修件
+&lt;ul>
+&lt;li>风险
+&lt;ul>
+&lt;li>专利侵权&lt;/li>
+&lt;li>可能需要铺货（大批量上传产品）&lt;/li>
+&lt;li>单品销售量(PCS)低&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>装饰品
+&lt;ul>
+&lt;li>风险
+&lt;ul>
+&lt;li>专利侵权&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h2 id="店铺关联">店铺关联&lt;/h2>
+&lt;p>重点：&lt;strong>一个公司一个店铺&lt;/strong>&lt;/p>
+&lt;ul>
+&lt;li>强关联
+&lt;ul>
+&lt;li>IP&lt;/li>
+&lt;li>公司信息&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>弱关联
+&lt;ul>
+&lt;li>品牌授权&lt;/li>
+&lt;li>法人姓名&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h2 id="站点选择">站点选择&lt;/h2>
+&lt;p>日 墨 德 法&lt;/p>
+&lt;ul>
+&lt;li>消费力高&lt;/li>
+&lt;/ul>
+&lt;p>欧洲站点注意欧盟合规问题&lt;/p>
+&lt;h2 id="vat">VAT&lt;/h2>
+&lt;h3 id="进口-vat">进口 VAT&lt;/h3>
+&lt;p>进口 VAT = (头程运费+申报货值+关税)×VAT税率&lt;/p>
+&lt;p>举例 头程运费 2欧 申报货值 10欧 关税 0.5欧 VAT税率 20%&lt;/p>
+&lt;p>进口 VAT = (2 + 10 + 0.5) × 20% = 2.5 × 20% = 0.5欧&lt;/p></description></item><item><title>亚马逊 - Day 2</title><link>https://tnzzz.top/posts/%E5%AD%A6%E4%B9%A0/%E7%94%B5%E5%95%86/%E4%BA%9A%E9%A9%AC%E9%80%8A/day-2/</link><pubDate>Wed, 11 Jun 2025 00:00:00 +0000</pubDate><guid>https://tnzzz.top/posts/%E5%AD%A6%E4%B9%A0/%E7%94%B5%E5%95%86/%E4%BA%9A%E9%A9%AC%E9%80%8A/day-2/</guid><description>&lt;h2 id="选品">选品&lt;/h2>
+&lt;ul>
+&lt;li>
+&lt;p>目标&lt;/p>
+&lt;ul>
+&lt;li>市场需求&lt;/li>
+&lt;li>市场上已经有了什么产品，哪些是我能拿起来就卖，并且卖得了的，我就卖。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>错误思维&lt;/p>
+&lt;ul>
+&lt;li>产品单一化&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul></description></item><item><title>CSS 重温 - Day 1</title><link>https://tnzzz.top/posts/%E5%AD%A6%E4%B9%A0/css/day1/</link><pubDate>Sun, 08 Jun 2025 00:00:00 +0000</pubDate><guid>https://tnzzz.top/posts/%E5%AD%A6%E4%B9%A0/css/day1/</guid><description>&lt;h3 id="选择器">选择器&lt;/h3>
+&lt;h4 id="标签选择器">标签选择器&lt;/h4>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-css" data-lang="css">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">&amp;lt;&lt;/span>&lt;span style="color:#f92672">h1&lt;/span>&lt;span style="color:#f92672">&amp;gt;&lt;/span>&lt;span style="color:#f92672">标题&lt;/span>&lt;span style="color:#f92672">&amp;lt;/&lt;/span>&lt;span style="color:#f92672">h1&lt;/span>&lt;span style="color:#f92672">&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">h1&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">color&lt;/span>: &lt;span style="color:#66d9ef">blue&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="类选择器">类选择器&lt;/h4>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-css" data-lang="css">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">&amp;lt;&lt;/span>&lt;span style="color:#f92672">div&lt;/span> &lt;span style="color:#f92672">class&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;header&amp;#34;&lt;/span>&lt;span style="color:#f92672">&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;&lt;/span>&lt;span style="color:#f92672">h1&lt;/span>&lt;span style="color:#f92672">&amp;gt;&lt;/span>&lt;span style="color:#f92672">标题&lt;/span>&lt;span style="color:#f92672">&amp;lt;/&lt;/span>&lt;span style="color:#f92672">h1&lt;/span>&lt;span style="color:#f92672">&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">&amp;lt;/&lt;/span>&lt;span style="color:#f92672">div&lt;/span>&lt;span style="color:#f92672">&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>.&lt;span style="color:#a6e22e">header&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">color&lt;/span>: &lt;span style="color:#66d9ef">blue&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="id选择器">ID选择器&lt;/h4>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-css" data-lang="css">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">&amp;lt;&lt;/span>&lt;span style="color:#f92672">div&lt;/span> &lt;span style="color:#f92672">id&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;header&amp;#34;&lt;/span>&lt;span style="color:#f92672">&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;&lt;/span>&lt;span style="color:#f92672">h1&lt;/span>&lt;span style="color:#f92672">&amp;gt;&lt;/span>&lt;span style="color:#f92672">标题&lt;/span>&lt;span style="color:#f92672">&amp;lt;/&lt;/span>&lt;span style="color:#f92672">h1&lt;/span>&lt;span style="color:#f92672">&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">&amp;lt;/&lt;/span>&lt;span style="color:#f92672">div&lt;/span>&lt;span style="color:#f92672">&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>#header {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">color&lt;/span>: &lt;span style="color:#66d9ef">blue&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="组合选择器">组合选择器&lt;/h4>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-css" data-lang="css">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">/* 会同时选中所有 h1 和 .special */&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">&amp;lt;&lt;/span>&lt;span style="color:#f92672">h1&lt;/span> &lt;span style="color:#f92672">class&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;title&amp;#34;&lt;/span>&lt;span style="color:#f92672">&amp;gt;&lt;/span>&lt;span style="color:#f92672">标题1&lt;/span>&lt;span style="color:#f92672">&amp;lt;/&lt;/span>&lt;span style="color:#f92672">h1&lt;/span>&lt;span style="color:#f92672">&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">&amp;lt;&lt;/span>&lt;span style="color:#f92672">h1&lt;/span> &lt;span style="color:#f92672">class&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;title&amp;#34;&lt;/span>&lt;span style="color:#f92672">&amp;gt;&lt;/span>&lt;span style="color:#f92672">标题2&lt;/span>&lt;span style="color:#f92672">&amp;lt;/&lt;/span>&lt;span style="color:#f92672">h1&lt;/span>&lt;span style="color:#f92672">&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">&amp;lt;&lt;/span>&lt;span style="color:#f92672">div&lt;/span> &lt;span style="color:#f92672">class&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;special&amp;#34;&lt;/span>&lt;span style="color:#f92672">&amp;gt;&amp;lt;/&lt;/span>&lt;span style="color:#f92672">div&lt;/span>&lt;span style="color:#f92672">&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">h1&lt;/span>&lt;span style="color:#f92672">,&lt;/span> .&lt;span style="color:#a6e22e">special&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">color&lt;/span>: &lt;span style="color:#66d9ef">blue&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="属性选择器">属性选择器&lt;/h4>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-css" data-lang="css">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">li&lt;/span>&lt;span style="color:#f92672">[&lt;/span>&lt;span style="color:#f92672">class&lt;/span>&lt;span style="color:#f92672">]&lt;/span> {&lt;span style="color:#75715e">/* 选择所有有 class 属性的 li 标签 */&lt;/span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">li&lt;/span>&lt;span style="color:#f92672">[&lt;/span>&lt;span style="color:#f92672">class&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;a&amp;#34;&lt;/span>&lt;span style="color:#f92672">]&lt;/span> {&lt;span style="color:#75715e">/* 选择 class 属性值为 &amp;#34;a&amp;#34; 的 li 标签 */&lt;/span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">li&lt;/span>&lt;span style="color:#f92672">[&lt;/span>&lt;span style="color:#f92672">class&lt;/span>&lt;span style="color:#f92672">~=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;a&amp;#34;&lt;/span>&lt;span style="color:#f92672">]&lt;/span> {&lt;span style="color:#75715e">/* 选择 class 属性值包含 &amp;#34;a类&amp;#34; 的 li 标签 */&lt;/span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">li&lt;/span>&lt;span style="color:#f92672">[&lt;/span>&lt;span style="color:#f92672">class&lt;/span>&lt;span style="color:#f92672">|=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;zh&amp;#34;&lt;/span>&lt;span style="color:#f92672">]&lt;/span> {&lt;span style="color:#75715e">/* 选择 class 属性值以 &amp;#34;zh&amp;#34; 开头并且后面跟随一个连字符&amp;#39;-&amp;#39;的 li 标签 */&lt;/span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">li&lt;/span>&lt;span style="color:#f92672">[&lt;/span>&lt;span style="color:#f92672">class&lt;/span>&lt;span style="color:#f92672">^=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;a&amp;#34;&lt;/span>&lt;span style="color:#f92672">]&lt;/span> {&lt;span style="color:#75715e">/* 选择 class 属性值以 &amp;#34;a&amp;#34; 开头的 li 标签 */&lt;/span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">li&lt;/span>&lt;span style="color:#f92672">[&lt;/span>&lt;span style="color:#f92672">class&lt;/span>&lt;span style="color:#f92672">$=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;a&amp;#34;&lt;/span>&lt;span style="color:#f92672">]&lt;/span> {&lt;span style="color:#75715e">/* 选择 class 属性值以 &amp;#34;a&amp;#34; 结尾的 li 标签 */&lt;/span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">li&lt;/span>&lt;span style="color:#f92672">[&lt;/span>&lt;span style="color:#f92672">class&lt;/span>&lt;span style="color:#f92672">*=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;a&amp;#34;&lt;/span>&lt;span style="color:#f92672">]&lt;/span> {&lt;span style="color:#75715e">/* 选择 class 属性值包含 &amp;#34;a&amp;#34; 的 li 标签 */&lt;/span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="关系选择器">关系选择器&lt;/h4>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-css" data-lang="css">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">article&lt;/span> &lt;span style="color:#f92672">p&lt;/span> {&lt;span style="color:#75715e">/* 选择 article 下的所有 p 元素 */&lt;/span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">article&lt;/span> &lt;span style="color:#f92672">&amp;gt;&lt;/span> &lt;span style="color:#f92672">p&lt;/span> {&lt;span style="color:#75715e">/* 选择 article 下的直接子元素 p 元素, 不会选中嵌套的 p 元素 */&lt;/span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">h1&lt;/span> &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#f92672">p&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">/* 选择 h1 元素的下一个兄弟元素 p 元素, 会选中紧接着 h1 的 p 元素 */&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#960050;background-color:#1e0010">&amp;lt;article&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#960050;background-color:#1e0010">&amp;lt;h1&amp;gt;A&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">heading&amp;lt;/h1&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#960050;background-color:#1e0010">&amp;lt;p&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#960050;background-color:#1e0010">Veggies&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">es&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">bonus&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">vobis,&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">proinde&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">vos&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">postulo&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">essum&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">magis&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">kohlrabi&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">welsh&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">onion&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#960050;background-color:#1e0010">daikon&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">amaranth&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">tatsoi&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">tomatillo&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">melon&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">azuki&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">bean&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">garlic.&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#960050;background-color:#1e0010">&amp;lt;/p&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#960050;background-color:#1e0010">&amp;lt;p&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#960050;background-color:#1e0010">Gumbo&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">beet&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">greens&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">corn&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">soko&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">endive&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">gumbo&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">gourd.&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">Parsley&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">shallot&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">courgette&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#960050;background-color:#1e0010">tatsoi&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">pea&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">sprouts&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">fava&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">bean&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">collard&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">greens&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">dandelion&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">okra&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">wakame&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">tomato.&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#960050;background-color:#1e0010">Dandelion&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">cucumber&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">earthnut&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">pea&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">peanut&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">soko&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">zucchini.&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#960050;background-color:#1e0010">&amp;lt;/p&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#960050;background-color:#1e0010">&amp;lt;/article&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">article&lt;/span> &lt;span style="color:#f92672">~&lt;/span> &lt;span style="color:#f92672">p&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">/* 选择 article 元素之后的所有兄弟元素 p 元素, 会选中下方所有的 p 元素 */&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#960050;background-color:#1e0010">&amp;lt;article&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#960050;background-color:#1e0010">&amp;lt;h1&amp;gt;A&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">heading&amp;lt;/h1&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#960050;background-color:#1e0010">&amp;lt;p&amp;gt;I&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">am&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">a&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">paragraph.&amp;lt;/p&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#960050;background-color:#1e0010">&amp;lt;div&amp;gt;I&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">am&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">a&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">div&amp;lt;/div&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#960050;background-color:#1e0010">&amp;lt;p&amp;gt;I&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">am&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">another&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">paragraph.&amp;lt;/p&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#960050;background-color:#1e0010">&amp;lt;/article&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="伪类和伪元素">伪类和伪元素&lt;/h3>
+&lt;h4 id="常用伪类">常用伪类&lt;/h4>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-css" data-lang="css">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">article&lt;/span> &lt;span style="color:#f92672">p&lt;/span>:&lt;span style="color:#a6e22e">first-child&lt;/span> { &lt;span style="color:#75715e">/* 选择 article 下第一个 p 元素 */&lt;/span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">article&lt;/span> &lt;span style="color:#f92672">p&lt;/span>:&lt;span style="color:#a6e22e">last-child&lt;/span> { &lt;span style="color:#75715e">/* 选择 article 下最后一个 p 元素 */&lt;/span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">article&lt;/span> &lt;span style="color:#f92672">p&lt;/span>:&lt;span style="color:#a6e22e">nth-child&lt;/span>&lt;span style="color:#f92672">(&lt;/span>&lt;span style="color:#f92672">2&lt;/span>&lt;span style="color:#f92672">)&lt;/span> { &lt;span style="color:#75715e">/* 选择 article 下第二个 p 元素 */&lt;/span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="伪元素">伪元素&lt;/h4>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-css" data-lang="css">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">article&lt;/span> &lt;span style="color:#f92672">p&lt;/span>:&lt;span style="color:#a6e22e">first-child&lt;/span>::&lt;span style="color:#a6e22e">first-line&lt;/span> {&lt;span style="color:#75715e">/* 选择 article 下的第一个 p 元素的第一行 */&lt;/span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">p&lt;/span>::&lt;span style="color:#a6e22e">first-line&lt;/span> {&lt;span style="color:#75715e">/* 选择 p 元素的第一行 */&lt;/span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">p&lt;/span>::&lt;span style="color:#a6e22e">first-letter&lt;/span> { &lt;span style="color:#75715e">/* 选择 p 元素的第一个字符 */&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">font-size&lt;/span>: &lt;span style="color:#ae81ff">200&lt;/span>&lt;span style="color:#66d9ef">%&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">color&lt;/span>: &lt;span style="color:#66d9ef">red&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">p&lt;/span>::&lt;span style="color:#a6e22e">before&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">content&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;前缀&amp;#34;&lt;/span>; &lt;span style="color:#75715e">/* 在 p 元素前插入内容 */&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">p&lt;/span>::&lt;span style="color:#a6e22e">after&lt;/span> { &lt;span style="color:#75715e">/* 在 p 元素后插入内容 */&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">content&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;后缀&amp;#34;&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="盒模型">盒模型&lt;/h3>
+&lt;p>用display属性来控制盒子的显示类型。&lt;/p></description></item></channel></rss>
