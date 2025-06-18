@@ -7,12 +7,17 @@
 &lt;/ul>
 &lt;p>关于数据流动，Prometheus 通过 HTTP 拉取 Node Exporter 的指标数据，然后将这些数据存储在时间序列数据库中。Grafana 则通过查询 Prometheus 的 API 来获取这些数据，并以可视化的方式展示出来。&lt;/p>
 &lt;p>所以 Prometheus 需要能访问 Node Exporter 的 HTTP 接口，而 Grafana 则需要能访问 Prometheus 的 HTTP 接口。&lt;/p>
-&lt;p>在实践中，我们将把 Prometheus、Node Exporter 和 Grafana 部署在同一台服务器上。Node Exporter 将安装在所需要监控的服务器上。&lt;/p>
+&lt;p>在实践中，我们将把 Prometheus 和 Grafana 部署在同一台服务器上。Node Exporter 将安装在所需要监控的服务器上。&lt;/p>
 &lt;p>为什么不用 docker ？个人觉得为了 docker 那点便利性不值得，并且 docker 至今还不原生支持 nftables，直接在宿主机上部署更少问题。&lt;/p>
 &lt;p>&lt;a href="https://github.com/docker/for-linux/issues/1472">Native support for nftables&lt;/a>&lt;/p>
 &lt;h2 id="安装-prometheus">安装 Prometheus&lt;/h2>
 &lt;h3 id="使用我的脚本">使用我的脚本&lt;/h3>
-&lt;p>如果你不想手动安装，可以使用我写的脚本来自动化安装 Prometheus、Node Exporter 和 Grafana。&lt;/p></description></item><item><title>Debian 编译安装 unbound</title><link>https://tnzzz.top/posts/%E6%95%99%E7%A8%8B/debian%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85unbound/</link><pubDate>Tue, 20 May 2025 22:17:40 +0800</pubDate><guid>https://tnzzz.top/posts/%E6%95%99%E7%A8%8B/debian%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85unbound/</guid><description>&lt;h3 id="unbound-简介">unbound 简介&lt;/h3>
+&lt;p>如果你不想手动安装，可以使用我写的脚本来自动化安装 Prometheus。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>bash &amp;lt;&lt;span style="color:#f92672">(&lt;/span>curl -s https://raw.githubusercontent.com/TnZzZHlp/CommonScript/refs/heads/main/Scripts/IU_Prometheus.sh&lt;span style="color:#f92672">)&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="手动安装">手动安装&lt;/h3>
+&lt;ol>
+&lt;li>
+&lt;p>下载 Prometheus 的二进制文件&lt;/p></description></item><item><title>Debian 编译安装 unbound</title><link>https://tnzzz.top/posts/%E6%95%99%E7%A8%8B/debian%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85unbound/</link><pubDate>Tue, 20 May 2025 22:17:40 +0800</pubDate><guid>https://tnzzz.top/posts/%E6%95%99%E7%A8%8B/debian%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85unbound/</guid><description>&lt;h3 id="unbound-简介">unbound 简介&lt;/h3>
 &lt;p>Unbound是一款验证型、递归式、带缓存的DNS解析器，旨在实现快速与轻量化，并融合了基于开放标准的现代特性。&lt;/p>
 &lt;p>为增强在线隐私保护，Unbound支持DNS-over-TLS和DNS-over-HTTPS，使客户端能够加密通信。此外，它还支持多种现代标准，这些标准不仅减少了与权威服务器交换的数据量，提升了隐私性，还增强了DNS的健壮性。其中最为关键的技术包括查询名称最小化、积极利用DNSSEC验证缓存，以及对权威区域的支持，后者可用于加载根区域副本。&lt;/p>
 &lt;p>Unbound兼容所有Linux和BSD发行版，以及macOS，大多数平台均有现成安装包。它已被纳入所有主要BSD操作系统的基础系统，以及大多数Linux发行版的标准软件库中，安装与配置简便易行，仅需几行配置即可为单机或网络设置解析器。&lt;/p>

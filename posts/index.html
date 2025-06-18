@@ -3,10 +3,11 @@
 <svg id="sun" width="24" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></button></div></div><ul id=menu><li><a href=https://tnzzz.top/categories/ title=分类><span>分类</span></a></li></ul></nav></header><main class=main><header class=page-header><h1>Posts</h1></header><article class=post-entry><header class=entry-header><h2 class=entry-hint-parent>Prometheus + Node Exporter + Grafana 部署</h2></header><div class=entry-content><p>前言 什么是 Prometheus、Node Exporter 和 Grafana？它们是用于监控和可视化系统性能的工具。
 Prometheus 是一个开源的监控系统和时间序列数据库 Node Exporter 是 Prometheus 的一个组件，用于收集 Linux 系统的硬件和操作系统指标 Grafana 是一个开源的数据可视化平台，可以与 Prometheus 集成来展示数据 关于数据流动，Prometheus 通过 HTTP 拉取 Node Exporter 的指标数据，然后将这些数据存储在时间序列数据库中。Grafana 则通过查询 Prometheus 的 API 来获取这些数据，并以可视化的方式展示出来。
 所以 Prometheus 需要能访问 Node Exporter 的 HTTP 接口，而 Grafana 则需要能访问 Prometheus 的 HTTP 接口。
-在实践中，我们将把 Prometheus、Node Exporter 和 Grafana 部署在同一台服务器上。Node Exporter 将安装在所需要监控的服务器上。
+在实践中，我们将把 Prometheus 和 Grafana 部署在同一台服务器上。Node Exporter 将安装在所需要监控的服务器上。
 为什么不用 docker ？个人觉得为了 docker 那点便利性不值得，并且 docker 至今还不原生支持 nftables，直接在宿主机上部署更少问题。
 Native support for nftables
-安装 Prometheus 使用我的脚本 如果你不想手动安装，可以使用我写的脚本来自动化安装 Prometheus、Node Exporter 和 Grafana。
+安装 Prometheus 使用我的脚本 如果你不想手动安装，可以使用我写的脚本来自动化安装 Prometheus。
+bash &lt;(curl -s https://raw.githubusercontent.com/TnZzZHlp/CommonScript/refs/heads/main/Scripts/IU_Prometheus.sh) 手动安装 下载 Prometheus 的二进制文件
 ...</p></div><footer class=entry-footer><span title='2025-06-18 00:00:00 +0000 UTC'>June 18, 2025</span></footer><a class=entry-link aria-label="post link to Prometheus + Node Exporter + Grafana 部署" href=https://tnzzz.top/posts/%E6%95%99%E7%A8%8B/promethus-+-nodeexporter--+-grafana-%E9%83%A8%E7%BD%B2/></a></article><article class=post-entry><header class=entry-header><h2 class=entry-hint-parent>关于网页体验优化</h2></header><div class=entry-content><p>首先我们要确定可以从什么方向对体验进行优化 影响网页体验有很多方面，不过一般方向无非下面这三大类
 网络 JS执行 页面渲染 关于网络优化 关于网络优化，我们要先了解发起网络请求的流程
 查询对应的域名 加入请求队列 发起连接 发送请求 等待响应 下载内容 其中 4, 5, 6 步都是受客户端到服务器之间的网络影响，前端几乎没什么能优化的所以着重说下剩下的几个方面如何优化
