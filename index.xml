@@ -1,4 +1,43 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>明天吃什么？</title><link>https://tnzzz.top/</link><description>Recent content on 明天吃什么？</description><generator>Hugo -- 0.147.8</generator><language>zh-cn</language><lastBuildDate>Tue, 17 Jun 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://tnzzz.top/index.xml" rel="self" type="application/rss+xml"/><item><title>JavaScript 中的 this 指向</title><link>https://tnzzz.top/posts/%E5%AD%A6%E4%B9%A0/js/this/</link><pubDate>Tue, 17 Jun 2025 00:00:00 +0000</pubDate><guid>https://tnzzz.top/posts/%E5%AD%A6%E4%B9%A0/js/this/</guid><description>&lt;h3 id="this-的值是运行时计算出来的">this 的值是运行时计算出来的&lt;/h3>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>明天吃什么？</title><link>https://tnzzz.top/</link><description>Recent content on 明天吃什么？</description><generator>Hugo -- 0.147.8</generator><language>zh-cn</language><lastBuildDate>Wed, 18 Jun 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://tnzzz.top/index.xml" rel="self" type="application/rss+xml"/><item><title>关于网页体验优化</title><link>https://tnzzz.top/posts/%E5%AD%A6%E4%B9%A0/%E5%89%8D%E7%AB%AF/%E5%85%B3%E4%BA%8E%E9%A1%B5%E9%9D%A2%E4%BD%93%E9%AA%8C%E4%BC%98%E5%8C%96/</link><pubDate>Wed, 18 Jun 2025 00:00:00 +0000</pubDate><guid>https://tnzzz.top/posts/%E5%AD%A6%E4%B9%A0/%E5%89%8D%E7%AB%AF/%E5%85%B3%E4%BA%8E%E9%A1%B5%E9%9D%A2%E4%BD%93%E9%AA%8C%E4%BC%98%E5%8C%96/</guid><description>&lt;p>首先我们要确定可以从什么方向对体验进行优化
+影响网页体验有很多方面，不过一般方向无非下面这三大类&lt;/p>
+&lt;ul>
+&lt;li>网络&lt;/li>
+&lt;li>JS执行&lt;/li>
+&lt;li>页面渲染&lt;/li>
+&lt;/ul>
+&lt;h2 id="关于网络优化">关于网络优化&lt;/h2>
+&lt;p>关于网络优化，我们要先了解发起网络请求的流程&lt;/p>
+&lt;ol>
+&lt;li>查询对应的域名&lt;/li>
+&lt;li>加入请求队列&lt;/li>
+&lt;li>发起连接&lt;/li>
+&lt;li>发送请求&lt;/li>
+&lt;li>等待响应&lt;/li>
+&lt;li>下载内容&lt;/li>
+&lt;/ol>
+&lt;p>其中 4, 5, 6 步都是受客户端到服务器之间的网络影响，前端几乎没什么能优化的所以着重说下剩下的几个方面如何优化&lt;/p>
+&lt;h3 id="dns-影响小">DNS (影响小)&lt;/h3>
+&lt;p>首先什么是 DNS 可以参考 &lt;a href="https://zh.wikipedia.org/wiki/%E5%9F%9F%E5%90%8D%E7%B3%BB%E7%BB%9F">Wikipedia 域名系统&lt;/a>&lt;/p>
+&lt;p>这部分优化说白了就是让浏览器在拿到地址时就直接把对应的 IP 解析出来，不要在真正发起请求的时候再解析。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-javascript" data-lang="javascript">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">&amp;lt;&lt;/span>&lt;span style="color:#a6e22e">link&lt;/span> &lt;span style="color:#a6e22e">rel&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;dns-prefetch&amp;#34;&lt;/span> &lt;span style="color:#a6e22e">href&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;https://fonts.googleapis.com/&amp;#34;&lt;/span> &lt;span style="color:#f92672">/&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;a href="https://developer.mozilla.org/zh-CN/docs/Web/Performance/Guides/dns-prefetch">参考 MDN 文档&lt;/a>&lt;/p>
+&lt;h3 id="请求队列">请求队列&lt;/h3>
+&lt;p>浏览器对于单个域名只能同时建立4~6个TCP连接（不同浏览器实现有差异）。&lt;/p>
+&lt;p>如果在 &lt;code>http/1.1&lt;/code> 的情况下比如说我现在有六个大体积的图片正在加载，剩下一个影响布局的 JS 请求只能等待前面的任意一个请求完成才能发起，很明显这会增加布局完成的时间降低用户体验，但是在 &lt;code>HTTP/2&lt;/code> 中则不存在这个问题，优化方面有下面这几个&lt;/p>
+&lt;h4 id="使用-http2">使用 HTTP/2&lt;/h4>
+&lt;p>这个需要服务端启用 HTTP/2 协议，浏览器会自动与服务端协商。如果服务端支持 HTTP/2，浏览器会优先使用这个协议。否则会回退到 HTTP/1.1。&lt;/p>
+&lt;h4 id="域名分片">域名分片&lt;/h4>
+&lt;p>把原来耗时的请求例如图片、字体等放到另一个域名中。这是最常见的做法
+例如谷歌就把字体等图片放到不同的域名中
+&lt;img alt="alt text" loading="lazy" src="https://tnzzz.top/posts/%E5%AD%A6%E4%B9%A0/%E5%89%8D%E7%AB%AF/%E5%85%B3%E4%BA%8E%E9%A1%B5%E9%9D%A2%E4%BD%93%E9%AA%8C%E4%BC%98%E5%8C%96/img/image-1.png">&lt;/p>
+&lt;h4 id="将耗时的请求延后">将耗时的请求延后&lt;/h4>
+&lt;p>确定哪些请求比较重要，先加载会影响页面布局的资源。&lt;/p>
+&lt;p>例如下面的 JS 标签 defer 属性可以让浏览器在 HTML 解析完成后再执行脚本，这样就不会阻塞页面渲染。但是注意，这个属性对模块脚本无效。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-html" data-lang="html">&lt;span style="display:flex;">&lt;span>&amp;lt;&lt;span style="color:#f92672">script&lt;/span> &lt;span style="color:#a6e22e">src&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;https://example.com/script.js&amp;#34;&lt;/span> &lt;span style="color:#a6e22e">defer&lt;/span>&amp;gt;&amp;lt;/&lt;span style="color:#f92672">script&lt;/span>&amp;gt;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>对于图片和 iframe 可以使用 &lt;code>loading=&amp;quot;lazy&amp;quot;&lt;/code> 属性来延迟加载，只有当进入视口时才会加载。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-html" data-lang="html">&lt;span style="display:flex;">&lt;span>&amp;lt;&lt;span style="color:#f92672">img&lt;/span> &lt;span style="color:#a6e22e">src&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;image.jpg&amp;#34;&lt;/span> &lt;span style="color:#a6e22e">loading&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;lazy&amp;#34;&lt;/span> &lt;span style="color:#a6e22e">alt&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;Lazy loaded image&amp;#34;&lt;/span>&amp;gt;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="发起连接">发起连接&lt;/h4>
+&lt;p>思路同样是预连接&lt;/p></description></item><item><title>JavaScript 中的 this 指向</title><link>https://tnzzz.top/posts/%E5%AD%A6%E4%B9%A0/js/this/</link><pubDate>Tue, 17 Jun 2025 00:00:00 +0000</pubDate><guid>https://tnzzz.top/posts/%E5%AD%A6%E4%B9%A0/js/this/</guid><description>&lt;h3 id="this-的值是运行时计算出来的">this 的值是运行时计算出来的&lt;/h3>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-javascript" data-lang="javascript">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">let&lt;/span> &lt;span style="color:#a6e22e">user&lt;/span> &lt;span style="color:#f92672">=&lt;/span> { &lt;span style="color:#a6e22e">name&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#e6db74">&amp;#34;John&amp;#34;&lt;/span> };
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">let&lt;/span> &lt;span style="color:#a6e22e">admin&lt;/span> &lt;span style="color:#f92672">=&lt;/span> { &lt;span style="color:#a6e22e">name&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#e6db74">&amp;#34;Admin&amp;#34;&lt;/span> };
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
