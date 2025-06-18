@@ -60,7 +60,8 @@
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>对于图片和 iframe 可以使用 &lt;code>loading=&amp;quot;lazy&amp;quot;&lt;/code> 属性来延迟加载，只有当进入视口时才会加载。&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-html" data-lang="html">&lt;span style="display:flex;">&lt;span>&amp;lt;&lt;span style="color:#f92672">img&lt;/span> &lt;span style="color:#a6e22e">src&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;image.jpg&amp;#34;&lt;/span> &lt;span style="color:#a6e22e">loading&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;lazy&amp;#34;&lt;/span> &lt;span style="color:#a6e22e">alt&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;Lazy loaded image&amp;#34;&lt;/span>&amp;gt;
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="发起连接">发起连接&lt;/h4>
-&lt;p>思路同样是预连接&lt;/p></description></item><item><title>JavaScript 中的 this 指向</title><link>https://tnzzz.top/posts/%E5%AD%A6%E4%B9%A0/js/this/</link><pubDate>Tue, 17 Jun 2025 00:00:00 +0000</pubDate><guid>https://tnzzz.top/posts/%E5%AD%A6%E4%B9%A0/js/this/</guid><description>&lt;h3 id="this-的值是运行时计算出来的">this 的值是运行时计算出来的&lt;/h3>
+&lt;p>思路同样是预连接&lt;/p></description></item><item><title>日语 - Day 4</title><link>https://tnzzz.top/posts/%E5%AD%A6%E4%B9%A0/%E6%97%A5%E8%AF%AD/day-4/</link><pubDate>Wed, 18 Jun 2025 00:00:00 +0000</pubDate><guid>https://tnzzz.top/posts/%E5%AD%A6%E4%B9%A0/%E6%97%A5%E8%AF%AD/day-4/</guid><description>&lt;h2 id="や行假名">や行假名&lt;/h2>
+&lt;p>や　ゆ　よ&lt;/p></description></item><item><title>JavaScript 中的 this 指向</title><link>https://tnzzz.top/posts/%E5%AD%A6%E4%B9%A0/js/this/</link><pubDate>Tue, 17 Jun 2025 00:00:00 +0000</pubDate><guid>https://tnzzz.top/posts/%E5%AD%A6%E4%B9%A0/js/this/</guid><description>&lt;h3 id="this-的值是运行时计算出来的">this 的值是运行时计算出来的&lt;/h3>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-javascript" data-lang="javascript">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">let&lt;/span> &lt;span style="color:#a6e22e">user&lt;/span> &lt;span style="color:#f92672">=&lt;/span> { &lt;span style="color:#a6e22e">name&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#e6db74">&amp;#34;John&amp;#34;&lt;/span> };
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">let&lt;/span> &lt;span style="color:#a6e22e">admin&lt;/span> &lt;span style="color:#f92672">=&lt;/span> { &lt;span style="color:#a6e22e">name&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#e6db74">&amp;#34;Admin&amp;#34;&lt;/span> };
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
@@ -122,15 +123,7 @@
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">alert&lt;/span>( &lt;span style="color:#a6e22e">user&lt;/span>.&lt;span style="color:#a6e22e">ref&lt;/span>.&lt;span style="color:#a6e22e">name&lt;/span> ); &lt;span style="color:#75715e">// 结果是什么？
 &lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;!-- raw HTML omitted -->
-&lt;p>因为在调用 &lt;code>makeUser&lt;/code> 函数时，不是通过对象调用的，所以 &lt;code>this&lt;/code> 是 &lt;code>undefined&lt;/code>。因此，&lt;code>user.ref&lt;/code> 是 &lt;code>undefined&lt;/code>，访问 &lt;code>user.ref.name&lt;/code> 会导致错误。&lt;/p></description></item><item><title>日语 - Day 2</title><link>https://tnzzz.top/posts/%E5%AD%A6%E4%B9%A0/%E6%97%A5%E8%AF%AD/day-2/</link><pubDate>Mon, 16 Jun 2025 00:00:00 +0000</pubDate><guid>https://tnzzz.top/posts/%E5%AD%A6%E4%B9%A0/%E6%97%A5%E8%AF%AD/day-2/</guid><description>&lt;h2 id="か行假名">か行假名&lt;/h2>
-&lt;p>か　き　く　け　こ
-カ　キ　ク　ケ　コ&lt;/p>
-&lt;h2 id="さ行假名">さ行假名&lt;/h2>
-&lt;p>さ　し　す　せ　そ
-サ　シ　ス　セ　ソ&lt;/p>
-&lt;h2 id="た行假名">た行假名&lt;/h2>
-&lt;p>た　ち　つ　て　と
-タ　チ　ツ　テ　ト&lt;/p></description></item><item><title>日语 - Day 3</title><link>https://tnzzz.top/posts/%E5%AD%A6%E4%B9%A0/%E6%97%A5%E8%AF%AD/day-3/</link><pubDate>Mon, 16 Jun 2025 00:00:00 +0000</pubDate><guid>https://tnzzz.top/posts/%E5%AD%A6%E4%B9%A0/%E6%97%A5%E8%AF%AD/day-3/</guid><description>&lt;h2 id="な行假名">な行假名&lt;/h2>
+&lt;p>因为在调用 &lt;code>makeUser&lt;/code> 函数时，不是通过对象调用的，所以 &lt;code>this&lt;/code> 是 &lt;code>undefined&lt;/code>。因此，&lt;code>user.ref&lt;/code> 是 &lt;code>undefined&lt;/code>，访问 &lt;code>user.ref.name&lt;/code> 会导致错误。&lt;/p></description></item><item><title>日语 - Day 3</title><link>https://tnzzz.top/posts/%E5%AD%A6%E4%B9%A0/%E6%97%A5%E8%AF%AD/day-3/</link><pubDate>Tue, 17 Jun 2025 00:00:00 +0000</pubDate><guid>https://tnzzz.top/posts/%E5%AD%A6%E4%B9%A0/%E6%97%A5%E8%AF%AD/day-3/</guid><description>&lt;h2 id="な行假名">な行假名&lt;/h2>
 &lt;p>な　に　ぬ　ね　の
 ナ　ニ　ヌ　ネ　ノ&lt;/p>
 &lt;h2 id="は行假名">は行假名&lt;/h2>
@@ -138,7 +131,15 @@
 ハ　ヒ　フ　ヘ　ホ&lt;/p>
 &lt;h2 id="ま行假名">ま行假名&lt;/h2>
 &lt;p>ま　み　む　め　も
-マ　ミ　ム　メ　モ&lt;/p></description></item><item><title>日语 - Day 1</title><link>https://tnzzz.top/posts/%E5%AD%A6%E4%B9%A0/%E6%97%A5%E8%AF%AD/day-1/</link><pubDate>Sun, 15 Jun 2025 00:00:00 +0000</pubDate><guid>https://tnzzz.top/posts/%E5%AD%A6%E4%B9%A0/%E6%97%A5%E8%AF%AD/day-1/</guid><description>&lt;h2 id="浊音">浊音&lt;/h2>
+マ　ミ　ム　メ　モ&lt;/p></description></item><item><title>日语 - Day 2</title><link>https://tnzzz.top/posts/%E5%AD%A6%E4%B9%A0/%E6%97%A5%E8%AF%AD/day-2/</link><pubDate>Mon, 16 Jun 2025 00:00:00 +0000</pubDate><guid>https://tnzzz.top/posts/%E5%AD%A6%E4%B9%A0/%E6%97%A5%E8%AF%AD/day-2/</guid><description>&lt;h2 id="か行假名">か行假名&lt;/h2>
+&lt;p>か　き　く　け　こ
+カ　キ　ク　ケ　コ&lt;/p>
+&lt;h2 id="さ行假名">さ行假名&lt;/h2>
+&lt;p>さ　し　す　せ　そ
+サ　シ　ス　セ　ソ&lt;/p>
+&lt;h2 id="た行假名">た行假名&lt;/h2>
+&lt;p>た　ち　つ　て　と
+タ　チ　ツ　テ　ト&lt;/p></description></item><item><title>日语 - Day 1</title><link>https://tnzzz.top/posts/%E5%AD%A6%E4%B9%A0/%E6%97%A5%E8%AF%AD/day-1/</link><pubDate>Sun, 15 Jun 2025 00:00:00 +0000</pubDate><guid>https://tnzzz.top/posts/%E5%AD%A6%E4%B9%A0/%E6%97%A5%E8%AF%AD/day-1/</guid><description>&lt;h2 id="浊音">浊音&lt;/h2>
 &lt;p>&lt;img alt="浊音" loading="lazy" src="https://tnzzz.top/posts/%E5%AD%A6%E4%B9%A0/%E6%97%A5%E8%AF%AD/day-1/img/image-1.png">&lt;/p>
 &lt;ul>
 &lt;li>か、た、ぱ行假名位于单词词中或词末时可以念不送气音 不送气音 ≠ 浊音&lt;/li>
