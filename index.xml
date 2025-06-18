@@ -1,4 +1,18 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>明天吃什么？</title><link>https://tnzzz.top/</link><description>Recent content on 明天吃什么？</description><generator>Hugo -- 0.147.8</generator><language>zh-cn</language><lastBuildDate>Wed, 18 Jun 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://tnzzz.top/index.xml" rel="self" type="application/rss+xml"/><item><title>关于网页体验优化</title><link>https://tnzzz.top/posts/%E5%AD%A6%E4%B9%A0/%E5%89%8D%E7%AB%AF/%E5%85%B3%E4%BA%8E%E9%A1%B5%E9%9D%A2%E4%BD%93%E9%AA%8C%E4%BC%98%E5%8C%96/</link><pubDate>Wed, 18 Jun 2025 00:00:00 +0000</pubDate><guid>https://tnzzz.top/posts/%E5%AD%A6%E4%B9%A0/%E5%89%8D%E7%AB%AF/%E5%85%B3%E4%BA%8E%E9%A1%B5%E9%9D%A2%E4%BD%93%E9%AA%8C%E4%BC%98%E5%8C%96/</guid><description>&lt;p>首先我们要确定可以从什么方向对体验进行优化
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>明天吃什么？</title><link>https://tnzzz.top/</link><description>Recent content on 明天吃什么？</description><generator>Hugo -- 0.147.8</generator><language>zh-cn</language><lastBuildDate>Wed, 18 Jun 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://tnzzz.top/index.xml" rel="self" type="application/rss+xml"/><item><title>Prometheus + Node Exporter + Grafana 部署</title><link>https://tnzzz.top/posts/%E6%95%99%E7%A8%8B/promethus-+-nodeexporter--+-grafana-%E9%83%A8%E7%BD%B2/</link><pubDate>Wed, 18 Jun 2025 00:00:00 +0000</pubDate><guid>https://tnzzz.top/posts/%E6%95%99%E7%A8%8B/promethus-+-nodeexporter--+-grafana-%E9%83%A8%E7%BD%B2/</guid><description>&lt;h2 id="前言">前言&lt;/h2>
+&lt;p>什么是 Prometheus、Node Exporter 和 Grafana？它们是用于监控和可视化系统性能的工具。&lt;/p>
+&lt;ul>
+&lt;li>Prometheus 是一个开源的监控系统和时间序列数据库&lt;/li>
+&lt;li>Node Exporter 是 Prometheus 的一个组件，用于收集 Linux 系统的硬件和操作系统指标&lt;/li>
+&lt;li>Grafana 是一个开源的数据可视化平台，可以与 Prometheus 集成来展示数据&lt;/li>
+&lt;/ul>
+&lt;p>关于数据流动，Prometheus 通过 HTTP 拉取 Node Exporter 的指标数据，然后将这些数据存储在时间序列数据库中。Grafana 则通过查询 Prometheus 的 API 来获取这些数据，并以可视化的方式展示出来。&lt;/p>
+&lt;p>所以 Prometheus 需要能访问 Node Exporter 的 HTTP 接口，而 Grafana 则需要能访问 Prometheus 的 HTTP 接口。&lt;/p>
+&lt;p>在实践中，我们将把 Prometheus、Node Exporter 和 Grafana 部署在同一台服务器上。Node Exporter 将安装在所需要监控的服务器上。&lt;/p>
+&lt;p>为什么不用 docker ？个人觉得为了 docker 那点便利性不值得，并且 docker 至今还不原生支持 nftables，直接在宿主机上部署更少问题。&lt;/p>
+&lt;p>&lt;a href="https://github.com/docker/for-linux/issues/1472">Native support for nftables&lt;/a>&lt;/p>
+&lt;h2 id="安装-prometheus">安装 Prometheus&lt;/h2>
+&lt;h3 id="使用我的脚本">使用我的脚本&lt;/h3>
+&lt;p>如果你不想手动安装，可以使用我写的脚本来自动化安装 Prometheus、Node Exporter 和 Grafana。&lt;/p></description></item><item><title>关于网页体验优化</title><link>https://tnzzz.top/posts/%E5%AD%A6%E4%B9%A0/%E5%89%8D%E7%AB%AF/%E5%85%B3%E4%BA%8E%E9%A1%B5%E9%9D%A2%E4%BD%93%E9%AA%8C%E4%BC%98%E5%8C%96/</link><pubDate>Wed, 18 Jun 2025 00:00:00 +0000</pubDate><guid>https://tnzzz.top/posts/%E5%AD%A6%E4%B9%A0/%E5%89%8D%E7%AB%AF/%E5%85%B3%E4%BA%8E%E9%A1%B5%E9%9D%A2%E4%BD%93%E9%AA%8C%E4%BC%98%E5%8C%96/</guid><description>&lt;p>首先我们要确定可以从什么方向对体验进行优化
 影响网页体验有很多方面，不过一般方向无非下面这三大类&lt;/p>
 &lt;ul>
 &lt;li>网络&lt;/li>
